@@ -5,6 +5,5 @@ __pycache__/
 *.py[cod]
 .pytest_cache/
 .mypy_cache/
-data/allowed_users.json
 data/sessions.json
 *.log

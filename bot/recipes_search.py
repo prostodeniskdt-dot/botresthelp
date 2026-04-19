@@ -3,6 +3,8 @@ from __future__ import annotations
 import re
 from typing import Any
 
+from bot.recipe_struct import recipe_search_blob
+
 
 def _norm(s: str) -> str:
     return re.sub(r"\s+", " ", s.strip().lower())
@@ -20,7 +22,7 @@ def search_recipes(recipes: list[dict[str, Any]], query: str) -> list[dict[str, 
         aliases = r.get("aliases") or []
         if not isinstance(aliases, list):
             aliases = []
-        haystack = _norm(name + " " + " ".join(str(a) for a in aliases))
+        haystack = _norm(recipe_search_blob(r))
 
         score = 0
         if _norm(name) == q:

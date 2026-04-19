@@ -29,6 +29,7 @@ from bot.keyboards import (
     main_menu_reply,
     tech_pick_inline,
 )
+from bot.recipe_struct import recipe_to_html
 from bot.recipes_search import search_recipes
 from bot.reports import send_closing_report, send_line_report, send_opening_report
 from bot.storage import default_session, load_recipes
@@ -403,10 +404,10 @@ async def on_tech_pick(callback: CallbackQuery, session: dict[str, Any]) -> None
         await callback.answer("Устаревший выбор, введите запрос снова.", show_alert=True)
         return
     chosen = matches[idx]
-    text = str(chosen.get("text", "")).strip() or "Текст техкарты пуст."
     name = str(chosen.get("name", ""))
+    body = recipe_to_html(chosen)
     await callback.message.answer(
-        f"<b>{html.escape(name)}</b>\n\n{html.escape(text)}",
+        f"<b>{html.escape(name)}</b>\n\n{body}",
         parse_mode="HTML",
         reply_markup=main_menu_reply(),
     )
@@ -470,10 +471,10 @@ async def on_text(message: Message, session: dict[str, Any]) -> None:
             return
         if len(matches) == 1:
             r = matches[0]
-            body = str(r.get("text", "")).strip() or "Текст техкарты пуст."
             name = str(r.get("name", ""))
+            body = recipe_to_html(r)
             await message.answer(
-                f"<b>{html.escape(name)}</b>\n\n{html.escape(body)}",
+                f"<b>{html.escape(name)}</b>\n\n{body}",
                 parse_mode="HTML",
                 reply_markup=main_menu_reply(),
             )

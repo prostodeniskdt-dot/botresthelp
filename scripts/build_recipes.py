@@ -1,16 +1,21 @@
 """
 Сборка data/recipes.json из data/ttk_source.txt.
 Запуск: python scripts/build_recipes.py
-(Дубликат логики scripts/build_recipes.mjs — нужен Node для проверки: node scripts/build_recipes.mjs)
+(Обертка: node scripts/build_recipes.mjs вызывает этот скрипт.)
 """
 
 from __future__ import annotations
 
 import json
 import re
+import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from bot.recipe_struct import parse_ttk_body  # noqa: E402
 SOURCE = ROOT / "data" / "ttk_source.txt"
 OUT = ROOT / "data" / "recipes.json"
 
@@ -36,7 +41,7 @@ def skip_body_line(line: str) -> bool:
     return False
 
 
-def parse_ttk(text: str) -> list[dict[str, str]]:
+def parse_ttk(text: str) -> list[dict[str, object]]:
     text = re.sub(r"--\s*\d+\s+of\s+\d+\s*--", "", text)
     lines = text.split("\n")
     recipes: dict[str, str] = {}
@@ -78,7 +83,11 @@ def parse_ttk(text: str) -> list[dict[str, str]]:
             continue
         recipes[name] = text_body
 
-    return [{"name": k, "text": v} for k, v in sorted(recipes.items(), key=lambda x: x[0].lower())]
+    out: list[dict[str, object]] = []
+    for k, v in sorted(recipes.items(), key=lambda x: x[0].lower()):
+        body = parse_ttk_body(v)
+        out.append({"name": k, **body})
+    return out
 
 
 def main() -> None:

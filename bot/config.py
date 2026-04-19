@@ -15,11 +15,22 @@ def _parse_int(name: str) -> int:
     return int(raw)
 
 
+def _parse_admin_group_chat_id() -> int:
+    """ID группы/супергруппы для Bot API — всегда отрицательный. Частая ошибка: вставить число без минуса."""
+    raw = os.getenv("ADMIN_GROUP_CHAT_ID", "").strip()
+    if not raw:
+        raise RuntimeError("Переменная окружения ADMIN_GROUP_CHAT_ID не задана")
+    val = int(raw)
+    if val > 0:
+        val = -val
+    return val
+
+
 BOT_TOKEN = os.getenv("BOT_TOKEN", "").strip()
 if not BOT_TOKEN:
     raise RuntimeError("BOT_TOKEN не задан")
 
-ADMIN_GROUP_CHAT_ID = _parse_int("ADMIN_GROUP_CHAT_ID")
+ADMIN_GROUP_CHAT_ID = _parse_admin_group_chat_id()
 
 _data_dir = os.getenv("DATA_DIR", "").strip()
 if _data_dir:

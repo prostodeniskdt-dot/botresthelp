@@ -1,9 +1,11 @@
 from __future__ import annotations
 
 import html
+import logging
 from typing import Any
 
 from aiogram import F, Router
+from aiogram.exceptions import TelegramBadRequest
 from aiogram.filters import Command, CommandStart
 from aiogram.types import CallbackQuery, Message
 
@@ -32,6 +34,7 @@ from bot.reports import send_closing_report, send_line_report, send_opening_repo
 from bot.storage import default_session, load_recipes
 
 router = Router()
+logger = logging.getLogger(__name__)
 
 MENU_BUTTONS = {BTN_OPENING, BTN_CLOSING, BTN_LINE, BTN_TECH}
 
@@ -295,7 +298,22 @@ async def on_photo(message: Message, session: dict[str, Any]) -> None:
         else:
             if not message.from_user:
                 return
-            await send_opening_report(message.bot, message.from_user, OPENING_ITEMS, session["opening"])
+            try:
+                await send_opening_report(message.bot, message.from_user, OPENING_ITEMS, session["opening"])
+            except TelegramBadRequest as e:
+                logger.exception("send_opening_report failed")
+                await message.answer(
+                    "Не удалось отправить отчёт в группу. Убедитесь, что бот добавлен в группу и может писать. "
+                    "ID группы в переменных должен быть с минусом (например -1003927366109). "
+                    f"Ошибка API: {e}"
+                )
+                _reset_session(session)
+                return
+            except Exception as e:
+                logger.exception("send_opening_report failed")
+                await message.answer(f"Ошибка при отправке отчёта: {type(e).__name__}: {e}")
+                _reset_session(session)
+                return
             await message.answer("Отчёт по открытию отправлен в группу администратора. Спасибо!")
             _reset_session(session)
         return
@@ -341,15 +359,31 @@ async def on_line_rate(callback: CallbackQuery, session: dict[str, Any]) -> None
         return
     session["line_rating"] = value
     label = RATING_LABELS.get(value, str(value))
-    await send_line_report(
-        callback.bot,
-        callback.from_user,
-        LINE_PHOTO_ITEMS,
-        session["line_photos"],
-        LINE_RATING_QUESTION,
-        value,
-        label,
-    )
+    try:
+        await send_line_report(
+            callback.bot,
+            callback.from_user,
+            LINE_PHOTO_ITEMS,
+            session["line_photos"],
+            LINE_RATING_QUESTION,
+            value,
+            label,
+        )
+    except TelegramBadRequest as e:
+        logger.exception("send_line_report failed")
+        await callback.message.answer(
+            "Не удалось отправить отчёт в группу. Проверьте бота в группе и ID (с минусом для супергруппы). "
+            f"{e}"
+        )
+        _reset_session(session)
+        await callback.answer()
+        return
+    except Exception as e:
+        logger.exception("send_line_report failed")
+        await callback.message.answer(f"Ошибка отправки отчёта: {e}")
+        _reset_session(session)
+        await callback.answer()
+        return
     await callback.message.answer("Лайн-чек отправлен в группу администратора. Спасибо!")
     _reset_session(session)
     await callback.answer()
@@ -401,14 +435,28 @@ async def on_text(message: Message, session: dict[str, Any]) -> None:
             session["step"] = len(answers)
             await _send_closing_text_prompt(message, session)
         else:
-            await send_closing_report(
-                message.bot,
-                message.from_user,
-                CLOSING_PHOTO_ITEMS,
-                session["closing_photos"],
-                CLOSING_TEXT_PROMPTS,
-                answers,
-            )
+            try:
+                await send_closing_report(
+                    message.bot,
+                    message.from_user,
+                    CLOSING_PHOTO_ITEMS,
+                    session["closing_photos"],
+                    CLOSING_TEXT_PROMPTS,
+                    answers,
+                )
+            except TelegramBadRequest as e:
+                logger.exception("send_closing_report failed")
+                await message.answer(
+                    "Не удалось отправить отчёт в группу. Проверьте бота в группе и ID (с минусом). "
+                    f"{e}"
+                )
+                _reset_session(session)
+                return
+            except Exception as e:
+                logger.exception("send_closing_report failed")
+                await message.answer(f"Ошибка отправки отчёта: {e}")
+                _reset_session(session)
+                return
             await message.answer("Отчёт по закрытию отправлен в группу администратора. Спасибо!")
             _reset_session(session)
         return

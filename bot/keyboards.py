@@ -1,6 +1,15 @@
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup, KeyboardButton, ReplyKeyboardMarkup
 
-from bot.content import BTN_CLOSING, BTN_LINE, BTN_OPENING, BTN_TECH, RATING_LABELS
+from bot.content import (
+    BTN_CLOSING,
+    BTN_INVOICES,
+    BTN_LINE,
+    BTN_MOVE,
+    BTN_OPENING,
+    BTN_TECH,
+    BTN_WRITE_OFF,
+    RATING_LABELS,
+)
 
 
 def main_menu_reply() -> ReplyKeyboardMarkup:
@@ -13,6 +22,11 @@ def main_menu_reply() -> ReplyKeyboardMarkup:
             [
                 KeyboardButton(text=BTN_LINE),
                 KeyboardButton(text=BTN_TECH),
+            ],
+            [
+                KeyboardButton(text=BTN_INVOICES),
+                KeyboardButton(text=BTN_MOVE),
+                KeyboardButton(text=BTN_WRITE_OFF),
             ],
         ],
         resize_keyboard=True,

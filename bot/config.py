@@ -32,6 +32,14 @@ if not BOT_TOKEN:
 
 ADMIN_GROUP_CHAT_ID = _parse_admin_group_chat_id()
 
+# Темы (message_thread_id) внутри супергруппы ADMIN_GROUP_CHAT_ID
+THREAD_OPENING = _parse_int("THREAD_OPENING")
+THREAD_CLOSING = _parse_int("THREAD_CLOSING")
+THREAD_LINE = _parse_int("THREAD_LINE")
+THREAD_INVOICES = _parse_int("THREAD_INVOICES")
+THREAD_MOVE = _parse_int("THREAD_MOVE")
+THREAD_WRITE_OFF = _parse_int("THREAD_WRITE_OFF")
+
 _data_dir = os.getenv("DATA_DIR", "").strip()
 if _data_dir:
     DATA_DIR = Path(_data_dir).resolve()

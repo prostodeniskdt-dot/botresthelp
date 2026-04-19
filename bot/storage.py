@@ -86,6 +86,11 @@ def default_session() -> dict[str, Any]:
         "line_photos": [],
         "line_rating": None,
         "tech_matches": [],
+        "invoices": {},
+        "invoice_photos": [],
+        "move": {},
+        "write_off": {},
+        "write_off_photo": None,
     }
 
 

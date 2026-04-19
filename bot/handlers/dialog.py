@@ -11,9 +11,12 @@ from aiogram.types import CallbackQuery, Message
 
 from bot.content import (
     BTN_CLOSING,
+    BTN_INVOICES,
     BTN_LINE,
+    BTN_MOVE,
     BTN_OPENING,
     BTN_TECH,
+    BTN_WRITE_OFF,
     CLOSING_PHOTO_ITEMS,
     CLOSING_TEXT_PROMPTS,
     LINE_PHOTO_ITEMS,
@@ -31,19 +34,29 @@ from bot.keyboards import (
 )
 from bot.recipe_struct import recipe_to_html
 from bot.recipes_search import search_recipes
-from bot.reports import send_closing_report, send_line_report, send_opening_report
+from bot.reports import (
+    send_closing_report,
+    send_invoices_report,
+    send_line_report,
+    send_move_report,
+    send_opening_report,
+    send_write_off_report,
+)
 from bot.storage import default_session, load_recipes
 
 router = Router()
 logger = logging.getLogger(__name__)
 
-MENU_BUTTONS = {BTN_OPENING, BTN_CLOSING, BTN_LINE, BTN_TECH}
+MENU_BUTTONS = {BTN_OPENING, BTN_CLOSING, BTN_LINE, BTN_TECH, BTN_INVOICES, BTN_MOVE, BTN_WRITE_OFF}
 
 FLOW_MENU_MAP: dict[str, str] = {
     BTN_OPENING: "opening",
     BTN_CLOSING: "closing",
     BTN_LINE: "line",
     BTN_TECH: "tech",
+    BTN_INVOICES: "invoices",
+    BTN_MOVE: "move",
+    BTN_WRITE_OFF: "write_off",
 }
 
 CURRENT_FLOW_GROUP: dict[str, str | None] = {
@@ -54,6 +67,18 @@ CURRENT_FLOW_GROUP: dict[str, str | None] = {
     "line_photo": "line",
     "line_rating": "line",
     "tech": "tech",
+    "invoices_product": "invoices",
+    "invoices_supplier": "invoices",
+    "invoices_date": "invoices",
+    "invoices_photos": "invoices",
+    "move_what": "move",
+    "move_why": "move",
+    "move_date": "move",
+    "move_from_to": "move",
+    "write_off_what": "write_off",
+    "write_off_why": "write_off",
+    "write_off_date": "write_off",
+    "write_off_photo": "write_off",
 }
 
 
@@ -71,6 +96,18 @@ def _flow_label(flow: str) -> str:
         "line_photo": "лайн-чек",
         "line_rating": "лайн-чек (оценка)",
         "tech": "тех-карты",
+        "invoices_product": "накладные",
+        "invoices_supplier": "накладные",
+        "invoices_date": "накладные",
+        "invoices_photos": "накладные (фото)",
+        "move_what": "перемещение",
+        "move_why": "перемещение",
+        "move_date": "перемещение",
+        "move_from_to": "перемещение",
+        "write_off_what": "списание",
+        "write_off_why": "списание",
+        "write_off_date": "списание",
+        "write_off_photo": "списание (фото)",
     }.get(flow, flow)
 
 
@@ -136,6 +173,47 @@ async def _send_tech_prompt(message: Message) -> None:
     )
 
 
+async def _send_invoices_prompt(message: Message, session: dict[str, Any]) -> None:
+    flow = session.get("flow")
+    if flow == "invoices_product":
+        await message.answer("Так-Так что у нас приехало?", reply_markup=main_menu_reply())
+    elif flow == "invoices_supplier":
+        await message.answer("От какого поставщика?", reply_markup=main_menu_reply())
+    elif flow == "invoices_date":
+        await message.answer("А какое сегодня число?", reply_markup=main_menu_reply())
+    elif flow == "invoices_photos":
+        got = len(session.get("invoice_photos") or [])
+        await message.answer(
+            "Отправь мне две фото накладных. Фото с наименованием, и фото с печатью и подписью"
+            + (f"\n\nПринято фото: {got}/2" if got else ""),
+            reply_markup=main_menu_reply(),
+        )
+
+
+async def _send_move_prompt(message: Message, session: dict[str, Any]) -> None:
+    flow = session.get("flow")
+    if flow == "move_what":
+        await message.answer("Так-Так что хочешь переместить?", reply_markup=main_menu_reply())
+    elif flow == "move_why":
+        await message.answer("Зачем?", reply_markup=main_menu_reply())
+    elif flow == "move_date":
+        await message.answer("А какое сегодня число?", reply_markup=main_menu_reply())
+    elif flow == "move_from_to":
+        await message.answer("Откуда и Куда", reply_markup=main_menu_reply())
+
+
+async def _send_write_off_prompt(message: Message, session: dict[str, Any]) -> None:
+    flow = session.get("flow")
+    if flow == "write_off_what":
+        await message.answer("Так-Так что хочешь списать?", reply_markup=main_menu_reply())
+    elif flow == "write_off_why":
+        await message.answer("Зачем?", reply_markup=main_menu_reply())
+    elif flow == "write_off_date":
+        await message.answer("А какое сегодня число?", reply_markup=main_menu_reply())
+    elif flow == "write_off_photo":
+        await message.answer("Отправь фото чека списания", reply_markup=main_menu_reply())
+
+
 async def _send_resume_notice(message: Message, session: dict[str, Any]) -> None:
     flow = session.get("flow", "idle")
     if flow == "idle":
@@ -156,6 +234,12 @@ async def _send_resume_notice(message: Message, session: dict[str, Any]) -> None
         await _send_line_rating(message, session)
     elif flow == "tech":
         await _send_tech_prompt(message)
+    elif flow.startswith("invoices_"):
+        await _send_invoices_prompt(message, session)
+    elif flow.startswith("move_"):
+        await _send_move_prompt(message, session)
+    elif flow.startswith("write_off_"):
+        await _send_write_off_prompt(message, session)
 
 
 @router.message(CommandStart())
@@ -206,6 +290,32 @@ async def _begin_tech(message: Message, session: dict[str, Any]) -> None:
     await _send_tech_prompt(message)
 
 
+async def _begin_invoices(message: Message, session: dict[str, Any]) -> None:
+    session["flow"] = "invoices_product"
+    session["step"] = 0
+    session["invoices"] = {}
+    session["invoice_photos"] = []
+    session["pending_switch"] = None
+    await _send_invoices_prompt(message, session)
+
+
+async def _begin_move(message: Message, session: dict[str, Any]) -> None:
+    session["flow"] = "move_what"
+    session["step"] = 0
+    session["move"] = {}
+    session["pending_switch"] = None
+    await _send_move_prompt(message, session)
+
+
+async def _begin_write_off(message: Message, session: dict[str, Any]) -> None:
+    session["flow"] = "write_off_what"
+    session["step"] = 0
+    session["write_off"] = {}
+    session["write_off_photo"] = None
+    session["pending_switch"] = None
+    await _send_write_off_prompt(message, session)
+
+
 def _requested_flow_from_menu(text: str) -> str | None:
     return FLOW_MENU_MAP.get(text.strip())
 
@@ -229,6 +339,12 @@ async def _handle_menu_press(message: Message, session: dict[str, Any], text: st
             await _begin_line(message, session)
         elif req == "tech":
             await _begin_tech(message, session)
+        elif req == "invoices":
+            await _begin_invoices(message, session)
+        elif req == "move":
+            await _begin_move(message, session)
+        elif req == "write_off":
+            await _begin_write_off(message, session)
         return True
 
     if cur == req:
@@ -246,6 +362,12 @@ async def _handle_menu_press(message: Message, session: dict[str, Any], text: st
                 await _send_line_rating(message, session)
         elif req == "tech":
             await _send_tech_prompt(message)
+        elif req == "invoices":
+            await _send_invoices_prompt(message, session)
+        elif req == "move":
+            await _send_move_prompt(message, session)
+        elif req == "write_off":
+            await _send_write_off_prompt(message, session)
         return True
 
     session["pending_switch"] = req
@@ -272,6 +394,12 @@ async def on_switch_yes(callback: CallbackQuery, session: dict[str, Any]) -> Non
         await _begin_line(callback.message, session)
     elif action == "tech":
         await _begin_tech(callback.message, session)
+    elif action == "invoices":
+        await _begin_invoices(callback.message, session)
+    elif action == "move":
+        await _begin_move(callback.message, session)
+    elif action == "write_off":
+        await _begin_write_off(callback.message, session)
     await callback.answer()
 
 
@@ -340,6 +468,73 @@ async def on_photo(message: Message, session: dict[str, Any]) -> None:
         else:
             session["flow"] = "line_rating"
             await _send_line_rating(message, session)
+        return
+
+    if flow == "invoices_photos":
+        photos = session.setdefault("invoice_photos", [])
+        photos.append(fid)
+        if len(photos) < 2:
+            await message.answer("Фото принято. Нужно ещё одно фото.", reply_markup=main_menu_reply())
+            await _send_invoices_prompt(message, session)
+            return
+        if not message.from_user:
+            return
+        inv = session.get("invoices") or {}
+        try:
+            await send_invoices_report(
+                message.bot,
+                message.from_user,
+                str(inv.get("product", "")),
+                str(inv.get("supplier", "")),
+                str(inv.get("date", "")),
+                photos[:2],
+            )
+        except TelegramBadRequest as e:
+            logger.exception("send_invoices_report failed")
+            await message.answer(
+                "Не удалось отправить отчёт в группу. Проверьте, что бот добавлен в группу и может писать. "
+                f"{e}"
+            )
+            _reset_session(session)
+            return
+        except Exception as e:
+            logger.exception("send_invoices_report failed")
+            await message.answer(f"Ошибка отправки отчёта: {e}")
+            _reset_session(session)
+            return
+        await message.answer("Спасибо, ваша накладная отправлена", reply_markup=main_menu_reply())
+        _reset_session(session)
+        return
+
+    if flow == "write_off_photo":
+        session["write_off_photo"] = fid
+        if not message.from_user:
+            return
+        wo = session.get("write_off") or {}
+        try:
+            await send_write_off_report(
+                message.bot,
+                message.from_user,
+                str(wo.get("what", "")),
+                str(wo.get("why", "")),
+                str(wo.get("date", "")),
+                fid,
+            )
+        except TelegramBadRequest as e:
+            logger.exception("send_write_off_report failed")
+            await message.answer(
+                "Не удалось отправить отчёт в группу. Проверьте, что бот добавлен в группу и может писать. "
+                f"{e}"
+            )
+            _reset_session(session)
+            return
+        except Exception as e:
+            logger.exception("send_write_off_report failed")
+            await message.answer(f"Ошибка отправки отчёта: {e}")
+            _reset_session(session)
+            return
+        await message.answer("Спасибо, списали", reply_markup=main_menu_reply())
+        _reset_session(session)
         return
 
     await message.answer("Сейчас фото не ожидается. Выберите действие в меню.")
@@ -460,6 +655,100 @@ async def on_text(message: Message, session: dict[str, Any]) -> None:
                 return
             await message.answer("Отчёт по закрытию отправлен в группу администратора. Спасибо!")
             _reset_session(session)
+        return
+
+    if flow == "invoices_product":
+        session.setdefault("invoices", {})["product"] = text
+        session["flow"] = "invoices_supplier"
+        await _send_invoices_prompt(message, session)
+        return
+
+    if flow == "invoices_supplier":
+        session.setdefault("invoices", {})["supplier"] = text
+        session["flow"] = "invoices_date"
+        await _send_invoices_prompt(message, session)
+        return
+
+    if flow == "invoices_date":
+        session.setdefault("invoices", {})["date"] = text
+        session["flow"] = "invoices_photos"
+        session["invoice_photos"] = []
+        await _send_invoices_prompt(message, session)
+        return
+
+    if flow == "invoices_photos":
+        await message.answer("Нужно отправить фото. Два фото: наименование и печать/подпись.")
+        return
+
+    if flow == "move_what":
+        session.setdefault("move", {})["what"] = text
+        session["flow"] = "move_why"
+        await _send_move_prompt(message, session)
+        return
+
+    if flow == "move_why":
+        session.setdefault("move", {})["why"] = text
+        session["flow"] = "move_date"
+        await _send_move_prompt(message, session)
+        return
+
+    if flow == "move_date":
+        session.setdefault("move", {})["date"] = text
+        session["flow"] = "move_from_to"
+        await _send_move_prompt(message, session)
+        return
+
+    if flow == "move_from_to":
+        session.setdefault("move", {})["from_to"] = text
+        if not message.from_user:
+            return
+        mv = session.get("move") or {}
+        try:
+            await send_move_report(
+                message.bot,
+                message.from_user,
+                str(mv.get("what", "")),
+                str(mv.get("why", "")),
+                str(mv.get("date", "")),
+                str(mv.get("from_to", "")),
+            )
+        except TelegramBadRequest as e:
+            logger.exception("send_move_report failed")
+            await message.answer(
+                "Не удалось отправить отчёт в группу. Проверьте, что бот добавлен в группу и может писать. "
+                f"{e}"
+            )
+            _reset_session(session)
+            return
+        except Exception as e:
+            logger.exception("send_move_report failed")
+            await message.answer(f"Ошибка отправки отчёта: {e}")
+            _reset_session(session)
+            return
+        await message.answer("Спасибо, переместили", reply_markup=main_menu_reply())
+        _reset_session(session)
+        return
+
+    if flow == "write_off_what":
+        session.setdefault("write_off", {})["what"] = text
+        session["flow"] = "write_off_why"
+        await _send_write_off_prompt(message, session)
+        return
+
+    if flow == "write_off_why":
+        session.setdefault("write_off", {})["why"] = text
+        session["flow"] = "write_off_date"
+        await _send_write_off_prompt(message, session)
+        return
+
+    if flow == "write_off_date":
+        session.setdefault("write_off", {})["date"] = text
+        session["flow"] = "write_off_photo"
+        await _send_write_off_prompt(message, session)
+        return
+
+    if flow == "write_off_photo":
+        await message.answer("Нужно отправить фото чека списания.")
         return
 
     if flow == "tech":

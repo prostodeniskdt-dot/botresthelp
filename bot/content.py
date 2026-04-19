@@ -54,6 +54,10 @@ BTN_CLOSING = "Чек-лист закрытия"
 BTN_LINE = "Лайн-чек"
 BTN_TECH = "Тех-карты"
 
+BTN_INVOICES = "Накладные"
+BTN_MOVE = "Перемещение"
+BTN_WRITE_OFF = "Списание"
+
 RATING_LABELS: dict[int, str] = {
     1: "1 — слабо",
     2: "2",

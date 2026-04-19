@@ -1,0 +1,7 @@
+# aiogram 3.24+ совместим с Python 3.14 (требуется Python >=3.10, <3.15).
+# Старый aiogram 3.15 тянул pydantic<2.10 → старый pydantic-core не собирался на Python 3.14.
+aiogram==3.24.0
+aiofiles>=23.2.1,<26.0
+python-dotenv>=1.0.1
+tzdata>=2024.1
+pydantic>=2.11.0,<2.13

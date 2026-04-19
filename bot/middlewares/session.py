@@ -3,8 +3,9 @@ from __future__ import annotations
 from typing import Any, Awaitable, Callable, Dict
 
 from aiogram import BaseMiddleware
-from aiogram.types import CallbackQuery, Message, TelegramObject
+from aiogram.types import TelegramObject
 
+from bot.middlewares._event import user_from_event
 from bot.storage import default_session, load_sessions, save_sessions
 
 
@@ -15,11 +16,8 @@ class SessionMiddleware(BaseMiddleware):
         event: TelegramObject,
         data: Dict[str, Any],
     ) -> Any:
-        user_id: int | None = None
-        if isinstance(event, Message):
-            user_id = event.from_user.id if event.from_user else None
-        elif isinstance(event, CallbackQuery):
-            user_id = event.from_user.id if event.from_user else None
+        user = user_from_event(event)
+        user_id = user.id if user else None
 
         if user_id is None:
             return await handler(event, data)

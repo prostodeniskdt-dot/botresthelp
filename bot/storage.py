@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import asyncio
 import json
+import logging
 import shutil
 from pathlib import Path
 from typing import Any
@@ -16,7 +17,14 @@ from bot.config import (
     SESSIONS_PATH,
 )
 
+logger = logging.getLogger(__name__)
+
 _file_lock = asyncio.Lock()
+_sessions_load_lock = asyncio.Lock()
+_sessions_cache: dict[str, dict[str, Any]] | None = None
+_session_locks: dict[str, asyncio.Lock] = {}
+_allowed_users_cache: tuple[float | None, list[dict[str, Any]]] | None = None
+_recipes_cache: tuple[float | None, list[dict[str, Any]]] | None = None
 
 
 def ensure_data_dir() -> None:
@@ -33,13 +41,26 @@ async def _atomic_write(path: Path, data: str) -> None:
 
 
 async def load_allowed_users() -> list[dict[str, Any]]:
+    global _allowed_users_cache
+
     ensure_data_dir()
     if not ALLOWED_USERS_PATH.exists():
+        _allowed_users_cache = (None, [])
         return []
+    mtime = ALLOWED_USERS_PATH.stat().st_mtime
+    if _allowed_users_cache and _allowed_users_cache[0] == mtime:
+        return _allowed_users_cache[1]
     async with aiofiles.open(ALLOWED_USERS_PATH, encoding="utf-8") as f:
         raw = await f.read()
-    data = json.loads(raw)
-    return list(data.get("users", []))
+    try:
+        data = json.loads(raw)
+    except json.JSONDecodeError:
+        logger.exception("allowed_users.json повреждён, whitelist временно пуст")
+        _allowed_users_cache = (mtime, [])
+        return []
+    users = list(data.get("users", []))
+    _allowed_users_cache = (mtime, users)
+    return users
 
 
 def user_allowed(user_id: int, username: str | None, rules: list[dict[str, Any]]) -> bool:
@@ -57,22 +78,51 @@ def user_allowed(user_id: int, username: str | None, rules: list[dict[str, Any]]
 
 
 async def load_sessions() -> dict[str, dict[str, Any]]:
-    ensure_data_dir()
-    if not SESSIONS_PATH.exists():
-        return {}
-    async with aiofiles.open(SESSIONS_PATH, encoding="utf-8") as f:
-        raw = await f.read()
-    if not raw.strip():
-        return {}
-    data = json.loads(raw)
-    return dict(data.get("sessions", {}))
+    global _sessions_cache
+
+    if _sessions_cache is not None:
+        return _sessions_cache
+
+    async with _sessions_load_lock:
+        if _sessions_cache is not None:
+            return _sessions_cache
+        ensure_data_dir()
+        if not SESSIONS_PATH.exists():
+            _sessions_cache = {}
+            return _sessions_cache
+        async with aiofiles.open(SESSIONS_PATH, encoding="utf-8") as f:
+            raw = await f.read()
+        if not raw.strip():
+            _sessions_cache = {}
+            return _sessions_cache
+        try:
+            data = json.loads(raw)
+        except json.JSONDecodeError:
+            backup = SESSIONS_PATH.with_suffix(SESSIONS_PATH.suffix + ".broken")
+            logger.exception("sessions.json повреждён, сохраняю копию в %s", backup)
+            SESSIONS_PATH.replace(backup)
+            _sessions_cache = {}
+            return _sessions_cache
+        _sessions_cache = dict(data.get("sessions", {}))
+        return _sessions_cache
 
 
 async def save_sessions(sessions: dict[str, dict[str, Any]]) -> None:
+    global _sessions_cache
+
     ensure_data_dir()
-    payload = json.dumps({"sessions": sessions}, ensure_ascii=False, indent=2)
     async with _file_lock:
+        _sessions_cache = sessions
+        payload = json.dumps({"sessions": sessions}, ensure_ascii=False, indent=2)
         await _atomic_write(SESSIONS_PATH, payload)
+
+
+def session_lock(key: str) -> asyncio.Lock:
+    lock = _session_locks.get(key)
+    if lock is None:
+        lock = asyncio.Lock()
+        _session_locks[key] = lock
+    return lock
 
 
 def default_session() -> dict[str, Any]:
@@ -95,10 +145,23 @@ def default_session() -> dict[str, Any]:
 
 
 async def load_recipes() -> list[dict[str, Any]]:
+    global _recipes_cache
+
     ensure_data_dir()
     if not RECIPES_PATH.exists():
+        _recipes_cache = (None, [])
         return []
+    mtime = RECIPES_PATH.stat().st_mtime
+    if _recipes_cache and _recipes_cache[0] == mtime:
+        return _recipes_cache[1]
     async with aiofiles.open(RECIPES_PATH, encoding="utf-8") as f:
         raw = await f.read()
-    data = json.loads(raw)
-    return list(data.get("recipes", []))
+    try:
+        data = json.loads(raw)
+    except json.JSONDecodeError:
+        logger.exception("recipes.json повреждён, поиск техкарт временно пуст")
+        _recipes_cache = (mtime, [])
+        return []
+    recipes = list(data.get("recipes", []))
+    _recipes_cache = (mtime, recipes)
+    return recipes

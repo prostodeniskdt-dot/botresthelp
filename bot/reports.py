@@ -1,10 +1,14 @@
 from __future__ import annotations
 
+import asyncio
 import html
+import logging
+from collections.abc import Awaitable, Callable
 from datetime import datetime
 from zoneinfo import ZoneInfo
 
 from aiogram import Bot
+from aiogram.exceptions import TelegramNetworkError, TelegramRetryAfter
 from aiogram.types import User
 
 from bot.config import (
@@ -18,6 +22,25 @@ from bot.config import (
 )
 
 MSK = ZoneInfo("Europe/Moscow")
+logger = logging.getLogger(__name__)
+
+
+async def _telegram_call(action: str, call: Callable[[], Awaitable[object]]) -> object:
+    delay = 1.0
+    for attempt in range(1, 4):
+        try:
+            return await call()
+        except TelegramRetryAfter as e:
+            wait = float(e.retry_after) + 0.5
+            logger.warning("%s rate limited, retry in %.1fs", action, wait)
+            await asyncio.sleep(wait)
+        except TelegramNetworkError:
+            if attempt == 3:
+                raise
+            logger.warning("%s network error, retry %s/3 in %.1fs", action, attempt, delay)
+            await asyncio.sleep(delay)
+            delay *= 2
+    raise RuntimeError(f"{action} failed after retries")
 
 
 def _user_line(user: User) -> str:
@@ -29,20 +52,26 @@ def _user_line(user: User) -> str:
 
 
 async def _send_admin_message(bot: Bot, text: str, thread_id: int) -> None:
-    await bot.send_message(
-        ADMIN_GROUP_CHAT_ID,
-        text,
-        parse_mode="HTML",
-        message_thread_id=thread_id,
+    await _telegram_call(
+        "send_admin_message",
+        lambda: bot.send_message(
+            ADMIN_GROUP_CHAT_ID,
+            text,
+            parse_mode="HTML",
+            message_thread_id=thread_id,
+        ),
     )
 
 
 async def _send_admin_photo(bot: Bot, file_id: str, caption: str, thread_id: int) -> None:
-    await bot.send_photo(
-        ADMIN_GROUP_CHAT_ID,
-        file_id,
-        caption=caption[:1024],
-        message_thread_id=thread_id,
+    await _telegram_call(
+        "send_admin_photo",
+        lambda: bot.send_photo(
+            ADMIN_GROUP_CHAT_ID,
+            file_id,
+            caption=caption[:1024],
+            message_thread_id=thread_id,
+        ),
     )
 
 

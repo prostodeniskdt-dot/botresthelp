@@ -7,7 +7,7 @@ from typing import Any
 from aiogram import F, Router
 from aiogram.exceptions import TelegramBadRequest
 from aiogram.filters import Command, CommandStart
-from aiogram.types import CallbackQuery, Message
+from aiogram.types import CallbackQuery, ErrorEvent, Message
 
 from bot.content import (
     BTN_CLOSING,
@@ -48,6 +48,11 @@ router = Router()
 logger = logging.getLogger(__name__)
 
 MENU_BUTTONS = {BTN_OPENING, BTN_CLOSING, BTN_LINE, BTN_TECH, BTN_INVOICES, BTN_MOVE, BTN_WRITE_OFF}
+
+
+@router.errors()
+async def on_error(event: ErrorEvent) -> None:
+    logger.error("Необработанная ошибка update", exc_info=event.exception)
 
 FLOW_MENU_MAP: dict[str, str] = {
     BTN_OPENING: "opening",
@@ -117,8 +122,24 @@ def _largest_photo_file_id(message: Message) -> str | None:
     return message.photo[-1].file_id
 
 
+def _step_index(session: dict[str, Any], total: int) -> int:
+    step = session.get("step", 0)
+    if not isinstance(step, int) or step < 0 or step >= total:
+        logger.warning("Некорректный шаг сценария: flow=%s step=%r total=%s", session.get("flow"), step, total)
+        session["step"] = 0
+        return 0
+    return step
+
+
+async def _safe_answer(message: Message, text: str, **kwargs: Any) -> None:
+    try:
+        await message.answer(text, **kwargs)
+    except Exception:
+        logger.exception("Не удалось отправить ответ пользователю")
+
+
 async def _send_opening_prompt(message: Message, session: dict[str, Any]) -> None:
-    i = session["step"]
+    i = _step_index(session, len(OPENING_ITEMS))
     text = OPENING_ITEMS[i]
     await message.answer(
         f"Пункт {i + 1}/{len(OPENING_ITEMS)}\n\n<b>{text}</b>\n\n{MSG_NEED_PHOTO}",
@@ -128,7 +149,7 @@ async def _send_opening_prompt(message: Message, session: dict[str, Any]) -> Non
 
 
 async def _send_closing_photo_prompt(message: Message, session: dict[str, Any]) -> None:
-    i = session["step"]
+    i = _step_index(session, len(CLOSING_PHOTO_ITEMS))
     text = CLOSING_PHOTO_ITEMS[i]
     await message.answer(
         f"Пункт {i + 1}/{len(CLOSING_PHOTO_ITEMS)}\n\n<b>{text}</b>\n\n{MSG_NEED_PHOTO}",
@@ -138,7 +159,7 @@ async def _send_closing_photo_prompt(message: Message, session: dict[str, Any]) 
 
 
 async def _send_closing_text_prompt(message: Message, session: dict[str, Any]) -> None:
-    i = session["step"]
+    i = _step_index(session, len(CLOSING_TEXT_PROMPTS))
     prompt = CLOSING_TEXT_PROMPTS[i]
     await message.answer(
         f"Текстовый вопрос {i + 1}/{len(CLOSING_TEXT_PROMPTS)}\n\n<b>{prompt}</b>\n\nОтветьте одним сообщением.",
@@ -148,7 +169,7 @@ async def _send_closing_text_prompt(message: Message, session: dict[str, Any]) -
 
 
 async def _send_line_photo_prompt(message: Message, session: dict[str, Any]) -> None:
-    i = session["step"]
+    i = _step_index(session, len(LINE_PHOTO_ITEMS))
     text = LINE_PHOTO_ITEMS[i]
     await message.answer(
         f"Пункт {i + 1}/{len(LINE_PHOTO_ITEMS)}\n\n<b>{text}</b>\n\n{MSG_NEED_PHOTO}",
@@ -431,17 +452,18 @@ async def on_photo(message: Message, session: dict[str, Any]) -> None:
                 await send_opening_report(message.bot, message.from_user, OPENING_ITEMS, session["opening"])
             except TelegramBadRequest as e:
                 logger.exception("send_opening_report failed")
-                await message.answer(
+                _reset_session(session)
+                await _safe_answer(
+                    message,
                     "Не удалось отправить отчёт в группу. Убедитесь, что бот добавлен в группу и может писать. "
                     "ID группы в переменных должен быть с минусом (например -1003927366109). "
                     f"Ошибка API: {e}"
                 )
-                _reset_session(session)
                 return
             except Exception as e:
                 logger.exception("send_opening_report failed")
-                await message.answer(f"Ошибка при отправке отчёта: {type(e).__name__}: {e}")
                 _reset_session(session)
+                await _safe_answer(message, f"Ошибка при отправке отчёта: {type(e).__name__}: {e}")
                 return
             await message.answer("Отчёт по открытию отправлен в группу администратора. Спасибо!")
             _reset_session(session)
@@ -491,16 +513,17 @@ async def on_photo(message: Message, session: dict[str, Any]) -> None:
             )
         except TelegramBadRequest as e:
             logger.exception("send_invoices_report failed")
-            await message.answer(
+            _reset_session(session)
+            await _safe_answer(
+                message,
                 "Не удалось отправить отчёт в группу. Проверьте, что бот добавлен в группу и может писать. "
                 f"{e}"
             )
-            _reset_session(session)
             return
         except Exception as e:
             logger.exception("send_invoices_report failed")
-            await message.answer(f"Ошибка отправки отчёта: {e}")
             _reset_session(session)
+            await _safe_answer(message, f"Ошибка отправки отчёта: {e}")
             return
         await message.answer("Спасибо, ваша накладная отправлена", reply_markup=main_menu_reply())
         _reset_session(session)
@@ -522,16 +545,17 @@ async def on_photo(message: Message, session: dict[str, Any]) -> None:
             )
         except TelegramBadRequest as e:
             logger.exception("send_write_off_report failed")
-            await message.answer(
+            _reset_session(session)
+            await _safe_answer(
+                message,
                 "Не удалось отправить отчёт в группу. Проверьте, что бот добавлен в группу и может писать. "
                 f"{e}"
             )
-            _reset_session(session)
             return
         except Exception as e:
             logger.exception("send_write_off_report failed")
-            await message.answer(f"Ошибка отправки отчёта: {e}")
             _reset_session(session)
+            await _safe_answer(message, f"Ошибка отправки отчёта: {e}")
             return
         await message.answer("Спасибо, списали", reply_markup=main_menu_reply())
         _reset_session(session)
@@ -567,17 +591,18 @@ async def on_line_rate(callback: CallbackQuery, session: dict[str, Any]) -> None
         )
     except TelegramBadRequest as e:
         logger.exception("send_line_report failed")
-        await callback.message.answer(
+        _reset_session(session)
+        await _safe_answer(
+            callback.message,
             "Не удалось отправить отчёт в группу. Проверьте бота в группе и ID (с минусом для супергруппы). "
             f"{e}"
         )
-        _reset_session(session)
         await callback.answer()
         return
     except Exception as e:
         logger.exception("send_line_report failed")
-        await callback.message.answer(f"Ошибка отправки отчёта: {e}")
         _reset_session(session)
+        await _safe_answer(callback.message, f"Ошибка отправки отчёта: {e}")
         await callback.answer()
         return
     await callback.message.answer("Лайн-чек отправлен в группу администратора. Спасибо!")
@@ -593,7 +618,11 @@ async def on_tech_pick(callback: CallbackQuery, session: dict[str, Any]) -> None
     if not callback.data or not callback.message:
         await callback.answer()
         return
-    idx = int(callback.data.split(":", 1)[1])
+    try:
+        idx = int(callback.data.split(":", 1)[1])
+    except (ValueError, IndexError):
+        await callback.answer("Устаревший выбор, введите запрос снова.", show_alert=True)
+        return
     matches = session.get("tech_matches") or []
     if idx < 0 or idx >= len(matches):
         await callback.answer("Устаревший выбор, введите запрос снова.", show_alert=True)
@@ -642,16 +671,17 @@ async def on_text(message: Message, session: dict[str, Any]) -> None:
                 )
             except TelegramBadRequest as e:
                 logger.exception("send_closing_report failed")
-                await message.answer(
+                _reset_session(session)
+                await _safe_answer(
+                    message,
                     "Не удалось отправить отчёт в группу. Проверьте бота в группе и ID (с минусом). "
                     f"{e}"
                 )
-                _reset_session(session)
                 return
             except Exception as e:
                 logger.exception("send_closing_report failed")
-                await message.answer(f"Ошибка отправки отчёта: {e}")
                 _reset_session(session)
+                await _safe_answer(message, f"Ошибка отправки отчёта: {e}")
                 return
             await message.answer("Отчёт по закрытию отправлен в группу администратора. Спасибо!")
             _reset_session(session)
@@ -714,16 +744,17 @@ async def on_text(message: Message, session: dict[str, Any]) -> None:
             )
         except TelegramBadRequest as e:
             logger.exception("send_move_report failed")
-            await message.answer(
+            _reset_session(session)
+            await _safe_answer(
+                message,
                 "Не удалось отправить отчёт в группу. Проверьте, что бот добавлен в группу и может писать. "
                 f"{e}"
             )
-            _reset_session(session)
             return
         except Exception as e:
             logger.exception("send_move_report failed")
-            await message.answer(f"Ошибка отправки отчёта: {e}")
             _reset_session(session)
+            await _safe_answer(message, f"Ошибка отправки отчёта: {e}")
             return
         await message.answer("Спасибо, переместили", reply_markup=main_menu_reply())
         _reset_session(session)

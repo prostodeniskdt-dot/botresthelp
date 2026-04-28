@@ -6,7 +6,7 @@ from aiogram import BaseMiddleware
 from aiogram.types import TelegramObject
 
 from bot.middlewares._event import user_from_event
-from bot.storage import default_session, load_sessions, save_sessions, session_lock
+from bot.storage import default_session, load_sessions, mark_sessions_dirty, session_lock
 
 
 def _normalize_session(session: dict[str, Any]) -> dict[str, Any]:
@@ -46,4 +46,4 @@ class SessionMiddleware(BaseMiddleware):
             try:
                 return await handler(event, data)
             finally:
-                await save_sessions(sessions)
+                mark_sessions_dirty()

@@ -10,6 +10,7 @@ from bot.config import ADMIN_GROUP_CHAT_ID, BOT_TOKEN
 from bot.handlers import setup_router
 from bot.middlewares.auth import AuthMiddleware
 from bot.middlewares.session import SessionMiddleware
+from bot.storage import flush_sessions
 
 logger = logging.getLogger(__name__)
 
@@ -46,6 +47,10 @@ async def main() -> None:
         logger.exception("Telegram API недоступен или отвечает с таймаутом")
         raise
     finally:
+        try:
+            await flush_sessions()
+        except Exception:
+            logger.exception("Не удалось сбросить sessions.json перед выходом")
         await bot.session.close()
 
 

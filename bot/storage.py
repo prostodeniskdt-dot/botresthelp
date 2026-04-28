@@ -25,6 +25,9 @@ _sessions_cache: dict[str, dict[str, Any]] | None = None
 _session_locks: dict[str, asyncio.Lock] = {}
 _allowed_users_cache: tuple[float | None, list[dict[str, Any]]] | None = None
 _recipes_cache: tuple[float | None, list[dict[str, Any]]] | None = None
+_sessions_dirty = False
+_flush_task: asyncio.Task[None] | None = None
+_flush_delay_s = 1.0
 
 
 def ensure_data_dir() -> None:
@@ -115,6 +118,35 @@ async def save_sessions(sessions: dict[str, dict[str, Any]]) -> None:
         _sessions_cache = sessions
         payload = json.dumps({"sessions": sessions}, ensure_ascii=False, indent=2)
         await _atomic_write(SESSIONS_PATH, payload)
+
+
+def mark_sessions_dirty() -> None:
+    global _sessions_dirty, _flush_task
+
+    _sessions_dirty = True
+    if _flush_task is None or _flush_task.done():
+        _flush_task = asyncio.create_task(_flush_sessions_later())
+
+
+async def _flush_sessions_later() -> None:
+    await asyncio.sleep(_flush_delay_s)
+    await flush_sessions()
+
+
+async def flush_sessions() -> None:
+    global _sessions_dirty, _flush_task
+
+    if not _sessions_dirty:
+        return
+    sessions = await load_sessions()
+    async with _file_lock:
+        if not _sessions_dirty:
+            return
+        ensure_data_dir()
+        payload = json.dumps({"sessions": sessions}, ensure_ascii=False, indent=2)
+        await _atomic_write(SESSIONS_PATH, payload)
+        _sessions_dirty = False
+    _flush_task = None
 
 
 def session_lock(key: str) -> asyncio.Lock:

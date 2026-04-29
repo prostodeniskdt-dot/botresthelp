@@ -15,6 +15,7 @@ from bot.config import (
     DATA_DIR,
     RECIPES_PATH,
     SESSIONS_PATH,
+    SESSIONS_FLUSH_DELAY_S,
 )
 
 logger = logging.getLogger(__name__)
@@ -27,7 +28,7 @@ _allowed_users_cache: tuple[float | None, list[dict[str, Any]]] | None = None
 _recipes_cache: tuple[float | None, list[dict[str, Any]]] | None = None
 _sessions_dirty = False
 _flush_task: asyncio.Task[None] | None = None
-_flush_delay_s = 1.0
+_flush_delay_s = float(SESSIONS_FLUSH_DELAY_S)
 
 
 def ensure_data_dir() -> None:

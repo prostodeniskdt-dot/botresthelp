@@ -1,12 +1,21 @@
 import asyncio
 import logging
 
+from aiohttp import ClientTimeout
 from aiogram import Bot, Dispatcher
 from aiogram.client.default import DefaultBotProperties
+from aiogram.client.session.aiohttp import AiohttpSession
 from aiogram.enums import ParseMode
 from aiogram.exceptions import TelegramConflictError, TelegramNetworkError
 
-from bot.config import ADMIN_GROUP_CHAT_ID, BOT_TOKEN
+from bot.config import (
+    ADMIN_GROUP_CHAT_ID,
+    BOT_TOKEN,
+    POLLING_TIMEOUT_S,
+    TELEGRAM_CONNECT_TIMEOUT_S,
+    TELEGRAM_POOL_LIMIT,
+    TELEGRAM_REQUEST_TIMEOUT_S,
+)
 from bot.handlers import setup_router
 from bot.middlewares.auth import AuthMiddleware
 from bot.middlewares.session import SessionMiddleware
@@ -20,7 +29,18 @@ async def main() -> None:
         level=logging.INFO,
         format="%(asctime)s %(levelname)s %(name)s %(message)s",
     )
-    bot = Bot(token=BOT_TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
+    session = AiohttpSession(
+        timeout=ClientTimeout(
+            total=float(TELEGRAM_REQUEST_TIMEOUT_S),
+            connect=float(TELEGRAM_CONNECT_TIMEOUT_S),
+        ),
+        limit=int(TELEGRAM_POOL_LIMIT),
+    )
+    bot = Bot(
+        token=BOT_TOKEN,
+        default=DefaultBotProperties(parse_mode=ParseMode.HTML),
+        session=session,
+    )
     try:
         me = await bot.get_me()
         logger.info(
@@ -39,7 +59,11 @@ async def main() -> None:
         dp.update.middleware(AuthMiddleware())
         dp.update.middleware(SessionMiddleware())
         dp.include_router(setup_router())
-        await dp.start_polling(bot, allowed_updates=dp.resolve_used_update_types())
+        await dp.start_polling(
+            bot,
+            allowed_updates=dp.resolve_used_update_types(),
+            polling_timeout=int(POLLING_TIMEOUT_S),
+        )
     except TelegramConflictError:
         logger.exception("Polling conflict: уже запущен другой экземпляр бота с этим BOT_TOKEN")
         raise

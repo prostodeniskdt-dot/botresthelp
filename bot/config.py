@@ -18,6 +18,15 @@ def _parse_int(name: str, *, default: int | None = None) -> int:
     return int(raw)
 
 
+def _parse_float(name: str, *, default: float | None = None) -> float:
+    raw = os.getenv(name, "").strip().replace(",", ".")
+    if not raw:
+        if default is None:
+            raise RuntimeError(f"Переменная окружения {name} не задана")
+        return default
+    return float(raw)
+
+
 def _parse_admin_group_chat_id() -> int:
     """ID группы/супергруппы для Bot API — всегда отрицательный. Частая ошибка: вставить число без минуса."""
     raw = os.getenv("ADMIN_GROUP_CHAT_ID", "").strip()
@@ -43,6 +52,18 @@ THREAD_LINE = _parse_int("THREAD_LINE", default=63)
 THREAD_INVOICES = _parse_int("THREAD_INVOICES", default=24)
 THREAD_MOVE = _parse_int("THREAD_MOVE", default=26)
 THREAD_WRITE_OFF = _parse_int("THREAD_WRITE_OFF", default=28)
+
+# Сетевые настройки для Telegram API (чтобы переживать нестабильную сеть на хостинге).
+# Можно переопределить в Timeweb env.
+TELEGRAM_CONNECT_TIMEOUT_S = _parse_float("TELEGRAM_CONNECT_TIMEOUT_S", default=10.0)
+TELEGRAM_REQUEST_TIMEOUT_S = _parse_float("TELEGRAM_REQUEST_TIMEOUT_S", default=75.0)
+TELEGRAM_POOL_LIMIT = _parse_int("TELEGRAM_POOL_LIMIT", default=100)
+
+# Настройки polling.
+POLLING_TIMEOUT_S = _parse_int("POLLING_TIMEOUT_S", default=30)
+
+# Как часто сбрасывать sessions.json на диск (debounce).
+SESSIONS_FLUSH_DELAY_S = _parse_float("SESSIONS_FLUSH_DELAY_S", default=1.0)
 
 _data_dir = os.getenv("DATA_DIR", "").strip()
 if _data_dir:

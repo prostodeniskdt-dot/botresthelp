@@ -27,6 +27,13 @@ def _parse_float(name: str, *, default: float | None = None) -> float:
     return float(raw)
 
 
+def _parse_bool(name: str, *, default: bool = False) -> bool:
+    raw = os.getenv(name, "").strip().lower()
+    if not raw:
+        return default
+    return raw in {"1", "true", "yes", "y", "on"}
+
+
 def _parse_admin_group_chat_id() -> int:
     """ID группы/супергруппы для Bot API — всегда отрицательный. Частая ошибка: вставить число без минуса."""
     raw = os.getenv("ADMIN_GROUP_CHAT_ID", "").strip()
@@ -61,6 +68,21 @@ TELEGRAM_POOL_LIMIT = _parse_int("TELEGRAM_POOL_LIMIT", default=100)
 
 # Настройки polling.
 POLLING_TIMEOUT_S = _parse_int("POLLING_TIMEOUT_S", default=30)
+
+# Настройки FastAPI webhook.
+APP_HOST = os.getenv("APP_HOST", "0.0.0.0").strip() or "0.0.0.0"
+APP_PORT = _parse_int("PORT", default=8000)
+WEBHOOK_PATH = os.getenv("WEBHOOK_PATH", "/telegram/webhook").strip() or "/telegram/webhook"
+if not WEBHOOK_PATH.startswith("/"):
+    WEBHOOK_PATH = "/" + WEBHOOK_PATH
+
+WEBHOOK_BASE_URL = os.getenv("WEBHOOK_BASE_URL", "").strip().rstrip("/")
+WEBHOOK_URL = os.getenv("WEBHOOK_URL", "").strip()
+if not WEBHOOK_URL and WEBHOOK_BASE_URL:
+    WEBHOOK_URL = f"{WEBHOOK_BASE_URL}{WEBHOOK_PATH}"
+WEBHOOK_SECRET_TOKEN = os.getenv("WEBHOOK_SECRET_TOKEN", "").strip() or None
+WEBHOOK_DROP_PENDING_UPDATES = _parse_bool("WEBHOOK_DROP_PENDING_UPDATES", default=False)
+DELETE_WEBHOOK_ON_SHUTDOWN = _parse_bool("DELETE_WEBHOOK_ON_SHUTDOWN", default=False)
 
 # Как часто сбрасывать sessions.json на диск (debounce).
 SESSIONS_FLUSH_DELAY_S = _parse_float("SESSIONS_FLUSH_DELAY_S", default=1.0)

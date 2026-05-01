@@ -6,4 +6,5 @@ __pycache__/
 .pytest_cache/
 .mypy_cache/
 data/sessions.json
+data/shift_reminders.json
 *.log

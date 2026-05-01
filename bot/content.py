@@ -47,16 +47,17 @@ MSG_NEED_PHOTO = (
     "Без фото ответ не засчитывается."
 )
 
-MSG_MAIN_MENU_HINT = "Выберите действие кнопками ниже."
+MSG_MAIN_MENU_HINT = "Выберите действие кнопками ниже 👇 Или /menu и /cancel."
 
-BTN_OPENING = "Чек-лист открытия"
-BTN_CLOSING = "Чек-лист закрытия"
-BTN_LINE = "Лайн-чек"
-BTN_TECH = "Тех-карты"
+BTN_OPENING = "☀️ Чек-лист открытия"
+BTN_CLOSING = "🌙 Чек-лист закрытия"
+BTN_LINE = "🍸 Лайн-чек"
+BTN_TECH = "📖 Тех-карты"
 
-BTN_INVOICES = "Накладные"
-BTN_MOVE = "Перемещение"
-BTN_WRITE_OFF = "Списание"
+BTN_INVOICES = "🧾 Накладные"
+BTN_MOVE = "📦 Перемещение"
+BTN_WRITE_OFF = "🗑️ Списание"
+BTN_BACK = "⬅️ Назад"
 
 RATING_LABELS: dict[int, str] = {
     1: "1 — слабо",

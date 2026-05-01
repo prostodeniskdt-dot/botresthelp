@@ -1,4 +1,5 @@
 import asyncio
+import contextlib
 import logging
 
 from aiohttp import ClientTimeout
@@ -19,6 +20,7 @@ from bot.config import (
 from bot.handlers import setup_router
 from bot.middlewares.auth import AuthMiddleware
 from bot.middlewares.session import SessionMiddleware
+from bot.shift_reminders import reminder_loop
 from bot.storage import flush_sessions
 
 logger = logging.getLogger(__name__)
@@ -59,11 +61,17 @@ async def main() -> None:
         dp.update.middleware(AuthMiddleware())
         dp.update.middleware(SessionMiddleware())
         dp.include_router(setup_router())
-        await dp.start_polling(
-            bot,
-            allowed_updates=dp.resolve_used_update_types(),
-            polling_timeout=int(POLLING_TIMEOUT_S),
-        )
+        reminder_task = asyncio.create_task(reminder_loop(bot))
+        try:
+            await dp.start_polling(
+                bot,
+                allowed_updates=dp.resolve_used_update_types(),
+                polling_timeout=int(POLLING_TIMEOUT_S),
+            )
+        finally:
+            reminder_task.cancel()
+            with contextlib.suppress(asyncio.CancelledError):
+                await reminder_task
     except TelegramConflictError:
         logger.exception("Polling conflict: уже запущен другой экземпляр бота с этим BOT_TOKEN")
         raise

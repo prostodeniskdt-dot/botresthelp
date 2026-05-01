@@ -81,3 +81,27 @@ else:
     RECIPES_PATH = (ROOT / "data" / "recipes.json").resolve()
 
 ALLOWED_USERS_EXAMPLE_SOURCE = (ROOT / "data" / "allowed_users.example.json").resolve()
+
+REMINDER_TIMEZONE = "Europe/Moscow"
+
+# Список user_id админов (команды whitelist). Через запятую.
+_admin_ids_raw = os.getenv("ADMIN_USER_IDS", "1221087257").strip()
+ADMIN_USER_IDS = frozenset(
+    int(p)
+    for p in (x.strip() for x in _admin_ids_raw.split(","))
+    if p and p.removeprefix("-").isdigit()
+)
+if not ADMIN_USER_IDS:
+    raise RuntimeError("Задайте хотя бы один ADMIN_USER_IDS (числовой user_id)")
+
+# Тема для GoListBar (если нет отдельной — задайте THREAD_GOLIST в env).
+THREAD_GOLIST = _parse_int("THREAD_GOLIST", default=63)
+
+# Размер страницы выбора техкарты (кнопки).
+TECH_PAGE_SIZE = _parse_int("TECH_PAGE_SIZE", default=8)
+
+# Файл состояния напоминаний смены (в DATA_DIR).
+SHIFT_REMINDERS_PATH = DATA_DIR / "shift_reminders.json"
+
+# Интервал фонового цикла напоминаний, сек.
+REMINDER_LOOP_INTERVAL_S = _parse_float("REMINDER_LOOP_INTERVAL_S", default=55.0)

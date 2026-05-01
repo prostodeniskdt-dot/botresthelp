@@ -67,6 +67,11 @@ async def load_allowed_users() -> list[dict[str, Any]]:
     return users
 
 
+def invalidate_allowed_users_cache() -> None:
+    global _allowed_users_cache
+    _allowed_users_cache = None
+
+
 def user_allowed(user_id: int, username: str | None, rules: list[dict[str, Any]]) -> bool:
     for entry in rules:
         uid = entry.get("user_id")
@@ -169,6 +174,8 @@ def default_session() -> dict[str, Any]:
         "line_photos": [],
         "line_rating": None,
         "tech_matches": [],
+        "tech_pick_offset": 0,
+        "tech_last_query": "",
         "invoices": {},
         "invoice_photos": [],
         "move": {},

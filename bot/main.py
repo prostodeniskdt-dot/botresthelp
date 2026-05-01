@@ -1,8 +1,5 @@
-<<<<<<< HEAD
-=======
 import asyncio
 import contextlib
->>>>>>> local-merge
 import logging
 from contextlib import asynccontextmanager
 
@@ -65,6 +62,7 @@ async def lifespan(app: FastAPI):
     if not WEBHOOK_URL:
         raise RuntimeError("WEBHOOK_URL или WEBHOOK_BASE_URL не задан: webhook некуда регистрировать")
 
+    reminder_task: asyncio.Task[None] | None = None
     try:
         me = await bot.get_me()
         logger.info(
@@ -79,7 +77,6 @@ async def lifespan(app: FastAPI):
         except Exception:
             logger.exception("Не удалось проверить ADMIN_GROUP_CHAT_ID=%s", ADMIN_GROUP_CHAT_ID)
 
-<<<<<<< HEAD
         await bot.set_webhook(
             url=WEBHOOK_URL,
             allowed_updates=dp.resolve_used_update_types(),
@@ -87,31 +84,16 @@ async def lifespan(app: FastAPI):
             secret_token=WEBHOOK_SECRET_TOKEN,
         )
         logger.info("Webhook зарегистрирован: %s", WEBHOOK_URL)
-        yield
-=======
-        dp = Dispatcher()
-        dp.update.middleware(AuthMiddleware())
-        dp.update.middleware(SessionMiddleware())
-        dp.include_router(setup_router())
         reminder_task = asyncio.create_task(reminder_loop(bot))
-        try:
-            await dp.start_polling(
-                bot,
-                allowed_updates=dp.resolve_used_update_types(),
-                polling_timeout=int(POLLING_TIMEOUT_S),
-            )
-        finally:
-            reminder_task.cancel()
-            with contextlib.suppress(asyncio.CancelledError):
-                await reminder_task
-    except TelegramConflictError:
-        logger.exception("Polling conflict: уже запущен другой экземпляр бота с этим BOT_TOKEN")
-        raise
->>>>>>> local-merge
+        yield
     except TelegramNetworkError:
         logger.exception("Telegram API недоступен или отвечает с таймаутом")
         raise
     finally:
+        if reminder_task is not None:
+            reminder_task.cancel()
+            with contextlib.suppress(asyncio.CancelledError):
+                await reminder_task
         try:
             await flush_sessions()
         except Exception:

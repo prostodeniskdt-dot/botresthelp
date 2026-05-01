@@ -19,19 +19,16 @@
 | `ADMIN_GROUP_CHAT_ID` | ID группы (в @GetIDsBot для супергруппы вида **−100…**). Если случайно указали число **без минуса**, приложение само добавит минус. |
 | `DATA_DIR` | Каталог для `allowed_users.json` и `sessions.json` (на проде — **постоянный диск** Timeweb, см. ниже). Если не задан — `./data` от корня проекта |
 | `RECIPES_PATH` | Необязательно: путь к `recipes.json`. По умолчанию `data/recipes.json` из образа/репозитория (техкарты не обязаны жить на том же диске, что и сессии) |
-<<<<<<< HEAD
 | `WEBHOOK_BASE_URL` | Публичный HTTPS-адрес приложения без слеша на конце, например `https://example.com`. Из него будет собран webhook URL |
 | `WEBHOOK_URL` | Необязательно: полный URL webhook. Если задан, используется вместо `WEBHOOK_BASE_URL + WEBHOOK_PATH` |
 | `WEBHOOK_PATH` | Путь webhook endpoint. По умолчанию `/telegram/webhook` |
 | `WEBHOOK_SECRET_TOKEN` | Необязательно: секрет для проверки заголовка `X-Telegram-Bot-Api-Secret-Token` |
 | `PORT` | Порт FastAPI-приложения. Обычно задаётся хостингом, локально по умолчанию `8000` |
-=======
 | `THREAD_*` | Необязательно: `THREAD_OPENING`, `THREAD_CLOSING`, `THREAD_LINE`, … — см. `bot/config.py` (темы в админ-супергруппе) |
 | `THREAD_GOLIST` | Тема для напоминаний GoListBar в 14:00 и 19:00 (по умолчанию равна `THREAD_LINE` — при необходимости задайте отдельный id темы) |
 | `ADMIN_USER_IDS` | `user_id` через запятую — кто может команды whitelist (`/staff_list`, `/staff_add`, `/staff_remove`). По умолчанию `1221087257` |
 | `TECH_PAGE_SIZE` | Сколько кнопок техкарт на странице (листание «Стр. ▶️»). По умолчанию `8` |
 | `REMINDER_LOOP_INTERVAL_S` | Пауза фонового цикла напоминаний смены (~минута). По умолчанию `55` |
->>>>>>> local-merge
 
 ## Сотрудники (whitelist)
 

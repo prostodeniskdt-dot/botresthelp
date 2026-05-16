@@ -22,11 +22,19 @@ async def apply_back(message: Message, session: dict[str, Any]) -> bool:
         return True
 
     if flow == "opening":
-        if session.get("step", 0) <= 0 or not session.get("opening"):
+        buf = session.get("opening_item_photos") or []
+        if buf:
+            buf.pop()
+            session["opening_item_photos"] = buf
+            await send_opening_prompt(message, session)
+            return True
+        if session.get("step", 0) <= 0 and not session.get("opening"):
             await message.answer("Вы на первом пункте открытия — дальше только /cancel.")
             return True
-        session["opening"].pop()
+        if session.get("opening"):
+            session["opening"].pop()
         session["step"] = max(0, int(session.get("step", 0)) - 1)
+        session["opening_item_photos"] = []
         await send_opening_prompt(message, session)
         return True
 

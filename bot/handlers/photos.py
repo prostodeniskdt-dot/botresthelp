@@ -6,7 +6,12 @@ from typing import Any
 from aiogram import F, Router
 from aiogram.types import Message
 
-from bot.content import CLOSING_PHOTO_ITEMS, LINE_PHOTO_ITEMS, OPENING_ITEMS
+from bot.content import (
+    CLOSING_PHOTO_ITEMS,
+    LINE_PHOTO_ITEMS,
+    OPENING_ITEMS,
+    opening_photos_required,
+)
 from bot.handlers.helpers import largest_photo_file_id
 from bot.handlers.prompts import (
     send_closing_photo_prompt,
@@ -39,7 +44,21 @@ async def on_photo(message: Message, session: dict[str, Any]) -> None:
 
     if flow == "opening":
         i = session["step"]
-        session["opening"].append({"file_id": fid, "caption": message.caption or ""})
+        required = opening_photos_required(i)
+        buf = session.setdefault("opening_item_photos", [])
+        buf.append({"file_id": fid, "caption": message.caption or ""})
+        if len(buf) < required:
+            await message.answer(
+                f"Фото принято ({len(buf)}/{required}). "
+                f"Нужно ещё {required - len(buf)} фото разных маркировок 📸",
+                reply_markup=main_menu_reply(),
+            )
+            return
+        if required > 1:
+            session["opening"].append({"photos": buf[:required]})
+        else:
+            session["opening"].append(buf[0])
+        session["opening_item_photos"] = []
         session["step"] = i + 1
         if session["step"] < len(OPENING_ITEMS):
             await send_opening_prompt(message, session)

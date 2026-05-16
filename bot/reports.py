@@ -90,11 +90,15 @@ async def send_opening_report(
     await _send_admin_message(bot, header, THREAD_OPENING)
 
     for i, (title, ph) in enumerate(zip(items, photos), start=1):
-        caption = f"{i}. {title}"
-        fid = ph.get("file_id")
-        if not fid:
-            continue
-        await _send_admin_photo(bot, fid, caption, THREAD_OPENING)
+        batch = ph.get("photos") or [ph]
+        for j, one in enumerate(batch, start=1):
+            caption = f"{i}. {title}"
+            if len(batch) > 1:
+                caption += f" (фото {j}/{len(batch)})"
+            fid = one.get("file_id")
+            if not fid:
+                continue
+            await _send_admin_photo(bot, fid, caption, THREAD_OPENING)
 
 
 async def send_closing_report(

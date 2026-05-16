@@ -63,6 +63,7 @@ async def begin_opening(message: Message, session: dict[str, Any]) -> None:
     session["flow"] = "opening"
     session["step"] = 0
     session["opening"] = []
+    session["opening_item_photos"] = []
     session["pending_switch"] = None
     await send_opening_prompt(message, session)
 

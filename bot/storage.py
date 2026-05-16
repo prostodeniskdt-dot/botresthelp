@@ -169,6 +169,7 @@ def default_session() -> dict[str, Any]:
         "step": 0,
         "pending_switch": None,
         "opening": [],
+        "opening_item_photos": [],
         "closing_photos": [],
         "closing_texts": [],
         "line_photos": [],

@@ -9,8 +9,10 @@ from bot.content import (
     CLOSING_TEXT_PROMPTS,
     LINE_PHOTO_ITEMS,
     LINE_RATING_QUESTION,
+    MSG_NEED_MARKING_PHOTOS,
     MSG_NEED_PHOTO,
     OPENING_ITEMS,
+    opening_photos_required,
 )
 from bot.handlers.helpers import flow_label, step_index
 from bot.keyboards import line_rating_inline, main_menu_reply
@@ -19,8 +21,16 @@ from bot.keyboards import line_rating_inline, main_menu_reply
 async def send_opening_prompt(message: Message, session: dict[str, Any]) -> None:
     i = step_index(session, len(OPENING_ITEMS))
     text = OPENING_ITEMS[i]
+    required = opening_photos_required(i)
+    got = len(session.get("opening_item_photos") or [])
+    if required > 1:
+        hint = MSG_NEED_MARKING_PHOTOS
+        if got:
+            hint += f"\n\nПринято фото: {got}/{required}"
+    else:
+        hint = MSG_NEED_PHOTO
     await message.answer(
-        f"Пункт {i + 1}/{len(OPENING_ITEMS)}\n\n<b>{text}</b>\n\n{MSG_NEED_PHOTO}",
+        f"Пункт {i + 1}/{len(OPENING_ITEMS)}\n\n<b>{text}</b>\n\n{hint}",
         reply_markup=main_menu_reply(),
         parse_mode="HTML",
     )

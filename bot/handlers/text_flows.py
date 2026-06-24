@@ -13,6 +13,7 @@ from bot.content import (
     CLOSING_TEXT_PROMPTS,
 )
 from bot.handlers.constants import MENU_BUTTONS
+from bot.handlers.library import handle_library_search
 from bot.handlers.menu import handle_menu_press
 from bot.handlers.prompts import (
     send_closing_text_prompt,
@@ -41,6 +42,9 @@ async def on_text(message: Message, session: dict[str, Any]) -> None:
 
     if text in MENU_BUTTONS:
         await handle_menu_press(message, session, text)
+        return
+
+    if await handle_library_search(message, session, text):
         return
 
     flow = session.get("flow")

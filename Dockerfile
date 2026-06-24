@@ -11,6 +11,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY bot ./bot
 COPY data ./data
+COPY library_seed_data.json ./library_seed_data.json
 
 EXPOSE 8000
 

@@ -10,7 +10,8 @@ from aiogram import Router
 from aiogram.filters import BaseFilter, Command
 from aiogram.types import Message
 
-from bot.config import ALLOWED_USERS_PATH
+from bot.config import ALLOWED_USERS_PATH, LIBRARY_SEED_PATH
+from bot.library_data import import_library_from_path
 from bot.storage import ensure_data_dir, invalidate_allowed_users_cache
 
 router = Router()
@@ -177,3 +178,47 @@ async def staff_remove(message: Message) -> None:
         await message.answer("Не удалось записать файл 😕")
         return
     await message.answer("Запись удалена ✅")
+
+
+@router.message(Command("admin_import_library"), IsBotAdmin())
+async def admin_import_library(message: Message) -> None:
+    """Перезагрузить библиотеку из library_seed_data.json или из приложенного JSON."""
+    doc = message.document
+    if doc is not None:
+        suffix = (doc.file_name or "").lower()
+        if not suffix.endswith(".json"):
+            await message.answer("Нужен файл .json с полем library_items 📎")
+            return
+        try:
+            from bot.config import DATA_DIR
+
+            ensure_data_dir()
+            file = await message.bot.get_file(doc.file_id)
+            assert file.file_path
+            from io import BytesIO
+
+            buf = BytesIO()
+            await message.bot.download_file(file.file_path, buf)
+            import_path = DATA_DIR / "_library_import_tmp.json"
+            import_path.write_bytes(buf.getvalue())
+            count, name = await import_library_from_path(import_path)
+            import_path.unlink(missing_ok=True)
+        except Exception:
+            logger.exception("admin_import_library document failed")
+            await message.answer("Не удалось импортировать JSON 😕")
+            return
+        await message.answer(f"✅ Библиотека обновлена из файла: {count} позиций → {name}")
+        return
+
+    if not LIBRARY_SEED_PATH.is_file():
+        await message.answer(
+            "Приложите JSON-документ или положите library_seed_data.json в корень проекта 📎",
+        )
+        return
+    try:
+        count, name = await import_library_from_path(LIBRARY_SEED_PATH)
+    except Exception:
+        logger.exception("admin_import_library seed failed")
+        await message.answer("Не удалось импортировать из seed 😕")
+        return
+    await message.answer(f"✅ Библиотека обновлена из seed: {count} позиций → {name}")

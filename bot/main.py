@@ -36,6 +36,7 @@ from bot.config import (
     WEBHOOK_URL,
 )
 from bot.handlers import setup_router
+from bot.library_data import ensure_library_file, load_library_store
 from bot.middlewares.auth import AuthMiddleware
 from bot.middlewares.session import SessionMiddleware
 from bot.shift_reminders import reminder_loop
@@ -280,6 +281,13 @@ async def bootstrap_bot(
             me = await _telegram_with_retry("get_me", bot.get_me)
             _bot_ready = True
             logger.info("Бот запущен: @%s (id=%s)", me.username, me.id)
+
+            ensure_library_file()
+            try:
+                store = await load_library_store()
+                logger.info("Библиотека: %s позиций", len(store.items_by_id))
+            except Exception:
+                logger.exception("Не удалось загрузить библиотеку при старте")
 
             try:
                 chat = await bot.get_chat(ADMIN_GROUP_CHAT_ID)

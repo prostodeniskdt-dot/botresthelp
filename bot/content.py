@@ -75,6 +75,7 @@ BTN_OPENING = "☀️ Чек-лист открытия"
 BTN_CLOSING = "🌙 Чек-лист закрытия"
 BTN_LINE = "🍸 Лайн-чек"
 BTN_TECH = "📖 Тех-карты"
+BTN_LIBRARY = "📚 Библиотека"
 
 BTN_INVOICES = "🧾 Накладные"
 BTN_MOVE = "📦 Перемещение"

@@ -1,6 +1,7 @@
 from bot.content import (
     BTN_CLOSING,
     BTN_INVOICES,
+    BTN_LIBRARY,
     BTN_LINE,
     BTN_MOVE,
     BTN_OPENING,
@@ -13,6 +14,7 @@ MENU_BUTTONS = {
     BTN_CLOSING,
     BTN_LINE,
     BTN_TECH,
+    BTN_LIBRARY,
     BTN_INVOICES,
     BTN_MOVE,
     BTN_WRITE_OFF,
@@ -48,4 +50,5 @@ CURRENT_FLOW_GROUP: dict[str, str | None] = {
     "write_off_why": "write_off",
     "write_off_date": "write_off",
     "write_off_photo": "write_off",
+    "library_search": "library",
 }

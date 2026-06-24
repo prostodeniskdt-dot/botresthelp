@@ -37,6 +37,7 @@ def flow_label(flow: str) -> str:
         "write_off_why": "списание",
         "write_off_date": "списание",
         "write_off_photo": "списание (фото)",
+        "library_search": "поиск по библиотеке",
     }.get(flow, flow)
 
 

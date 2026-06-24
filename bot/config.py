@@ -138,6 +138,15 @@ THREAD_GOLIST = _parse_int("THREAD_GOLIST", default=63)
 # Размер страницы выбора техкарты (кнопки).
 TECH_PAGE_SIZE = _parse_int("TECH_PAGE_SIZE", default=8)
 
+# Библиотека меню: JSON с позициями и поиском.
+LIBRARY_SEED_PATH = (ROOT / "library_seed_data.json").resolve()
+_library = os.getenv("LIBRARY_PATH", "").strip()
+if _library:
+    LIBRARY_PATH = Path(_library).resolve()
+else:
+    LIBRARY_PATH = (DATA_DIR / "library.json").resolve()
+LIBRARY_PAGE_SIZE = _parse_int("LIBRARY_PAGE_SIZE", default=8)
+
 # Файл состояния напоминаний смены (в DATA_DIR).
 SHIFT_REMINDERS_PATH = DATA_DIR / "shift_reminders.json"
 

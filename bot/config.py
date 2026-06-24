@@ -66,6 +66,12 @@ TELEGRAM_CONNECT_TIMEOUT_S = _parse_float("TELEGRAM_CONNECT_TIMEOUT_S", default=
 TELEGRAM_REQUEST_TIMEOUT_S = _parse_float("TELEGRAM_REQUEST_TIMEOUT_S", default=75.0)
 TELEGRAM_POOL_LIMIT = _parse_int("TELEGRAM_POOL_LIMIT", default=100)
 
+# Режим получения обновлений: polling (long polling) или webhook.
+# На Timeweb webhook часто падает с «Connection timed out» — используйте polling (по умолчанию).
+_bot_update_mode = os.getenv("BOT_UPDATE_MODE", "polling").strip().lower()
+USE_POLLING = _bot_update_mode in ("polling", "poll", "long_polling")
+USE_WEBHOOK = not USE_POLLING
+
 # Настройки polling.
 POLLING_TIMEOUT_S = _parse_int("POLLING_TIMEOUT_S", default=30)
 

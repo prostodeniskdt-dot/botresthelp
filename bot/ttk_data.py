@@ -40,6 +40,9 @@ class TtkStore:
     categories: list[dict[str, Any]] = field(default_factory=list)
     items_by_id: dict[str, dict[str, Any]] = field(default_factory=dict)
     items_by_category: dict[str, list[dict[str, Any]]] = field(default_factory=dict)
+    items_by_index: dict[int, dict[str, Any]] = field(default_factory=dict)
+    item_index_by_id: dict[str, int] = field(default_factory=dict)
+    category_index_by_id: dict[str, int] = field(default_factory=dict)
     meta: dict[str, Any] = field(default_factory=dict)
 
     @property
@@ -56,8 +59,23 @@ class TtkStore:
                 return str(cat.get("title") or category_id)
         return category_id
 
+    def category_id_at(self, index: int) -> str:
+        if 0 <= index < len(self.categories):
+            return str(self.categories[index].get("id") or "")
+        return ""
+
+    def category_idx(self, category_id: str) -> int:
+        return self.category_index_by_id.get(category_id, 0)
+
     def items_in_category(self, category_id: str) -> list[dict[str, Any]]:
         return self.items_by_category.get(category_id, [])
+
+    def item_at(self, index: int) -> dict[str, Any] | None:
+        return self.items_by_index.get(index)
+
+    def item_idx(self, item_id: str) -> int | None:
+        idx = self.item_index_by_id.get(item_id)
+        return idx if idx is not None else None
 
 
 _store_cache: tuple[float | None, TtkStore | None] = (None, None)
@@ -85,6 +103,19 @@ def _build_store(data: dict[str, Any]) -> TtkStore:
         store.items_by_category.setdefault(cat_id, []).append(item)
     for cat_items in store.items_by_category.values():
         cat_items.sort(key=lambda x: str(x.get("title") or "").lower())
+    store.category_index_by_id = {
+        str(cat.get("id") or ""): idx for idx, cat in enumerate(store.categories)
+    }
+    ordered_items = sorted(
+        store.active_items,
+        key=lambda x: (str(x.get("category_id") or ""), str(x.get("title") or "").lower()),
+    )
+    store.items_by_index = {}
+    store.item_index_by_id = {}
+    for idx, item in enumerate(ordered_items):
+        item_id = str(item.get("id") or "")
+        store.items_by_index[idx] = item
+        store.item_index_by_id[item_id] = idx
     return store
 
 

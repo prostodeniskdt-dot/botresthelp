@@ -73,15 +73,6 @@ async def send_line_rating(message: Message, session: dict[str, Any]) -> None:
         parse_mode="HTML",
     )
 
-
-async def send_tech_prompt(message: Message) -> None:
-    await message.answer(
-        "Напишите название коктейля или ключевые слова. Например: <code>Мохито</code> или <code>ром мох</code>.",
-        reply_markup=main_menu_reply(),
-        parse_mode="HTML",
-    )
-
-
 async def send_invoices_prompt(message: Message, session: dict[str, Any]) -> None:
     flow = session.get("flow")
     if flow == "invoices_product":
@@ -147,8 +138,10 @@ async def send_resume_notice(message: Message, session: dict[str, Any]) -> None:
         await send_line_photo_prompt(message, session)
     elif flow == "line_rating":
         await send_line_rating(message, session)
-    elif flow == "tech":
-        await send_tech_prompt(message)
+    elif flow == "ttk_search":
+        await message.answer("Продолжите поиск ТТК текстом или откройте 📋 ТТК снова.")
+    elif flow == "library_search":
+        await message.answer("Продолжите поиск по библиотеке текстом или откройте 📚 Библиотеку снова.")
     elif isinstance(flow, str) and flow.startswith("invoices_"):
         await send_invoices_prompt(message, session)
     elif isinstance(flow, str) and flow.startswith("move_"):

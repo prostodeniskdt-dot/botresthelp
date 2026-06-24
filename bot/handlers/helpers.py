@@ -24,7 +24,8 @@ def flow_label(flow: str) -> str:
         "closing_text": "чек-лист закрытия (текст)",
         "line_photo": "лайн-чек",
         "line_rating": "лайн-чек (оценка)",
-        "tech": "тех-карты",
+        "ttk_search": "поиск по ТТК",
+        "library_search": "поиск по библиотеке",
         "invoices_product": "накладные",
         "invoices_supplier": "накладные",
         "invoices_date": "накладные",
@@ -37,7 +38,6 @@ def flow_label(flow: str) -> str:
         "write_off_why": "списание",
         "write_off_date": "списание",
         "write_off_photo": "списание (фото)",
-        "library_search": "поиск по библиотеке",
     }.get(flow, flow)
 
 

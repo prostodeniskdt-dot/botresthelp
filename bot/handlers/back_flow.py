@@ -125,10 +125,9 @@ async def apply_back(message: Message, session: dict[str, Any]) -> bool:
         await send_write_off_prompt(message, session)
         return True
 
-    if flow == "tech":
-        session["tech_matches"] = []
-        session["tech_pick_offset"] = 0
-        await message.answer("Поиск сброшен. Введите новый запрос по техкартам.")
+    if flow == "ttk_search":
+        session["flow"] = "idle"
+        await message.answer("Поиск ТТК сброшен. Откройте 📋 ТТК снова.")
         return True
 
     await message.answer("Назад для этого шага пока не настроен — используйте /cancel.")

@@ -10,8 +10,9 @@ from aiogram import Router
 from aiogram.filters import BaseFilter, Command
 from aiogram.types import Message
 
-from bot.config import ALLOWED_USERS_PATH, LIBRARY_SEED_PATH
+from bot.config import ALLOWED_USERS_PATH, LIBRARY_SEED_PATH, RECIPES_PATH, TTK_SEED_PATH
 from bot.library_data import import_library_from_path
+from bot.ttk_data import import_ttk_from_path, load_ttk_store
 from bot.storage import ensure_data_dir, invalidate_allowed_users_cache
 
 router = Router()
@@ -222,3 +223,91 @@ async def admin_import_library(message: Message) -> None:
         await message.answer("Не удалось импортировать из seed 😕")
         return
     await message.answer(f"✅ Библиотека обновлена из seed: {count} позиций → {name}")
+
+
+@router.message(Command("admin_import_ttk"), IsBotAdmin())
+async def admin_import_ttk(message: Message) -> None:
+    doc = message.document
+    if doc is not None:
+        suffix = (doc.file_name or "").lower()
+        if not suffix.endswith(".json"):
+            await message.answer("Нужен файл .json с полями categories и items 📎")
+            return
+        try:
+            from bot.config import DATA_DIR
+
+            ensure_data_dir()
+            file = await message.bot.get_file(doc.file_id)
+            assert file.file_path
+            from io import BytesIO
+
+            buf = BytesIO()
+            await message.bot.download_file(file.file_path, buf)
+            import_path = DATA_DIR / "_ttk_import_tmp.json"
+            import_path.write_bytes(buf.getvalue())
+            stats, name = await import_ttk_from_path(import_path)
+            import_path.unlink(missing_ok=True)
+        except Exception:
+            logger.exception("admin_import_ttk document failed")
+            await message.answer("Не удалось импортировать JSON 😕")
+            return
+        await message.answer(_format_ttk_import_result(stats, name))
+        return
+
+    if not TTK_SEED_PATH.is_file():
+        await message.answer(
+            "Приложите JSON-документ или положите ttk_seed_data.json в корень проекта 📎",
+        )
+        return
+    try:
+        stats, name = await import_ttk_from_path(TTK_SEED_PATH)
+    except Exception:
+        logger.exception("admin_import_ttk seed failed")
+        await message.answer("Не удалось импортировать из seed 😕")
+        return
+    await message.answer(_format_ttk_import_result(stats, name))
+
+
+def _format_ttk_import_result(stats: Any, filename: str) -> str:
+    empty = len(stats.empty_ingredients)
+    return (
+        "✅ ТТК обновлены\n"
+        f"Файл: {html.escape(filename)}\n"
+        f"Категорий создано: {stats.categories_created}\n"
+        f"Категорий обновлено: {stats.categories_updated}\n"
+        f"Позиций создано: {stats.items_created}\n"
+        f"Позиций обновлено: {stats.items_updated}\n"
+        f"Старых скрыто: {stats.items_archived}\n"
+        f"Пустых составов: {empty}"
+    )
+
+
+@router.message(Command("ttk_check"), IsBotAdmin())
+async def ttk_check(message: Message) -> None:
+    store = await load_ttk_store()
+    lines = [
+        "📋 <b>Проверка ТТК</b>",
+        "",
+        f"Разделов: {len(store.categories)}",
+        f"Позиций: {len(store.active_items)}",
+        "",
+    ]
+    errors = 0
+    for cat in store.categories:
+        cat_id = str(cat.get("id") or "")
+        count = len(store.items_in_category(cat_id))
+        expected = int(cat.get("items_count") or 0)
+        title = html.escape(str(cat.get("title") or cat_id))
+        lines.append(f"{title} — {count}")
+        if expected and count != expected:
+            errors += 1
+    updated = html.escape(str(store.meta.get("updated_at") or "не указана"))
+    lines.extend(
+        [
+            "",
+            f"Ошибки: {errors}",
+            f"Старые скрытые позиции: {store.archived_count}",
+            f"Дата обновления: {updated}",
+        ]
+    )
+    await message.answer("\n".join(lines), parse_mode="HTML")

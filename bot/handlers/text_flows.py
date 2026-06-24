@@ -1,20 +1,20 @@
 from __future__ import annotations
 
-import html
 import logging
 from typing import Any
 
 from aiogram import F, Router
 from aiogram.types import Message
 
-from bot.config import TECH_PAGE_SIZE
 from bot.content import (
     CLOSING_PHOTO_ITEMS,
     CLOSING_TEXT_PROMPTS,
 )
 from bot.handlers.constants import MENU_BUTTONS
 from bot.handlers.library import handle_library_search
+from bot.handlers.ttk import handle_ttk_search
 from bot.handlers.menu import handle_menu_press
+from bot.handlers.helpers import reset_session
 from bot.handlers.prompts import (
     send_closing_text_prompt,
     send_invoices_prompt,
@@ -22,13 +22,9 @@ from bot.handlers.prompts import (
     send_move_prompt,
     send_write_off_prompt,
 )
-from bot.keyboards import main_menu_reply, tech_pick_page_inline
-from bot.recipe_struct import recipe_to_html
+from bot.keyboards import main_menu_reply
 from bot.report_delivery import deliver_report
 from bot.reports import send_closing_report, send_move_report
-from bot.storage import load_recipes
-from bot.recipes_search import search_recipes
-from bot.handlers.helpers import reset_session
 
 router = Router()
 logger = logging.getLogger(__name__)
@@ -45,6 +41,9 @@ async def on_text(message: Message, session: dict[str, Any]) -> None:
         return
 
     if await handle_library_search(message, session, text):
+        return
+
+    if await handle_ttk_search(message, session, text):
         return
 
     flow = session.get("flow")
@@ -185,31 +184,6 @@ async def on_text(message: Message, session: dict[str, Any]) -> None:
 
     if flow == "write_off_photo":
         await message.answer("Нужно отправить фото чека списания 📸")
-        return
-
-    if flow == "tech":
-        recipes = await load_recipes()
-        matches = search_recipes(recipes, text)
-        session["tech_matches"] = matches
-        session["tech_last_query"] = text
-        session["tech_pick_offset"] = 0
-        if not matches:
-            await message.answer("Ничего не найдено. Попробуйте другое название или слова 🔍")
-            return
-        if len(matches) == 1:
-            r = matches[0]
-            name = str(r.get("name", ""))
-            body = recipe_to_html(r)
-            await message.answer(
-                f"<b>{html.escape(name)}</b>\n\n{body}",
-                parse_mode="HTML",
-                reply_markup=main_menu_reply(),
-            )
-            return
-        await message.answer(
-            "Несколько совпадений — выберите кнопкой (есть листание страниц 👇)",
-            reply_markup=tech_pick_page_inline(matches=matches, offset=0, page_size=TECH_PAGE_SIZE),
-        )
         return
 
     if flow == "line_rating":

@@ -4,6 +4,7 @@ from bot.handlers.admin import router as admin_router
 from bot.handlers.callbacks import router as callbacks_router
 from bot.handlers.errors import router as errors_router
 from bot.handlers.library import router as library_router
+from bot.handlers.ttk import router as ttk_router
 from bot.handlers.menu import router as menu_router
 from bot.handlers.photos import router as photos_router
 from bot.handlers.text_flows import router as text_router
@@ -15,6 +16,7 @@ def setup_router() -> Router:
     r.include_router(admin_router)
     r.include_router(menu_router)
     r.include_router(library_router)
+    r.include_router(ttk_router)
     r.include_router(callbacks_router)
     r.include_router(photos_router)
     r.include_router(text_router)

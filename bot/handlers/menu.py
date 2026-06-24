@@ -14,6 +14,7 @@ from bot.handlers.helpers import (
     requested_flow_from_menu,
     reset_session,
 )
+from bot.handlers.ttk import send_ttk_home
 from bot.handlers.prompts import (
     send_closing_photo_prompt,
     send_closing_text_prompt,
@@ -23,7 +24,6 @@ from bot.handlers.prompts import (
     send_move_prompt,
     send_opening_prompt,
     send_resume_notice,
-    send_tech_prompt,
     send_write_off_prompt,
 )
 from bot.keyboards import confirm_switch_inline, main_menu_reply
@@ -86,13 +86,11 @@ async def begin_line(message: Message, session: dict[str, Any]) -> None:
     await send_line_photo_prompt(message, session)
 
 
-async def begin_tech(message: Message, session: dict[str, Any]) -> None:
-    session["flow"] = "tech"
-    session["step"] = 0
+async def begin_ttk(message: Message, session: dict[str, Any]) -> None:
     session["pending_switch"] = None
-    session["tech_matches"] = []
-    session["tech_pick_offset"] = 0
-    await send_tech_prompt(message)
+    session.pop("ttk_back", None)
+    session.pop("ttk_search_results", None)
+    await send_ttk_home(message)
 
 
 async def begin_invoices(message: Message, session: dict[str, Any]) -> None:
@@ -134,8 +132,8 @@ async def handle_menu_press(message: Message, session: dict[str, Any], text: str
             await begin_closing(message, session)
         elif req == "line":
             await begin_line(message, session)
-        elif req == "tech":
-            await begin_tech(message, session)
+        elif req == "ttk":
+            await begin_ttk(message, session)
         elif req == "invoices":
             await begin_invoices(message, session)
         elif req == "move":
@@ -157,8 +155,8 @@ async def handle_menu_press(message: Message, session: dict[str, Any], text: str
                 await send_line_photo_prompt(message, session)
             else:
                 await send_line_rating(message, session)
-        elif req == "tech":
-            await send_tech_prompt(message)
+        elif req == "ttk":
+            await begin_ttk(message, session)
         elif req == "invoices":
             await send_invoices_prompt(message, session)
         elif req == "move":
@@ -189,8 +187,8 @@ async def on_switch_yes(callback: CallbackQuery, session: dict[str, Any]) -> Non
         await begin_closing(callback.message, session)
     elif action == "line":
         await begin_line(callback.message, session)
-    elif action == "tech":
-        await begin_tech(callback.message, session)
+    elif action == "ttk":
+        await begin_ttk(callback.message, session)
     elif action == "invoices":
         await begin_invoices(callback.message, session)
     elif action == "move":

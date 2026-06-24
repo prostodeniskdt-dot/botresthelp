@@ -37,6 +37,7 @@ from bot.config import (
 )
 from bot.handlers import setup_router
 from bot.library_data import ensure_library_file, load_library_store
+from bot.ttk_data import ensure_ttk_file, load_ttk_store
 from bot.middlewares.auth import AuthMiddleware
 from bot.middlewares.session import SessionMiddleware
 from bot.shift_reminders import reminder_loop
@@ -288,6 +289,17 @@ async def bootstrap_bot(
                 logger.info("Библиотека: %s позиций", len(store.items_by_id))
             except Exception:
                 logger.exception("Не удалось загрузить библиотеку при старте")
+
+            ensure_ttk_file()
+            try:
+                ttk_store = await load_ttk_store()
+                logger.info(
+                    "ТТК: %s активных позиций в %s разделах",
+                    len(ttk_store.active_items),
+                    len(ttk_store.categories),
+                )
+            except Exception:
+                logger.exception("Не удалось загрузить ТТК при старте")
 
             try:
                 chat = await bot.get_chat(ADMIN_GROUP_CHAT_ID)

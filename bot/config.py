@@ -147,6 +147,15 @@ else:
     LIBRARY_PATH = (DATA_DIR / "library.json").resolve()
 LIBRARY_PAGE_SIZE = _parse_int("LIBRARY_PAGE_SIZE", default=8)
 
+# ТТК: JSON с техкартами.
+TTK_SEED_PATH = (ROOT / "ttk_seed_data.json").resolve()
+_ttk = os.getenv("TTK_PATH", "").strip()
+if _ttk:
+    TTK_PATH = Path(_ttk).resolve()
+else:
+    TTK_PATH = (DATA_DIR / "ttk.json").resolve()
+TTK_PAGE_SIZE = _parse_int("TTK_PAGE_SIZE", default=10)
+
 # Файл состояния напоминаний смены (в DATA_DIR).
 SHIFT_REMINDERS_PATH = DATA_DIR / "shift_reminders.json"
 

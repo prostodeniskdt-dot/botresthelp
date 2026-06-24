@@ -1,0 +1,129 @@
+import os
+from pathlib import Path
+
+from dotenv import load_dotenv
+
+load_dotenv()
+
+ROOT = Path(__file__).resolve().parent.parent
+
+
+def _parse_int(name: str, *, default: int | None = None) -> int:
+    """Читает целое из env. Если переменной нет — использует default (для деплоя без лишних секретов)."""
+    raw = os.getenv(name, "").strip()
+    if not raw:
+        if default is None:
+            raise RuntimeError(f"Переменная окружения {name} не задана")
+        return default
+    return int(raw)
+
+
+def _parse_float(name: str, *, default: float | None = None) -> float:
+    raw = os.getenv(name, "").strip().replace(",", ".")
+    if not raw:
+        if default is None:
+            raise RuntimeError(f"Переменная окружения {name} не задана")
+        return default
+    return float(raw)
+
+
+def _parse_bool(name: str, *, default: bool = False) -> bool:
+    raw = os.getenv(name, "").strip().lower()
+    if not raw:
+        return default
+    return raw in {"1", "true", "yes", "y", "on"}
+
+
+def _parse_admin_group_chat_id() -> int:
+    """ID группы/супергруппы для Bot API — всегда отрицательный. Частая ошибка: вставить число без минуса."""
+    raw = os.getenv("ADMIN_GROUP_CHAT_ID", "").strip()
+    if not raw:
+        raise RuntimeError("Переменная окружения ADMIN_GROUP_CHAT_ID не задана")
+    val = int(raw)
+    if val > 0:
+        val = -val
+    return val
+
+
+BOT_TOKEN = os.getenv("BOT_TOKEN", "").strip()
+if not BOT_TOKEN:
+    raise RuntimeError("BOT_TOKEN не задан")
+
+ADMIN_GROUP_CHAT_ID = _parse_admin_group_chat_id()
+
+# Темы (message_thread_id) внутри супергруппы ADMIN_GROUP_CHAT_ID.
+# Значения по умолчанию — согласованные с темами в группе; можно переопределить в env.
+THREAD_OPENING = _parse_int("THREAD_OPENING", default=20)
+THREAD_CLOSING = _parse_int("THREAD_CLOSING", default=22)
+THREAD_LINE = _parse_int("THREAD_LINE", default=63)
+THREAD_INVOICES = _parse_int("THREAD_INVOICES", default=24)
+THREAD_MOVE = _parse_int("THREAD_MOVE", default=26)
+THREAD_WRITE_OFF = _parse_int("THREAD_WRITE_OFF", default=28)
+
+# Сетевые настройки для Telegram API (чтобы переживать нестабильную сеть на хостинге).
+# Можно переопределить в Timeweb env.
+TELEGRAM_CONNECT_TIMEOUT_S = _parse_float("TELEGRAM_CONNECT_TIMEOUT_S", default=10.0)
+TELEGRAM_REQUEST_TIMEOUT_S = _parse_float("TELEGRAM_REQUEST_TIMEOUT_S", default=75.0)
+TELEGRAM_POOL_LIMIT = _parse_int("TELEGRAM_POOL_LIMIT", default=100)
+
+# Настройки polling.
+POLLING_TIMEOUT_S = _parse_int("POLLING_TIMEOUT_S", default=30)
+
+# Настройки FastAPI webhook.
+APP_HOST = os.getenv("APP_HOST", "0.0.0.0").strip() or "0.0.0.0"
+APP_PORT = _parse_int("PORT", default=8000)
+WEBHOOK_PATH = os.getenv("WEBHOOK_PATH", "/telegram/webhook").strip() or "/telegram/webhook"
+if not WEBHOOK_PATH.startswith("/"):
+    WEBHOOK_PATH = "/" + WEBHOOK_PATH
+
+WEBHOOK_BASE_URL = os.getenv("WEBHOOK_BASE_URL", "").strip().rstrip("/")
+WEBHOOK_URL = os.getenv("WEBHOOK_URL", "").strip()
+if not WEBHOOK_URL and WEBHOOK_BASE_URL:
+    WEBHOOK_URL = f"{WEBHOOK_BASE_URL}{WEBHOOK_PATH}"
+WEBHOOK_SECRET_TOKEN = os.getenv("WEBHOOK_SECRET_TOKEN", "").strip() or None
+WEBHOOK_DROP_PENDING_UPDATES = _parse_bool("WEBHOOK_DROP_PENDING_UPDATES", default=False)
+DELETE_WEBHOOK_ON_SHUTDOWN = _parse_bool("DELETE_WEBHOOK_ON_SHUTDOWN", default=False)
+
+# Как часто сбрасывать sessions.json на диск (debounce).
+SESSIONS_FLUSH_DELAY_S = _parse_float("SESSIONS_FLUSH_DELAY_S", default=1.0)
+
+_data_dir = os.getenv("DATA_DIR", "").strip()
+if _data_dir:
+    DATA_DIR = Path(_data_dir).resolve()
+else:
+    DATA_DIR = (ROOT / "data").resolve()
+
+ALLOWED_USERS_PATH = DATA_DIR / "allowed_users.json"
+SESSIONS_PATH = DATA_DIR / "sessions.json"
+
+_recipes = os.getenv("RECIPES_PATH", "").strip()
+if _recipes:
+    RECIPES_PATH = Path(_recipes).resolve()
+else:
+    RECIPES_PATH = (ROOT / "data" / "recipes.json").resolve()
+
+ALLOWED_USERS_EXAMPLE_SOURCE = (ROOT / "data" / "allowed_users.example.json").resolve()
+
+REMINDER_TIMEZONE = "Europe/Moscow"
+
+# Список user_id админов (команды whitelist). Через запятую.
+_admin_ids_raw = os.getenv("ADMIN_USER_IDS", "1221087257").strip()
+ADMIN_USER_IDS = frozenset(
+    int(p)
+    for p in (x.strip() for x in _admin_ids_raw.split(","))
+    if p and p.removeprefix("-").isdigit()
+)
+if not ADMIN_USER_IDS:
+    raise RuntimeError("Задайте хотя бы один ADMIN_USER_IDS (числовой user_id)")
+
+# Тема для GoListBar (если нет отдельной — задайте THREAD_GOLIST в env).
+THREAD_GOLIST = _parse_int("THREAD_GOLIST", default=63)
+
+# Размер страницы выбора техкарты (кнопки).
+TECH_PAGE_SIZE = _parse_int("TECH_PAGE_SIZE", default=8)
+
+# Файл состояния напоминаний смены (в DATA_DIR).
+SHIFT_REMINDERS_PATH = DATA_DIR / "shift_reminders.json"
+
+# Интервал фонового цикла напоминаний, сек.
+REMINDER_LOOP_INTERVAL_S = _parse_float("REMINDER_LOOP_INTERVAL_S", default=55.0)

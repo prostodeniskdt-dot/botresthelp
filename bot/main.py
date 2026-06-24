@@ -4,7 +4,6 @@ import logging
 from contextlib import asynccontextmanager
 from typing import Any
 
-from aiohttp import ClientTimeout
 from aiogram import Bot, Dispatcher
 from aiogram.client.default import DefaultBotProperties
 from aiogram.client.session.aiohttp import AiohttpSession
@@ -21,7 +20,6 @@ from bot.config import (
     BOT_TOKEN,
     DELETE_WEBHOOK_ON_SHUTDOWN,
     POLLING_TIMEOUT_S,
-    TELEGRAM_CONNECT_TIMEOUT_S,
     TELEGRAM_POOL_LIMIT,
     TELEGRAM_REQUEST_TIMEOUT_S,
     USE_POLLING,
@@ -52,11 +50,10 @@ TELEGRAM_RETRY_DELAY_S = 3.0
 BOOTSTRAP_RETRY_DELAY_S = 15.0
 WEBHOOK_WATCHDOG_INTERVAL_S = 120.0
 
+# aiogram start_polling считает bot.session.timeout + polling_timeout.
+# Нужен числовой timeout (сек), иначе TypeError: ClientTimeout + int.
 session = AiohttpSession(
-    timeout=ClientTimeout(
-        total=float(TELEGRAM_REQUEST_TIMEOUT_S),
-        connect=float(TELEGRAM_CONNECT_TIMEOUT_S),
-    ),
+    timeout=float(TELEGRAM_REQUEST_TIMEOUT_S),
     limit=int(TELEGRAM_POOL_LIMIT),
 )
 bot = Bot(

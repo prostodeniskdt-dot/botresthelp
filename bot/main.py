@@ -76,6 +76,13 @@ _webhook_registered = False
 _update_tasks: set[asyncio.Task[None]] = set()
 _bootstrap_phase = "starting"
 _bootstrap_last_error: str | None = None
+_last_webhook_info: dict[str, Any] | None = None
+
+
+def _json_safe(value: Any) -> Any:
+    if isinstance(value, datetime):
+        return value.isoformat()
+    return value
 
 
 def _set_bootstrap_phase(phase: str, error: str | None = None) -> None:
@@ -83,6 +90,8 @@ def _set_bootstrap_phase(phase: str, error: str | None = None) -> None:
     _bootstrap_phase = phase
     if error is not None:
         _bootstrap_last_error = error
+    elif phase == "ready":
+        _bootstrap_last_error = None
 
 
 def _update_kinds(update: Update) -> list[str]:
@@ -118,7 +127,15 @@ async def _telegram_with_retry(description: str, coro_factory: Any) -> Any:
 
 
 async def _log_webhook_info() -> None:
+    global _last_webhook_info
+
     info = await bot.get_webhook_info()
+    _last_webhook_info = {
+        "url": info.url,
+        "pending_update_count": info.pending_update_count,
+        "last_error_message": info.last_error_message,
+        "last_error_date": _json_safe(info.last_error_date),
+    }
     logger.info(
         "Webhook info: url=%r pending=%s last_error_date=%s last_error=%s",
         info.url,
@@ -126,13 +143,22 @@ async def _log_webhook_info() -> None:
         info.last_error_date,
         info.last_error_message or "(нет)",
     )
+    if info.last_error_message:
+        logger.error(
+            "Telegram НЕ доставляет обновления на webhook: %s (pending=%s). "
+            "Проверьте доступность %s с интернета или обратитесь в поддержку Timeweb.",
+            info.last_error_message,
+            info.pending_update_count,
+            WEBHOOK_URL,
+        )
 
 
 async def _register_webhook() -> None:
     global _webhook_registered
 
     async with _webhook_lock:
-        _set_bootstrap_phase("webhook")
+        if not _bot_ready:
+            _set_bootstrap_phase("webhook")
         await bot.set_webhook(
             url=WEBHOOK_URL,
             allowed_updates=ALLOWED_UPDATES,
@@ -291,8 +317,8 @@ app = FastAPI(title="Mucara Telegram Bot", lifespan=lifespan)
 
 
 def _health_payload() -> dict[str, Any]:
-    return {
-        "ok": _bootstrap_phase in {"ready", "webhook", "telegram_api", "starting"},
+    payload: dict[str, Any] = {
+        "ok": _bot_ready and _webhook_registered,
         "bot_ready": _bot_ready,
         "webhook_registered": _webhook_registered,
         "webhook_url_configured": bool(WEBHOOK_URL),
@@ -301,6 +327,16 @@ def _health_payload() -> dict[str, Any]:
         "bootstrap_last_error": _bootstrap_last_error,
         "checked_at": datetime.now(UTC).isoformat(),
     }
+    if _last_webhook_info:
+        payload["telegram_delivery"] = {
+            "pending_update_count": _last_webhook_info.get("pending_update_count"),
+            "last_error_message": _last_webhook_info.get("last_error_message"),
+            "last_error_date": _last_webhook_info.get("last_error_date"),
+            "updates_reaching_server": not bool(_last_webhook_info.get("last_error_message")),
+        }
+        if _last_webhook_info.get("last_error_message"):
+            payload["ok"] = False
+    return payload
 
 
 @app.api_route("/health", methods=["GET", "HEAD"])
@@ -332,15 +368,29 @@ async def health_webhook() -> JSONResponse:
 
     try:
         info = await bot.get_webhook_info()
+        last_error_date = _json_safe(info.last_error_date)
+        delivery_ok = info.url == WEBHOOK_URL and not info.last_error_message
         payload.update(
             {
-                "ok": info.url == WEBHOOK_URL and not info.last_error_message,
+                "ok": delivery_ok,
                 "url": info.url,
                 "pending_update_count": info.pending_update_count,
                 "last_error_message": info.last_error_message,
-                "last_error_date": info.last_error_date,
+                "last_error_date": last_error_date,
+                "telegram_delivery": {
+                    "pending_update_count": info.pending_update_count,
+                    "last_error_message": info.last_error_message,
+                    "last_error_date": last_error_date,
+                    "updates_reaching_server": delivery_ok,
+                },
             }
         )
+        if info.last_error_message:
+            payload["hint"] = (
+                "Бот зарегистрирован, но Telegram не может POST-ить на ваш URL "
+                f"({info.last_error_message}). Обновления не доходят — бот молчит. "
+                "Нужна доступность URL с интернета или другой хостинг."
+            )
         return JSONResponse(payload, status_code=200)
     except Exception as exc:
         logger.exception("health_webhook failed")

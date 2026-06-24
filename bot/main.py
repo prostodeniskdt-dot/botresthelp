@@ -2,8 +2,10 @@ import asyncio
 import contextlib
 import logging
 from contextlib import asynccontextmanager
+from datetime import UTC, datetime
 from typing import Any
 
+from aiohttp import ClientTimeout
 from aiogram import Bot, Dispatcher
 from aiogram.client.default import DefaultBotProperties
 from aiogram.client.session.aiohttp import AiohttpSession
@@ -19,7 +21,9 @@ from bot.config import (
     APP_PORT,
     BOT_TOKEN,
     DELETE_WEBHOOK_ON_SHUTDOWN,
+    TELEGRAM_CONNECT_TIMEOUT_S,
     TELEGRAM_POOL_LIMIT,
+    TELEGRAM_PROXY,
     TELEGRAM_REQUEST_TIMEOUT_S,
     WEBHOOK_DROP_PENDING_UPDATES,
     WEBHOOK_MAX_CONNECTIONS,
@@ -41,17 +45,20 @@ logging.basicConfig(
     format="%(asctime)s %(levelname)s %(name)s %(message)s",
 )
 
-# reply-кнопки меню (message) и inline-кнопки (callback_query).
 ALLOWED_UPDATES = ["message", "edited_message", "callback_query"]
 
-TELEGRAM_CALL_RETRIES = 5
-TELEGRAM_RETRY_DELAY_S = 3.0
-BOOTSTRAP_RETRY_DELAY_S = 15.0
+TELEGRAM_CALL_RETRIES = 8
+TELEGRAM_RETRY_DELAY_S = 5.0
+BOOTSTRAP_RETRY_DELAY_S = 20.0
 
-# Числовой timeout: совместим с aiogram 3.24 (ClientTimeout ломает часть API).
 session = AiohttpSession(
-    timeout=float(TELEGRAM_REQUEST_TIMEOUT_S),
+    timeout=ClientTimeout(
+        total=float(TELEGRAM_REQUEST_TIMEOUT_S),
+        connect=float(TELEGRAM_CONNECT_TIMEOUT_S),
+        sock_connect=float(TELEGRAM_CONNECT_TIMEOUT_S),
+    ),
     limit=int(TELEGRAM_POOL_LIMIT),
+    proxy=TELEGRAM_PROXY,
 )
 bot = Bot(
     token=BOT_TOKEN,
@@ -67,6 +74,15 @@ _webhook_lock = asyncio.Lock()
 _bot_ready = False
 _webhook_registered = False
 _update_tasks: set[asyncio.Task[None]] = set()
+_bootstrap_phase = "starting"
+_bootstrap_last_error: str | None = None
+
+
+def _set_bootstrap_phase(phase: str, error: str | None = None) -> None:
+    global _bootstrap_phase, _bootstrap_last_error
+    _bootstrap_phase = phase
+    if error is not None:
+        _bootstrap_last_error = error
 
 
 def _update_kinds(update: Update) -> list[str]:
@@ -87,6 +103,7 @@ async def _telegram_with_retry(description: str, coro_factory: Any) -> Any:
             return await coro_factory()
         except TelegramNetworkError as exc:
             last_error = exc
+            _set_bootstrap_phase("telegram_api", str(exc))
             logger.warning(
                 "Telegram %s: попытка %s/%s не удалась (%s)",
                 description,
@@ -115,6 +132,7 @@ async def _register_webhook() -> None:
     global _webhook_registered
 
     async with _webhook_lock:
+        _set_bootstrap_phase("webhook")
         await bot.set_webhook(
             url=WEBHOOK_URL,
             allowed_updates=ALLOWED_UPDATES,
@@ -175,19 +193,21 @@ def _schedule_update(update: Update) -> None:
 
 
 async def bootstrap_bot(reminder_task_holder: dict[str, asyncio.Task[None] | None]) -> None:
-    """Регистрация webhook в фоне — HTTP-сервер стартует сразу (healthcheck Timeweb)."""
+    """Регистрация webhook в фоне — HTTP /health доступен сразу."""
     global _bot_ready
 
     while True:
         try:
             if not WEBHOOK_URL:
+                _set_bootstrap_phase("missing_webhook_url")
                 logger.error(
-                    "WEBHOOK_BASE_URL (или WEBHOOK_URL) не задан в переменных окружения — "
-                    "задайте в панели Timeweb, например WEBHOOK_BASE_URL=https://your-app.twc1.net"
+                    "WEBHOOK_BASE_URL не задан — добавьте в Timeweb, "
+                    "например WEBHOOK_BASE_URL=https://your-app.twc1.net"
                 )
                 await asyncio.sleep(BOOTSTRAP_RETRY_DELAY_S)
                 continue
 
+            _set_bootstrap_phase("telegram_api")
             me = await _telegram_with_retry("get_me", bot.get_me)
             _bot_ready = True
             logger.info("Бот запущен: @%s (id=%s), webhook...", me.username, me.id)
@@ -199,12 +219,15 @@ async def bootstrap_bot(reminder_task_holder: dict[str, asyncio.Task[None] | Non
                 logger.exception("Не удалось проверить ADMIN_GROUP_CHAT_ID=%s", ADMIN_GROUP_CHAT_ID)
 
             await _telegram_with_retry("set_webhook", _register_webhook)
+            _set_bootstrap_phase("ready")
+            _bootstrap_last_error = None
             if reminder_task_holder.get("task") is None:
                 reminder_task_holder["task"] = asyncio.create_task(reminder_loop(bot))
             return
         except asyncio.CancelledError:
             raise
-        except Exception:
+        except Exception as exc:
+            _set_bootstrap_phase("telegram_api", str(exc))
             logger.exception(
                 "bootstrap_bot не завершился — повтор через %s с",
                 BOOTSTRAP_RETRY_DELAY_S,
@@ -216,7 +239,7 @@ async def webhook_watchdog() -> None:
     while True:
         await asyncio.sleep(WEBHOOK_WATCHDOG_INTERVAL_S)
         try:
-            if _bot_ready:
+            if _bot_ready and WEBHOOK_URL:
                 await _ensure_webhook()
         except asyncio.CancelledError:
             raise
@@ -231,11 +254,10 @@ async def lifespan(app: FastAPI):
     watchdog_task = asyncio.create_task(webhook_watchdog())
     if WEBHOOK_URL:
         logger.info("HTTP-сервер готов, регистрация webhook в фоне: %s", WEBHOOK_URL)
+        if TELEGRAM_PROXY:
+            logger.info("Telegram API через прокси: %s", TELEGRAM_PROXY)
     else:
-        logger.warning(
-            "HTTP-сервер готов, но WEBHOOK_BASE_URL не задан — бот не подключится к Telegram "
-            "пока не зададите переменную и не перезапустите"
-        )
+        logger.warning("HTTP-сервер готов, но WEBHOOK_BASE_URL не задан")
     try:
         yield
     finally:
@@ -268,14 +290,22 @@ async def lifespan(app: FastAPI):
 app = FastAPI(title="Mucara Telegram Bot", lifespan=lifespan)
 
 
-@app.api_route("/health", methods=["GET", "HEAD"])
-async def health() -> dict[str, Any]:
+def _health_payload() -> dict[str, Any]:
     return {
-        "ok": True,
+        "ok": _bootstrap_phase in {"ready", "webhook", "telegram_api", "starting"},
         "bot_ready": _bot_ready,
         "webhook_registered": _webhook_registered,
         "webhook_url_configured": bool(WEBHOOK_URL),
+        "expected_webhook_url": WEBHOOK_URL or None,
+        "bootstrap_phase": _bootstrap_phase,
+        "bootstrap_last_error": _bootstrap_last_error,
+        "checked_at": datetime.now(UTC).isoformat(),
     }
+
+
+@app.api_route("/health", methods=["GET", "HEAD"])
+async def health() -> dict[str, Any]:
+    return _health_payload()
 
 
 @app.api_route("/", methods=["GET", "HEAD"])
@@ -285,23 +315,38 @@ async def root_health() -> dict[str, bool]:
 
 @app.get("/health/webhook")
 async def health_webhook() -> JSONResponse:
+    payload: dict[str, Any] = _health_payload()
+    if not WEBHOOK_URL:
+        payload["ok"] = False
+        payload["reason"] = "webhook_url_not_configured"
+        return JSONResponse(payload, status_code=503)
+
     if not _bot_ready:
-        return JSONResponse({"ok": False, "reason": "bot_not_ready"}, status_code=503)
+        payload["ok"] = False
+        payload["reason"] = "connecting_to_telegram_api"
+        payload["hint"] = (
+            "Сервер жив, URL задан. Ждём ответа api.telegram.org — на Timeweb это может "
+            "занять 1–3 минуты. Если не меняется — проверьте TELEGRAM_PROXY или поддержку хостинга."
+        )
+        return JSONResponse(payload, status_code=200)
+
     try:
         info = await bot.get_webhook_info()
-        return JSONResponse(
+        payload.update(
             {
                 "ok": info.url == WEBHOOK_URL and not info.last_error_message,
                 "url": info.url,
-                "expected_url": WEBHOOK_URL,
                 "pending_update_count": info.pending_update_count,
                 "last_error_message": info.last_error_message,
                 "last_error_date": info.last_error_date,
             }
         )
+        return JSONResponse(payload, status_code=200)
     except Exception as exc:
         logger.exception("health_webhook failed")
-        return JSONResponse({"ok": False, "reason": str(exc)}, status_code=503)
+        payload["ok"] = False
+        payload["reason"] = str(exc)
+        return JSONResponse(payload, status_code=200)
 
 
 @app.post(WEBHOOK_PATH)

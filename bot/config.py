@@ -61,10 +61,12 @@ THREAD_MOVE = _parse_int("THREAD_MOVE", default=26)
 THREAD_WRITE_OFF = _parse_int("THREAD_WRITE_OFF", default=28)
 
 # Сетевые настройки для Telegram API (чтобы переживать нестабильную сеть на хостинге).
-# Можно переопределить в Timeweb env.
-TELEGRAM_CONNECT_TIMEOUT_S = _parse_float("TELEGRAM_CONNECT_TIMEOUT_S", default=10.0)
-TELEGRAM_REQUEST_TIMEOUT_S = _parse_float("TELEGRAM_REQUEST_TIMEOUT_S", default=75.0)
+TELEGRAM_CONNECT_TIMEOUT_S = _parse_float("TELEGRAM_CONNECT_TIMEOUT_S", default=30.0)
+TELEGRAM_REQUEST_TIMEOUT_S = _parse_float("TELEGRAM_REQUEST_TIMEOUT_S", default=90.0)
 TELEGRAM_POOL_LIMIT = _parse_int("TELEGRAM_POOL_LIMIT", default=100)
+# Необязательно: HTTP/SOCKS5-прокси до api.telegram.org, если хостинг блокирует Telegram.
+# Пример: http://user:pass@host:8080  или  socks5://host:1080
+TELEGRAM_PROXY = os.getenv("TELEGRAM_PROXY", "").strip() or None
 
 # Настройки FastAPI webhook.
 APP_HOST = os.getenv("APP_HOST", "0.0.0.0").strip() or "0.0.0.0"

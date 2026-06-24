@@ -53,6 +53,8 @@ logging.basicConfig(
 TELEGRAM_CALL_RETRIES = 6
 TELEGRAM_RETRY_DELAY_S = 5.0
 BOOTSTRAP_RETRY_DELAY_S = 15.0
+POLLING_RESTART_DELAY_S = 10.0
+POLLING_CONFLICT_RETRY_DELAY_S = 60.0
 
 # Числовой timeout обязателен для aiogram start_polling (ClientTimeout ломает polling).
 session = AiohttpSession(
@@ -258,6 +260,34 @@ async def _start_polling_task() -> asyncio.Task[None]:
     return asyncio.create_task(_run_polling(), name="telegram-polling")
 
 
+async def _run_polling_with_restart(
+    polling_task_holder: dict[str, asyncio.Task[None] | None],
+) -> None:
+    """Держит long polling живым — после обрыва связи с Telegram перезапускает опрос."""
+    while True:
+        delay = POLLING_RESTART_DELAY_S
+        try:
+            polling_task_holder["task"] = await _start_polling_task()
+            await polling_task_holder["task"]
+        except asyncio.CancelledError:
+            raise
+        except TelegramConflictError:
+            delay = POLLING_CONFLICT_RETRY_DELAY_S
+            logger.error(
+                "TelegramConflictError: с этим BOT_TOKEN уже запущен другой процесс "
+                "(второй контейнер или webhook). Остановите дубликат. "
+                "Повтор polling через %s с",
+                delay,
+            )
+        except Exception:
+            logger.warning("Polling-task завершился — будет перезапущен")
+        finally:
+            polling_task_holder["task"] = None
+
+        logger.warning("Перезапуск polling через %s с", delay)
+        await asyncio.sleep(delay)
+
+
 async def _webhook_delivery_failed() -> bool:
     if _last_webhook_received_at is not None:
         return False
@@ -312,7 +342,7 @@ async def bootstrap_bot(
                 reminder_task_holder["task"] = asyncio.create_task(reminder_loop(bot))
 
             if USE_POLLING:
-                polling_task_holder["task"] = await _start_polling_task()
+                await _run_polling_with_restart(polling_task_holder)
                 return
 
             if USE_WEBHOOK:
@@ -329,7 +359,7 @@ async def bootstrap_bot(
                     logger.warning(
                         "WEBHOOK_BASE_URL не задан — в режиме auto сразу включаю polling"
                     )
-                    polling_task_holder["task"] = await _start_polling_task()
+                    await _run_polling_with_restart(polling_task_holder)
                     return
 
                 await _telegram_with_retry("set_webhook", _register_webhook)
@@ -344,7 +374,7 @@ async def bootstrap_bot(
                         "За %s с webhook не получил ни одного обновления — переключаюсь на polling",
                         int(WEBHOOK_DELIVERY_CHECK_S),
                     )
-                    polling_task_holder["task"] = await _start_polling_task()
+                    await _run_polling_with_restart(polling_task_holder)
                 else:
                     logger.info("Webhook доставляет обновления — остаёмся на webhook")
                 return

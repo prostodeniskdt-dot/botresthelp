@@ -180,6 +180,14 @@ async def bootstrap_bot(reminder_task_holder: dict[str, asyncio.Task[None] | Non
 
     while True:
         try:
+            if not WEBHOOK_URL:
+                logger.error(
+                    "WEBHOOK_BASE_URL (или WEBHOOK_URL) не задан в переменных окружения — "
+                    "задайте в панели Timeweb, например WEBHOOK_BASE_URL=https://your-app.twc1.net"
+                )
+                await asyncio.sleep(BOOTSTRAP_RETRY_DELAY_S)
+                continue
+
             me = await _telegram_with_retry("get_me", bot.get_me)
             _bot_ready = True
             logger.info("Бот запущен: @%s (id=%s), webhook...", me.username, me.id)
@@ -218,13 +226,16 @@ async def webhook_watchdog() -> None:
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    if not WEBHOOK_URL:
-        raise RuntimeError("WEBHOOK_URL или WEBHOOK_BASE_URL не задан")
-
     reminder_holder: dict[str, asyncio.Task[None] | None] = {"task": None}
     bootstrap_task = asyncio.create_task(bootstrap_bot(reminder_holder))
     watchdog_task = asyncio.create_task(webhook_watchdog())
-    logger.info("HTTP-сервер готов, регистрация webhook в фоне...")
+    if WEBHOOK_URL:
+        logger.info("HTTP-сервер готов, регистрация webhook в фоне: %s", WEBHOOK_URL)
+    else:
+        logger.warning(
+            "HTTP-сервер готов, но WEBHOOK_BASE_URL не задан — бот не подключится к Telegram "
+            "пока не зададите переменную и не перезапустите"
+        )
     try:
         yield
     finally:
@@ -259,7 +270,12 @@ app = FastAPI(title="Mucara Telegram Bot", lifespan=lifespan)
 
 @app.api_route("/health", methods=["GET", "HEAD"])
 async def health() -> dict[str, Any]:
-    return {"ok": True, "bot_ready": _bot_ready, "webhook_registered": _webhook_registered}
+    return {
+        "ok": True,
+        "bot_ready": _bot_ready,
+        "webhook_registered": _webhook_registered,
+        "webhook_url_configured": bool(WEBHOOK_URL),
+    }
 
 
 @app.api_route("/", methods=["GET", "HEAD"])

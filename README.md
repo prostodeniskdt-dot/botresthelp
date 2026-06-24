@@ -20,7 +20,8 @@
 | `DATA_DIR` | Каталог для `allowed_users.json` и `sessions.json` (на проде — **постоянный диск** Timeweb, см. ниже). Если не задан — `./data` от корня проекта |
 | `RECIPES_PATH` | Необязательно: путь к `recipes.json`. По умолчанию `data/recipes.json` из образа/репозитория (техкарты не обязаны жить на том же диске, что и сессии) |
 | `WEBHOOK_BASE_URL` | Публичный HTTPS-адрес приложения без слеша на конце, например `https://your-app.twc1.net` |
-| `BOT_UPDATE_MODE` | `auto` (по умолчанию), `webhook` или `polling`. **auto**: пробует webhook, если за 2 мин нет POST — переключается на polling и забирает зависшие обновления |
+| `BOT_UPDATE_MODE` | `polling` (по умолчанию), `webhook` или `auto`. На Timeweb рекомендуется **polling** |
+| `UPDATE_CONCURRENCY` | Сколько обновлений обрабатывать параллельно. По умолчанию `1` — иначе зависшая очередь забивает Telegram API |
 | `WEBHOOK_URL` | Необязательно: полный URL webhook. Если задан, используется вместо `WEBHOOK_BASE_URL + WEBHOOK_PATH` |
 | `WEBHOOK_PATH` | Путь webhook endpoint. По умолчанию `/telegram/webhook` |
 | `WEBHOOK_SECRET_TOKEN` | Необязательно: секрет для заголовка `X-Telegram-Bot-Api-Secret-Token`. **Должен совпадать** с тем, что зарегистрирован в Telegram |

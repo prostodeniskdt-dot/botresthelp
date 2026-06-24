@@ -24,6 +24,7 @@ from bot.config import (
     TELEGRAM_POOL_LIMIT,
     TELEGRAM_PROXY,
     TELEGRAM_REQUEST_TIMEOUT_S,
+    UPDATE_CONCURRENCY,
     USE_AUTO_UPDATE_MODE,
     USE_POLLING,
     USE_WEBHOOK,
@@ -64,6 +65,16 @@ bot = Bot(
 )
 dp = Dispatcher()
 
+_update_semaphore = asyncio.Semaphore(max(1, int(UPDATE_CONCURRENCY)))
+
+
+class _SequentialUpdateMiddleware(BaseMiddleware):
+    """Одно обновление за раз — иначе очередь pending забивает api.telegram.org на Timeweb."""
+
+    async def __call__(self, handler: Any, event: Any, data: dict[str, Any]) -> Any:
+        async with _update_semaphore:
+            return await handler(event, data)
+
 
 class _UpdateReceivedMiddleware(BaseMiddleware):
     async def __call__(self, handler: Any, event: Any, data: dict[str, Any]) -> Any:
@@ -71,6 +82,7 @@ class _UpdateReceivedMiddleware(BaseMiddleware):
         return await handler(event, data)
 
 
+dp.update.outer_middleware(_SequentialUpdateMiddleware())
 dp.update.outer_middleware(_UpdateReceivedMiddleware())
 dp.update.middleware(AuthMiddleware())
 dp.update.middleware(SessionMiddleware())
@@ -209,8 +221,9 @@ async def _start_polling_task() -> asyncio.Task[None]:
     _update_mode = "polling"
     _polling_active = True
     logger.info(
-        "Запуск long polling (timeout=%s s, allowed_updates=%s)",
+        "Запуск long polling (timeout=%s s, concurrency=%s, allowed_updates=%s)",
         POLLING_TIMEOUT_S,
+        UPDATE_CONCURRENCY,
         ALLOWED_UPDATES,
     )
 
@@ -220,6 +233,7 @@ async def _start_polling_task() -> asyncio.Task[None]:
                 bot,
                 allowed_updates=ALLOWED_UPDATES,
                 polling_timeout=int(POLLING_TIMEOUT_S),
+                handle_as_tasks=False,
                 handle_signals=False,
             )
         except TelegramConflictError:

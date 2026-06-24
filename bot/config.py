@@ -62,8 +62,8 @@ THREAD_WRITE_OFF = _parse_int("THREAD_WRITE_OFF", default=28)
 
 # Сетевые настройки для Telegram API (чтобы переживать нестабильную сеть на хостинге).
 TELEGRAM_CONNECT_TIMEOUT_S = _parse_float("TELEGRAM_CONNECT_TIMEOUT_S", default=30.0)
-TELEGRAM_REQUEST_TIMEOUT_S = _parse_float("TELEGRAM_REQUEST_TIMEOUT_S", default=90.0)
-TELEGRAM_POOL_LIMIT = _parse_int("TELEGRAM_POOL_LIMIT", default=100)
+TELEGRAM_REQUEST_TIMEOUT_S = _parse_float("TELEGRAM_REQUEST_TIMEOUT_S", default=120.0)
+TELEGRAM_POOL_LIMIT = _parse_int("TELEGRAM_POOL_LIMIT", default=20)
 # Необязательно: HTTP/SOCKS5-прокси до api.telegram.org, если хостинг блокирует Telegram.
 # Пример: http://user:pass@host:8080  или  socks5://host:1080
 TELEGRAM_PROXY = os.getenv("TELEGRAM_PROXY", "").strip() or None
@@ -88,13 +88,15 @@ WEBHOOK_WATCHDOG_INTERVAL_S = _parse_float("WEBHOOK_WATCHDOG_INTERVAL_S", defaul
 # Режим получения обновлений:
 # - webhook — только входящий POST от Telegram (как у «рабочего» бота на Timeweb)
 # - polling — long polling (бот сам забирает обновления; надёжнее, если webhook не доставляет)
-# - auto (по умолчанию) — webhook, и если за WEBHOOK_DELIVERY_CHECK_S сек нет ни одного POST — polling
-_bot_update_mode = os.getenv("BOT_UPDATE_MODE", "auto").strip().lower()
+# - auto — webhook 2 мин, если POST не приходят → polling
+_bot_update_mode = os.getenv("BOT_UPDATE_MODE", "polling").strip().lower()
 USE_POLLING = _bot_update_mode in ("polling", "poll", "long_polling")
 USE_WEBHOOK = _bot_update_mode in ("webhook", "hook")
 USE_AUTO_UPDATE_MODE = not USE_POLLING and not USE_WEBHOOK
 
 POLLING_TIMEOUT_S = _parse_int("POLLING_TIMEOUT_S", default=30)
+# Сколько обновлений обрабатывать параллельно (на Timeweb — 1, иначе очередь забивает API).
+UPDATE_CONCURRENCY = _parse_int("UPDATE_CONCURRENCY", default=1)
 # Сколько ждать первый POST webhook в режиме auto перед переключением на polling.
 WEBHOOK_DELIVERY_CHECK_S = _parse_float("WEBHOOK_DELIVERY_CHECK_S", default=120.0)
 

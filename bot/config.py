@@ -85,6 +85,19 @@ DELETE_WEBHOOK_ON_SHUTDOWN = _parse_bool("DELETE_WEBHOOK_ON_SHUTDOWN", default=F
 WEBHOOK_MAX_CONNECTIONS = _parse_int("WEBHOOK_MAX_CONNECTIONS", default=40)
 WEBHOOK_WATCHDOG_INTERVAL_S = _parse_float("WEBHOOK_WATCHDOG_INTERVAL_S", default=120.0)
 
+# Режим получения обновлений:
+# - webhook — только входящий POST от Telegram (как у «рабочего» бота на Timeweb)
+# - polling — long polling (бот сам забирает обновления; надёжнее, если webhook не доставляет)
+# - auto (по умолчанию) — webhook, и если за WEBHOOK_DELIVERY_CHECK_S сек нет ни одного POST — polling
+_bot_update_mode = os.getenv("BOT_UPDATE_MODE", "auto").strip().lower()
+USE_POLLING = _bot_update_mode in ("polling", "poll", "long_polling")
+USE_WEBHOOK = _bot_update_mode in ("webhook", "hook")
+USE_AUTO_UPDATE_MODE = not USE_POLLING and not USE_WEBHOOK
+
+POLLING_TIMEOUT_S = _parse_int("POLLING_TIMEOUT_S", default=30)
+# Сколько ждать первый POST webhook в режиме auto перед переключением на polling.
+WEBHOOK_DELIVERY_CHECK_S = _parse_float("WEBHOOK_DELIVERY_CHECK_S", default=120.0)
+
 # Как часто сбрасывать sessions.json на диск (debounce).
 SESSIONS_FLUSH_DELAY_S = _parse_float("SESSIONS_FLUSH_DELAY_S", default=1.0)
 

@@ -30,7 +30,6 @@ from bot.config import (
     WEBHOOK_PATH,
     WEBHOOK_SECRET_TOKEN,
     WEBHOOK_URL,
-    WEBHOOK_WATCHDOG_INTERVAL_S,
 )
 from bot.handlers import setup_router
 from bot.middlewares.auth import AuthMiddleware
@@ -45,11 +44,9 @@ logging.basicConfig(
     format="%(asctime)s %(levelname)s %(name)s %(message)s",
 )
 
-ALLOWED_UPDATES = ["message", "edited_message", "callback_query"]
-
-TELEGRAM_CALL_RETRIES = 8
+TELEGRAM_CALL_RETRIES = 6
 TELEGRAM_RETRY_DELAY_S = 5.0
-BOOTSTRAP_RETRY_DELAY_S = 20.0
+BOOTSTRAP_RETRY_DELAY_S = 15.0
 
 session = AiohttpSession(
     timeout=ClientTimeout(
@@ -70,12 +67,9 @@ dp.update.middleware(AuthMiddleware())
 dp.update.middleware(SessionMiddleware())
 dp.include_router(setup_router())
 
-_webhook_lock = asyncio.Lock()
 _bot_ready = False
 _webhook_registered = False
-_update_tasks: set[asyncio.Task[None]] = set()
-_bootstrap_phase = "starting"
-_bootstrap_last_error: str | None = None
+_last_webhook_received_at: str | None = None
 _last_webhook_info: dict[str, Any] | None = None
 
 
@@ -85,13 +79,13 @@ def _json_safe(value: Any) -> Any:
     return value
 
 
-def _set_bootstrap_phase(phase: str, error: str | None = None) -> None:
-    global _bootstrap_phase, _bootstrap_last_error
-    _bootstrap_phase = phase
-    if error is not None:
-        _bootstrap_last_error = error
-    elif phase == "ready":
-        _bootstrap_last_error = None
+def _client_ip(request: Request) -> str:
+    forwarded = request.headers.get("x-forwarded-for")
+    if forwarded:
+        return forwarded.split(",")[0].strip()
+    if request.client is not None:
+        return request.client.host
+    return "unknown"
 
 
 def _update_kinds(update: Update) -> list[str]:
@@ -112,7 +106,6 @@ async def _telegram_with_retry(description: str, coro_factory: Any) -> Any:
             return await coro_factory()
         except TelegramNetworkError as exc:
             last_error = exc
-            _set_bootstrap_phase("telegram_api", str(exc))
             logger.warning(
                 "Telegram %s: попытка %s/%s не удалась (%s)",
                 description,
@@ -135,18 +128,18 @@ async def _log_webhook_info() -> None:
         "pending_update_count": info.pending_update_count,
         "last_error_message": info.last_error_message,
         "last_error_date": _json_safe(info.last_error_date),
+        "ip_address": info.ip_address,
     }
     logger.info(
-        "Webhook info: url=%r pending=%s last_error_date=%s last_error=%s",
+        "Webhook info: url=%r pending=%s ip=%s last_error=%s",
         info.url,
         info.pending_update_count,
-        info.last_error_date,
+        info.ip_address or "(нет)",
         info.last_error_message or "(нет)",
     )
     if info.last_error_message:
         logger.error(
-            "Telegram НЕ доставляет обновления на webhook: %s (pending=%s). "
-            "Проверьте доступность %s с интернета или обратитесь в поддержку Timeweb.",
+            "Telegram не доставляет обновления: %s (pending=%s, url=%s)",
             info.last_error_message,
             info.pending_update_count,
             WEBHOOK_URL,
@@ -156,87 +149,43 @@ async def _log_webhook_info() -> None:
 async def _register_webhook() -> None:
     global _webhook_registered
 
-    async with _webhook_lock:
-        if not _bot_ready:
-            _set_bootstrap_phase("webhook")
-        await bot.set_webhook(
-            url=WEBHOOK_URL,
-            allowed_updates=ALLOWED_UPDATES,
-            drop_pending_updates=WEBHOOK_DROP_PENDING_UPDATES,
-            secret_token=WEBHOOK_SECRET_TOKEN,
-            max_connections=WEBHOOK_MAX_CONNECTIONS,
-        )
-        _webhook_registered = True
-        logger.info(
-            "Webhook зарегистрирован: %s (allowed_updates=%s)",
-            WEBHOOK_URL,
-            ALLOWED_UPDATES,
-        )
-        await _log_webhook_info()
-
-
-async def _ensure_webhook() -> None:
-    info = await bot.get_webhook_info()
-    needs_reregister = info.url != WEBHOOK_URL or bool(info.last_error_message)
-    if needs_reregister:
-        if info.url != WEBHOOK_URL:
-            logger.warning(
-                "Webhook URL не совпадает: telegram=%r expected=%r — перерегистрирую",
-                info.url,
-                WEBHOOK_URL,
-            )
-        if info.last_error_message:
-            logger.warning(
-                "Webhook last_error_date=%s message=%s pending=%s — перерегистрирую",
-                info.last_error_date,
-                info.last_error_message,
-                info.pending_update_count,
-            )
-        await _register_webhook()
-    else:
-        logger.info(
-            "Webhook OK: pending=%s url=%r",
-            info.pending_update_count,
-            info.url,
-        )
-
-
-async def _process_update(update: Update) -> None:
-    try:
-        await dp.feed_update(bot, update)
-    except Exception:
-        logger.exception(
-            "Ошибка обработки update id=%s kinds=%s",
-            update.update_id,
-            _update_kinds(update),
-        )
-
-
-def _schedule_update(update: Update) -> None:
-    task = asyncio.create_task(_process_update(update))
-    _update_tasks.add(task)
-    task.add_done_callback(_update_tasks.discard)
+    allowed_updates = dp.resolve_used_update_types()
+    # Сброс webhook перед регистрацией помогает Telegram начать доставку заново.
+    await bot.delete_webhook(drop_pending_updates=False)
+    await bot.set_webhook(
+        url=WEBHOOK_URL,
+        allowed_updates=allowed_updates,
+        drop_pending_updates=WEBHOOK_DROP_PENDING_UPDATES,
+        secret_token=WEBHOOK_SECRET_TOKEN,
+        max_connections=WEBHOOK_MAX_CONNECTIONS,
+    )
+    _webhook_registered = True
+    logger.info(
+        "Webhook зарегистрирован: %s (allowed_updates=%s)",
+        WEBHOOK_URL,
+        allowed_updates,
+    )
+    await _log_webhook_info()
 
 
 async def bootstrap_bot(reminder_task_holder: dict[str, asyncio.Task[None] | None]) -> None:
-    """Регистрация webhook в фоне — HTTP /health доступен сразу."""
+    """Telegram init в фоне: HTTP /health отвечает сразу, Timeweb не убивает контейнер."""
     global _bot_ready
 
     while True:
         try:
             if not WEBHOOK_URL:
-                _set_bootstrap_phase("missing_webhook_url")
                 logger.error(
-                    "WEBHOOK_BASE_URL не задан — добавьте в Timeweb, "
+                    "WEBHOOK_BASE_URL не задан — задайте в Timeweb, "
                     "например WEBHOOK_BASE_URL=https://your-app.twc1.net"
                 )
                 await asyncio.sleep(BOOTSTRAP_RETRY_DELAY_S)
                 continue
 
-            _set_bootstrap_phase("telegram_api")
             me = await _telegram_with_retry("get_me", bot.get_me)
             _bot_ready = True
-            logger.info("Бот запущен: @%s (id=%s), webhook...", me.username, me.id)
+            logger.info("Бот запущен: @%s (id=%s)", me.username, me.id)
+
             try:
                 chat = await bot.get_chat(ADMIN_GROUP_CHAT_ID)
                 chat_name = chat.title or getattr(chat, "full_name", None) or str(chat.id)
@@ -245,15 +194,13 @@ async def bootstrap_bot(reminder_task_holder: dict[str, asyncio.Task[None] | Non
                 logger.exception("Не удалось проверить ADMIN_GROUP_CHAT_ID=%s", ADMIN_GROUP_CHAT_ID)
 
             await _telegram_with_retry("set_webhook", _register_webhook)
-            _set_bootstrap_phase("ready")
-            _bootstrap_last_error = None
+
             if reminder_task_holder.get("task") is None:
                 reminder_task_holder["task"] = asyncio.create_task(reminder_loop(bot))
             return
         except asyncio.CancelledError:
             raise
-        except Exception as exc:
-            _set_bootstrap_phase("telegram_api", str(exc))
+        except Exception:
             logger.exception(
                 "bootstrap_bot не завершился — повтор через %s с",
                 BOOTSTRAP_RETRY_DELAY_S,
@@ -261,27 +208,12 @@ async def bootstrap_bot(reminder_task_holder: dict[str, asyncio.Task[None] | Non
             await asyncio.sleep(BOOTSTRAP_RETRY_DELAY_S)
 
 
-async def webhook_watchdog() -> None:
-    while True:
-        await asyncio.sleep(WEBHOOK_WATCHDOG_INTERVAL_S)
-        try:
-            if _bot_ready and WEBHOOK_URL:
-                await _ensure_webhook()
-        except asyncio.CancelledError:
-            raise
-        except Exception:
-            logger.exception("webhook_watchdog tick failed")
-
-
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     reminder_holder: dict[str, asyncio.Task[None] | None] = {"task": None}
     bootstrap_task = asyncio.create_task(bootstrap_bot(reminder_holder))
-    watchdog_task = asyncio.create_task(webhook_watchdog())
     if WEBHOOK_URL:
         logger.info("HTTP-сервер готов, регистрация webhook в фоне: %s", WEBHOOK_URL)
-        if TELEGRAM_PROXY:
-            logger.info("Telegram API через прокси: %s", TELEGRAM_PROXY)
     else:
         logger.warning("HTTP-сервер готов, но WEBHOOK_BASE_URL не задан")
     try:
@@ -290,16 +222,11 @@ async def lifespan(app: FastAPI):
         bootstrap_task.cancel()
         with contextlib.suppress(asyncio.CancelledError):
             await bootstrap_task
-        watchdog_task.cancel()
-        with contextlib.suppress(asyncio.CancelledError):
-            await watchdog_task
         reminder_task = reminder_holder.get("task")
         if reminder_task is not None:
             reminder_task.cancel()
             with contextlib.suppress(asyncio.CancelledError):
                 await reminder_task
-        if _update_tasks:
-            await asyncio.gather(*list(_update_tasks), return_exceptions=True)
         try:
             await flush_sessions()
         except Exception:
@@ -316,15 +243,24 @@ async def lifespan(app: FastAPI):
 app = FastAPI(title="Mucara Telegram Bot", lifespan=lifespan)
 
 
-def _health_payload() -> dict[str, Any]:
+@app.middleware("http")
+async def log_incoming_requests(request: Request, call_next: Any) -> Any:
+    if request.method == "POST" and request.url.path == WEBHOOK_PATH:
+        logger.info("Входящий POST %s от %s", WEBHOOK_PATH, _client_ip(request))
+    response = await call_next(request)
+    if request.method == "POST" and request.url.path == WEBHOOK_PATH:
+        logger.info("Ответ POST %s: %s", WEBHOOK_PATH, response.status_code)
+    return response
+
+
+def _status_payload() -> dict[str, Any]:
     payload: dict[str, Any] = {
         "ok": _bot_ready and _webhook_registered,
         "bot_ready": _bot_ready,
         "webhook_registered": _webhook_registered,
         "webhook_url_configured": bool(WEBHOOK_URL),
         "expected_webhook_url": WEBHOOK_URL or None,
-        "bootstrap_phase": _bootstrap_phase,
-        "bootstrap_last_error": _bootstrap_last_error,
+        "last_webhook_received_at": _last_webhook_received_at,
         "checked_at": datetime.now(UTC).isoformat(),
     }
     if _last_webhook_info:
@@ -332,16 +268,17 @@ def _health_payload() -> dict[str, Any]:
             "pending_update_count": _last_webhook_info.get("pending_update_count"),
             "last_error_message": _last_webhook_info.get("last_error_message"),
             "last_error_date": _last_webhook_info.get("last_error_date"),
-            "updates_reaching_server": not bool(_last_webhook_info.get("last_error_message")),
+            "ip_address": _last_webhook_info.get("ip_address"),
+            "updates_reaching_server": _last_webhook_received_at is not None
+            or not bool(_last_webhook_info.get("last_error_message")),
         }
-        if _last_webhook_info.get("last_error_message"):
-            payload["ok"] = False
     return payload
 
 
 @app.api_route("/health", methods=["GET", "HEAD"])
-async def health() -> dict[str, Any]:
-    return _health_payload()
+async def health() -> dict[str, bool]:
+    # Timeweb healthcheck: всегда ok, иначе платформа перезапускает контейнер.
+    return {"ok": True}
 
 
 @app.api_route("/", methods=["GET", "HEAD"])
@@ -349,9 +286,14 @@ async def root_health() -> dict[str, bool]:
     return {"ok": True}
 
 
+@app.get("/health/status")
+async def health_status() -> dict[str, Any]:
+    return _status_payload()
+
+
 @app.get("/health/webhook")
 async def health_webhook() -> JSONResponse:
-    payload: dict[str, Any] = _health_payload()
+    payload = _status_payload()
     if not WEBHOOK_URL:
         payload["ok"] = False
         payload["reason"] = "webhook_url_not_configured"
@@ -360,16 +302,14 @@ async def health_webhook() -> JSONResponse:
     if not _bot_ready:
         payload["ok"] = False
         payload["reason"] = "connecting_to_telegram_api"
-        payload["hint"] = (
-            "Сервер жив, URL задан. Ждём ответа api.telegram.org — на Timeweb это может "
-            "занять 1–3 минуты. Если не меняется — проверьте TELEGRAM_PROXY или поддержку хостинга."
-        )
         return JSONResponse(payload, status_code=200)
 
     try:
         info = await bot.get_webhook_info()
         last_error_date = _json_safe(info.last_error_date)
-        delivery_ok = info.url == WEBHOOK_URL and not info.last_error_message
+        delivery_ok = info.url == WEBHOOK_URL and (
+            _last_webhook_received_at is not None or not info.last_error_message
+        )
         payload.update(
             {
                 "ok": delivery_ok,
@@ -377,20 +317,16 @@ async def health_webhook() -> JSONResponse:
                 "pending_update_count": info.pending_update_count,
                 "last_error_message": info.last_error_message,
                 "last_error_date": last_error_date,
+                "ip_address": info.ip_address,
                 "telegram_delivery": {
                     "pending_update_count": info.pending_update_count,
                     "last_error_message": info.last_error_message,
                     "last_error_date": last_error_date,
+                    "ip_address": info.ip_address,
                     "updates_reaching_server": delivery_ok,
                 },
             }
         )
-        if info.last_error_message:
-            payload["hint"] = (
-                "Бот зарегистрирован, но Telegram не может POST-ить на ваш URL "
-                f"({info.last_error_message}). Обновления не доходят — бот молчит. "
-                "Нужна доступность URL с интернета или другой хостинг."
-            )
         return JSONResponse(payload, status_code=200)
     except Exception as exc:
         logger.exception("health_webhook failed")
@@ -401,16 +337,39 @@ async def health_webhook() -> JSONResponse:
 
 @app.post(WEBHOOK_PATH)
 async def telegram_webhook(request: Request) -> dict[str, bool]:
+    global _last_webhook_received_at
+
     if WEBHOOK_SECRET_TOKEN:
         received = request.headers.get("X-Telegram-Bot-Api-Secret-Token")
         if received != WEBHOOK_SECRET_TOKEN:
-            logger.warning("Webhook отклонён: неверный secret token")
+            logger.warning(
+                "Webhook отклонён: неверный secret token (from %s)",
+                _client_ip(request),
+            )
             raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Invalid webhook secret")
 
-    data = await request.json()
-    update = Update.model_validate(data, context={"bot": bot})
-    logger.info("Webhook update id=%s kinds=%s", update.update_id, _update_kinds(update))
-    _schedule_update(update)
+    try:
+        data = await request.json()
+        update = Update.model_validate(data, context={"bot": bot})
+    except Exception:
+        logger.exception("Webhook: некорректное тело запроса от %s", _client_ip(request))
+        return {"ok": True}
+
+    _last_webhook_received_at = datetime.now(UTC).isoformat()
+    logger.info(
+        "Webhook update id=%s kinds=%s from=%s",
+        update.update_id,
+        _update_kinds(update),
+        _client_ip(request),
+    )
+    try:
+        await dp.feed_update(bot, update)
+    except Exception:
+        logger.exception(
+            "Ошибка обработки update id=%s kinds=%s",
+            update.update_id,
+            _update_kinds(update),
+        )
     return {"ok": True}
 
 

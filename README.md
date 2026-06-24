@@ -85,7 +85,7 @@ node scripts/build_recipes.mjs
 2. В панели выберите окружение **Python**, framework **FastAPI**.
 3. Сборка: `pip install --upgrade -r requirements.txt`.
 4. Старт: `python -m bot.main` — поднимает Uvicorn/FastAPI и регистрирует webhook в Telegram.
-5. Healthcheck path: `/health` (или `/`).
+5. Healthcheck path: `/health` или `/` — endpoint **всегда** возвращает `{"ok": true}` (требование Timeweb). Подробная диагностика: `/health/webhook`.
 6. Задайте `WEBHOOK_BASE_URL` равным публичному HTTPS-адресу приложения в Timeweb.
 7. **Не задавайте** `DELETE_WEBHOOK_ON_SHUTDOWN=true` без необходимости — при деплое webhook останется активным.
 7. **Обязательно** подключите **постоянный диск** и задайте `DATA_DIR` на точку монтирования, чтобы при новом деплое не терялись `allowed_users.json` и `sessions.json`.

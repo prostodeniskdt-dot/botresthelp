@@ -19,11 +19,12 @@
 | `ADMIN_GROUP_CHAT_ID` | ID группы (в @GetIDsBot для супергруппы вида **−100…**). Если случайно указали число **без минуса**, приложение само добавит минус. |
 | `DATA_DIR` | Каталог для `allowed_users.json` и `sessions.json` (на проде — **постоянный диск** Timeweb, см. ниже). Если не задан — `./data` от корня проекта |
 | `RECIPES_PATH` | Необязательно: путь к `recipes.json`. По умолчанию `data/recipes.json` из образа/репозитория (техкарты не обязаны жить на том же диске, что и сессии) |
-| `BOT_UPDATE_MODE` | `polling` (по умолчанию) или `webhook`. **На Timeweb используйте `polling`**: webhook часто падает с `Connection timed out`, Telegram не может достучаться до вашего URL |
-| `WEBHOOK_BASE_URL` | Публичный HTTPS-адрес приложения без слеша на конце. Нужен только при `BOT_UPDATE_MODE=webhook` |
+| `WEBHOOK_BASE_URL` | Публичный HTTPS-адрес приложения без слеша на конце, например `https://your-app.twc1.net` |
 | `WEBHOOK_URL` | Необязательно: полный URL webhook. Если задан, используется вместо `WEBHOOK_BASE_URL + WEBHOOK_PATH` |
 | `WEBHOOK_PATH` | Путь webhook endpoint. По умолчанию `/telegram/webhook` |
-| `WEBHOOK_SECRET_TOKEN` | Необязательно: секрет для проверки заголовка `X-Telegram-Bot-Api-Secret-Token` |
+| `WEBHOOK_SECRET_TOKEN` | Необязательно: секрет для заголовка `X-Telegram-Bot-Api-Secret-Token`. **Должен совпадать** с тем, что зарегистрирован в Telegram |
+| `DELETE_WEBHOOK_ON_SHUTDOWN` | `false` (по умолчанию) — не снимать webhook при рестарте контейнера |
+| `TELEGRAM_REQUEST_TIMEOUT_S` | Таймаут запросов к Telegram API, сек. По умолчанию `75` |
 | `PORT` | Порт FastAPI-приложения. Обычно задаётся хостингом, локально по умолчанию `8000` |
 | `THREAD_*` | Необязательно: `THREAD_OPENING`, `THREAD_CLOSING`, `THREAD_LINE`, … — см. `bot/config.py` (темы в админ-супергруппе) |
 | `THREAD_GOLIST` | Тема для напоминаний GoListBar в 14:00 и 19:00 (по умолчанию равна `THREAD_LINE` — при необходимости задайте отдельный id темы) |
@@ -83,9 +84,10 @@ node scripts/build_recipes.mjs
 1. Подключите репозиторий к Timeweb, укажите ветку (например `main`).
 2. В панели выберите окружение **Python**, framework **FastAPI**.
 3. Сборка: `pip install --upgrade -r requirements.txt`.
-4. Старт: `python -m bot.main` из корня репозитория. Эта команда поднимает Uvicorn/FastAPI и бота (по умолчанию **long polling**).
-5. Healthcheck path: `/health`.
-6. Задайте `BOT_UPDATE_MODE=polling` (уже по умолчанию). `WEBHOOK_BASE_URL` нужен только для режима `webhook`.
+4. Старт: `python -m bot.main` — поднимает Uvicorn/FastAPI и регистрирует webhook в Telegram.
+5. Healthcheck path: `/health` (или `/`).
+6. Задайте `WEBHOOK_BASE_URL` равным публичному HTTPS-адресу приложения в Timeweb.
+7. **Не задавайте** `DELETE_WEBHOOK_ON_SHUTDOWN=true` без необходимости — при деплое webhook останется активным.
 7. **Обязательно** подключите **постоянный диск** и задайте `DATA_DIR` на точку монтирования, чтобы при новом деплое не терялись `allowed_users.json` и `sessions.json`.
 8. Секреты (`BOT_TOKEN`, `ADMIN_GROUP_CHAT_ID`, `WEBHOOK_SECRET_TOKEN`) задавайте только в панели Timeweb, не в Git.
 

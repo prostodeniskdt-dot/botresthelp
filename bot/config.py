@@ -66,15 +66,6 @@ TELEGRAM_CONNECT_TIMEOUT_S = _parse_float("TELEGRAM_CONNECT_TIMEOUT_S", default=
 TELEGRAM_REQUEST_TIMEOUT_S = _parse_float("TELEGRAM_REQUEST_TIMEOUT_S", default=75.0)
 TELEGRAM_POOL_LIMIT = _parse_int("TELEGRAM_POOL_LIMIT", default=100)
 
-# Режим получения обновлений: polling (long polling) или webhook.
-# На Timeweb webhook часто падает с «Connection timed out» — используйте polling (по умолчанию).
-_bot_update_mode = os.getenv("BOT_UPDATE_MODE", "polling").strip().lower()
-USE_POLLING = _bot_update_mode in ("polling", "poll", "long_polling")
-USE_WEBHOOK = not USE_POLLING
-
-# Настройки polling.
-POLLING_TIMEOUT_S = _parse_int("POLLING_TIMEOUT_S", default=30)
-
 # Настройки FastAPI webhook.
 APP_HOST = os.getenv("APP_HOST", "0.0.0.0").strip() or "0.0.0.0"
 APP_PORT = _parse_int("PORT", default=8000)
@@ -89,6 +80,8 @@ if not WEBHOOK_URL and WEBHOOK_BASE_URL:
 WEBHOOK_SECRET_TOKEN = os.getenv("WEBHOOK_SECRET_TOKEN", "").strip() or None
 WEBHOOK_DROP_PENDING_UPDATES = _parse_bool("WEBHOOK_DROP_PENDING_UPDATES", default=False)
 DELETE_WEBHOOK_ON_SHUTDOWN = _parse_bool("DELETE_WEBHOOK_ON_SHUTDOWN", default=False)
+WEBHOOK_MAX_CONNECTIONS = _parse_int("WEBHOOK_MAX_CONNECTIONS", default=40)
+WEBHOOK_WATCHDOG_INTERVAL_S = _parse_float("WEBHOOK_WATCHDOG_INTERVAL_S", default=120.0)
 
 # Как часто сбрасывать sessions.json на диск (debounce).
 SESSIONS_FLUSH_DELAY_S = _parse_float("SESSIONS_FLUSH_DELAY_S", default=1.0)

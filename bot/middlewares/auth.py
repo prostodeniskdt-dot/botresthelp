@@ -19,7 +19,7 @@ async def _send_not_employee(event: TelegramObject) -> None:
     elif isinstance(event, Message):
         await event.answer(MSG_NOT_EMPLOYEE)
     elif isinstance(event, CallbackQuery):
-        await event.callback_query.answer(MSG_NOT_EMPLOYEE, show_alert=True)
+        await event.answer(MSG_NOT_EMPLOYEE, show_alert=True)
 
 
 class AuthMiddleware(BaseMiddleware):

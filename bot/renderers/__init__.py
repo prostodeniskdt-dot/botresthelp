@@ -2,6 +2,7 @@ from bot.renderers.common import CARD_DIVIDER, escape_html, render_bullets, rend
 from bot.renderers.library_renderer import (
     render_library_card,
     render_library_full,
+    render_library_history,
     render_library_qa,
     render_library_sale,
     render_library_summary,
@@ -20,6 +21,7 @@ __all__ = [
     "render_library_card",
     "render_library_summary",
     "render_library_sale",
+    "render_library_history",
     "render_library_qa",
     "render_library_warning",
     "render_library_full",

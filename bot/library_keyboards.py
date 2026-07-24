@@ -109,15 +109,18 @@ def library_card_keyboard(
     return InlineKeyboardMarkup(
         inline_keyboard=[
             [
-                InlineKeyboardButton(text="💬 Фраза продажи", callback_data=f"lb:v:{item_id}:s"),
-                InlineKeyboardButton(text="❓ Вопрос/ответ", callback_data=f"lb:v:{item_id}:q"),
+                InlineKeyboardButton(text="💬 Как сказать гостю", callback_data=f"lb:v:{item_id}:s"),
+                InlineKeyboardButton(text="📖 История", callback_data=f"lb:v:{item_id}:h"),
             ],
             [
-                InlineKeyboardButton(text="⚠️ Важно/аллергены", callback_data=f"lb:v:{item_id}:w"),
+                InlineKeyboardButton(text="❓ Аттестация", callback_data=f"lb:v:{item_id}:q"),
+                InlineKeyboardButton(text="⚠️ Важно", callback_data=f"lb:v:{item_id}:w"),
+            ],
+            [
                 InlineKeyboardButton(text="🧾 Все данные", callback_data=f"lb:v:{item_id}:f"),
             ],
             [
-                InlineKeyboardButton(text="⬅️ Назад к списку", callback_data=back_callback),
+                InlineKeyboardButton(text="⬅️ Назад", callback_data=back_callback),
                 InlineKeyboardButton(text="🏠 В библиотеку", callback_data="lb:h"),
             ],
         ]

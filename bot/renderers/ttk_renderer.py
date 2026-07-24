@@ -22,6 +22,13 @@ CATEGORY_EMOJI = {
     "настойки": "🍶",
     "заготовки": "🧪",
     "чай_кофе": "☕",
+    "signature_cocktails": "🍸",
+    "classic_cocktails": "🥃",
+    "signature_tea": "🫖",
+    "lemonades": "🍋",
+    "infusions": "🍶",
+    "preparations": "🧪",
+    "tea_coffee": "☕",
 }
 
 

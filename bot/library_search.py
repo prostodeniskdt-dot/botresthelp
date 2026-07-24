@@ -23,7 +23,29 @@ def search_library(store: LibraryStore, query: str) -> list[dict[str, Any]]:
         searchable = _norm(str(item.get("searchable_text", "")))
         fields = item.get("fields") or {}
         field_blob = _norm(" ".join(str(v) for v in fields.values() if v))
-        haystack = " ".join(filter(None, [_norm(title), _norm(group), _norm(section_name), searchable, field_blob]))
+        top_blob = _norm(
+            " ".join(
+                str(item.get(key) or "")
+                for key in (
+                    "country",
+                    "region",
+                    "grapes",
+                    "aroma",
+                    "origin_story",
+                    "sales_phrase",
+                    "guest_description",
+                    "country_region",
+                    "base",
+                    "taste",
+                    "style_aging",
+                    "pairing",
+                    "warning",
+                )
+            )
+        )
+        haystack = " ".join(
+            filter(None, [_norm(title), _norm(group), _norm(section_name), searchable, field_blob, top_blob])
+        )
 
         score = 0
         if _norm(title) == q:

@@ -285,29 +285,62 @@ def _format_ttk_import_result(stats: Any, filename: str) -> str:
 @router.message(Command("ttk_check"), IsBotAdmin())
 async def ttk_check(message: Message) -> None:
     store = await load_ttk_store()
+    source_meta = store.meta.get("source")
+    if isinstance(source_meta, dict):
+        source = source_meta.get("file") or source_meta.get("file_name") or source_meta.get("role")
+    else:
+        source = store.meta.get("import_source") or source_meta
+    all_categories = store.meta.get("all_categories") or store.categories
     lines = [
         "📋 <b>Проверка ТТК</b>",
         "",
-        f"Разделов: {len(store.categories)}",
-        f"Позиций: {len(store.active_items)}",
+        f"Источник: {html.escape(str(source or 'не указан'))}",
+        f"Дата обновления: {html.escape(str(store.meta.get('updated_at') or 'не указана'))}",
+        f"Активных карточек: {len(store.active_items)}",
+        f"Разделов в меню: {len(store.categories)}",
         "",
     ]
     errors = 0
-    for cat in store.categories:
+    empty_sections: list[str] = []
+    for cat in all_categories:
         cat_id = str(cat.get("id") or "")
         count = len(store.items_in_category(cat_id))
-        expected = int(cat.get("items_count") or 0)
+        expected = int(cat.get("items_count") or cat.get("item_count") or 0)
         title = html.escape(str(cat.get("title") or cat_id))
-        lines.append(f"{title} — {count}")
+        lines.append(f"{title} — {count}" + (f" (ожид. {expected})" if expected else ""))
         if expected and count != expected:
             errors += 1
-    updated = html.escape(str(store.meta.get("updated_at") or "не указана"))
+        if count == 0:
+            empty_sections.append(title)
+
+    empty_ings = [
+        str(item.get("title") or item.get("id"))
+        for item in store.active_items
+        if not item.get("ingredients")
+    ]
+    from collections import Counter
+
+    title_counts = Counter(
+        str(item.get("title") or "").strip().lower() for item in store.active_items if item.get("title")
+    )
+    dupes = [title for title, cnt in title_counts.items() if cnt > 1]
+    long_cards = 0
+    try:
+        from bot.renderers.ttk_renderer import ttk_card_is_long
+
+        long_cards = sum(1 for item in store.active_items if ttk_card_is_long(item))
+    except Exception:
+        logger.exception("ttk_check long cards failed")
+
     lines.extend(
         [
             "",
-            f"Ошибки: {errors}",
+            f"Пустые разделы: {', '.join(empty_sections) if empty_sections else 'нет'}",
+            f"Без ингредиентов: {len(empty_ings)}",
+            f"Дубли названий: {len(dupes)}",
+            f"Длинные карточки: {long_cards}",
             f"Старые скрытые позиции: {store.archived_count}",
-            f"Дата обновления: {updated}",
+            f"Ошибки сверки разделов: {errors}",
         ]
     )
     await message.answer("\n".join(lines), parse_mode="HTML")

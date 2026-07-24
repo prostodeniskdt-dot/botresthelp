@@ -138,8 +138,19 @@ THREAD_GOLIST = _parse_int("THREAD_GOLIST", default=63)
 # Размер страницы выбора техкарты (кнопки).
 TECH_PAGE_SIZE = _parse_int("TECH_PAGE_SIZE", default=8)
 
+def _prefer_seed(*candidates: Path) -> Path:
+    """Возвращает первый существующий seed-файл, иначе первый кандидат."""
+    for path in candidates:
+        if path.is_file():
+            return path.resolve()
+    return candidates[0].resolve()
+
+
 # Библиотека меню: JSON с позициями и поиском.
-LIBRARY_SEED_PATH = (ROOT / "library_seed_data.json").resolve()
+LIBRARY_SEED_PATH = _prefer_seed(
+    ROOT / "library_seed_data_v2.json",
+    ROOT / "library_seed_data.json",
+)
 _library = os.getenv("LIBRARY_PATH", "").strip()
 if _library:
     LIBRARY_PATH = Path(_library).resolve()
@@ -148,7 +159,10 @@ else:
 LIBRARY_PAGE_SIZE = _parse_int("LIBRARY_PAGE_SIZE", default=8)
 
 # ТТК: JSON с техкартами.
-TTK_SEED_PATH = (ROOT / "ttk_seed_data.json").resolve()
+TTK_SEED_PATH = _prefer_seed(
+    ROOT / "ttk_seed_data_v2.json",
+    ROOT / "ttk_seed_data.json",
+)
 _ttk = os.getenv("TTK_PATH", "").strip()
 if _ttk:
     TTK_PATH = Path(_ttk).resolve()

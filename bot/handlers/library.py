@@ -17,6 +17,7 @@ from bot.library_data import (
 )
 from bot.library_format import (
     format_item_full,
+    format_item_history,
     format_item_qa,
     format_item_sale,
     format_item_summary,
@@ -39,6 +40,7 @@ logger = logging.getLogger(__name__)
 _CARD_FORMATTERS = {
     "d": format_item_summary,
     "s": format_item_sale,
+    "h": format_item_history,
     "q": format_item_qa,
     "w": format_item_warning,
     "f": format_item_full,

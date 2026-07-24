@@ -1,11 +1,13 @@
 .env
 .venv/
 venv/
+.tools/
 __pycache__/
 *.py[cod]
 .pytest_cache/
 .mypy_cache/
 data/sessions.json
 data/shift_reminders.json
+data/backups/
 *.log
 app-logs-*.txt

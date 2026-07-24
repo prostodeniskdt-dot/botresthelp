@@ -33,11 +33,14 @@ SUMMARY_FIELD_ORDER: dict[str, list[str]] = {
     "cocktails": [
         "Основа",
         "Ключевой состав",
+        "Состав",
         "TTK / граммовка",
         "Вкус",
         "Метод",
         "Бокал",
         "Лед/гарнир",
+        "Лёд",
+        "Украшение",
         "Кому предложить",
         "Готовая фраза продажи",
     ],
@@ -45,6 +48,7 @@ SUMMARY_FIELD_ORDER: dict[str, list[str]] = {
         "Профиль",
         "База",
         "Ключевой состав / TTK",
+        "Состав",
         "Выход",
         "Вкус",
         "Сервис / кому предложить",
@@ -58,6 +62,8 @@ SUMMARY_FIELD_ORDER: dict[str, list[str]] = {
         "Тело/кислотность/танин",
         "Ароматика",
         "Pairing",
+        "История и происхождение",
+        "Готовая фраза продажи",
         "Продажная история",
     ],
     "spirits": [
@@ -67,20 +73,27 @@ SUMMARY_FIELD_ORDER: dict[str, list[str]] = {
         "Стиль/выдержка",
         "Вкус",
         "Подача",
+        "История и технология",
         "Кому предложить",
         "Готовая фраза продажи",
     ],
     "beer_soft": [
         "Стиль/состав",
+        "Состав",
         "Вкус",
+        "Метод",
+        "Бокал",
         "Подача",
+        "Приготовление",
         "Кому предложить",
         "Фраза гостю",
     ],
     "prep": [
         "Где используется",
         "Ключевые ингредиенты",
+        "Состав",
         "Краткий метод",
+        "Приготовление",
         "Выход",
         "Что дает во вкусе",
         "Что знать официанту",
@@ -114,6 +127,14 @@ SALE_FIELD_KEYS = (
     "Продажная история",
     "Фраза апсейла",
     "Мягкий заход",
+)
+
+HISTORY_FIELD_KEYS = (
+    "История и происхождение",
+    "История и технология",
+    "История для гостя",
+    "Сторителлинг 20–30 сек",
+    "Продажная история",
 )
 
 WARN_FIELD_KEYS = (
@@ -170,10 +191,136 @@ class LibraryStore:
 _store_cache: tuple[float | None, LibraryStore | None] = (None, None)
 
 
+def _format_amount_name(ing: dict[str, Any]) -> str:
+    amount = str(ing.get("amount") or "").strip()
+    unit = str(ing.get("unit") or "").strip()
+    name = str(ing.get("name") or "").strip()
+    qty = " ".join(part for part in (amount, unit) if part).strip()
+    if qty and name:
+        return f"{qty} — {name}"
+    return name or qty
+
+
+def _composition_to_text(value: Any) -> str:
+    if isinstance(value, list):
+        lines: list[str] = []
+        for entry in value:
+            if isinstance(entry, dict):
+                line = _format_amount_name(entry)
+                if line:
+                    lines.append(line)
+            else:
+                text = str(entry).strip()
+                if text:
+                    lines.append(text)
+        return "\n".join(lines)
+    if value is None:
+        return ""
+    return str(value).strip()
+
+
+def _set_field(fields: dict[str, Any], key: str, value: Any) -> None:
+    if value is None:
+        return
+    if isinstance(value, list):
+        text = _composition_to_text(value)
+    else:
+        text = str(value).strip()
+    if text and key not in fields:
+        fields[key] = text
+
+
+def normalize_library_item(raw: dict[str, Any]) -> dict[str, Any]:
+    """Приводит карточку schema 2.x к формату с fields для рендерера."""
+    item = dict(raw)
+    fields = dict(item.get("fields") or {})
+    section = str(item.get("section_code") or "")
+
+    if "Состав" in fields:
+        fields["Состав"] = _composition_to_text(fields.get("Состав"))
+    if isinstance(fields.get("Примечания"), list):
+        fields["Примечания"] = "; ".join(str(x).strip() for x in fields["Примечания"] if str(x).strip())
+
+    # Общие top-level поля новой редакционной модели.
+    _set_field(fields, "Готовая фраза продажи", item.get("sales_phrase"))
+    _set_field(fields, "Красивое описание для гостя", item.get("guest_description"))
+    _set_field(fields, "Честное предупреждение", item.get("warning"))
+    _set_field(fields, "Вопрос", item.get("question"))
+    _set_field(fields, "Ответ", item.get("answer"))
+    _set_field(fields, "Зацепка для аттестации", item.get("training_hook"))
+    _set_field(fields, "Источник", item.get("source_url") or item.get("source_menu") or item.get("source"))
+
+    if section == "wine":
+        _set_field(fields, "Страна", item.get("country"))
+        _set_field(fields, "Регион/аппелласьон", item.get("region"))
+        _set_field(fields, "Город/местность", item.get("locality"))
+        _set_field(fields, "Сорт(а)", item.get("grapes"))
+        _set_field(fields, "Стиль", item.get("style"))
+        _set_field(fields, "Тело/кислотность/танин", item.get("structure"))
+        _set_field(fields, "Ароматика", item.get("aroma"))
+        _set_field(fields, "Pairing", item.get("pairing"))
+        _set_field(fields, "История и происхождение", item.get("origin_story"))
+        _set_field(fields, "Когда предлагать", item.get("when_to_offer"))
+        if not item.get("format_or_serving"):
+            item["format_or_serving"] = str(item.get("format") or "").strip()
+    elif section == "spirits":
+        _set_field(fields, "Страна/регион", item.get("country_region"))
+        _set_field(fields, "Сырье/база", item.get("base"))
+        _set_field(fields, "Стиль/выдержка", item.get("style_aging"))
+        _set_field(fields, "Вкус", item.get("taste"))
+        _set_field(fields, "Подача", item.get("best_service") or item.get("serving_style"))
+        _set_field(fields, "История и технология", item.get("origin_story"))
+        _set_field(fields, "Кому предложить", item.get("who_to_offer"))
+        if not item.get("format_or_serving"):
+            item["format_or_serving"] = str(item.get("serving") or "").strip()
+    else:
+        # Рецептурные карточки из новой ТТК: состав/подача уже в fields.
+        if fields.get("Состав") and "Ключевой состав" not in fields:
+            fields["Ключевой состав"] = fields["Состав"]
+        if fields.get("Состав") and section == "infusions" and "Ключевой состав / TTK" not in fields:
+            fields["Ключевой состав / TTK"] = fields["Состав"]
+        if fields.get("Состав") and section == "prep" and "Ключевые ингредиенты" not in fields:
+            fields["Ключевые ингредиенты"] = fields["Состав"]
+        ice = str(fields.get("Лёд") or "").strip()
+        garnish = str(fields.get("Украшение") or "").strip()
+        if (ice or garnish) and "Лед/гарнир" not in fields:
+            fields["Лед/гарнир"] = " / ".join(part for part in (ice, garnish) if part)
+
+    item["fields"] = fields
+    if not item.get("price"):
+        price = str(fields.get("Цена") or "").strip()
+        if price:
+            item["price"] = price
+    if not item.get("format_or_serving"):
+        fmt = str(fields.get("Объем") or fields.get("Порция") or "").strip()
+        if fmt:
+            item["format_or_serving"] = fmt
+    return item
+
+
+def normalize_library_payload(data: dict[str, Any]) -> dict[str, Any]:
+    payload = dict(data)
+    raw_items = data.get("library_items")
+    if not isinstance(raw_items, list):
+        raw_items = data.get("items")
+    if not isinstance(raw_items, list):
+        raise ValueError("В JSON нет массива library_items или items")
+    items = [normalize_library_item(item) for item in raw_items if isinstance(item, dict)]
+    payload["library_items"] = items
+    payload["meta"] = {
+        **dict(data.get("meta") or {}),
+        "schema_version": data.get("schema_version"),
+        "generated_at": data.get("generated_at"),
+        "statistics": data.get("statistics") or {},
+        "sources": data.get("sources") or [],
+    }
+    return payload
+
+
 def _build_store(data: dict[str, Any]) -> LibraryStore:
     store = LibraryStore()
     store.meta = dict(data.get("meta") or {})
-    items = list(data.get("library_items") or [])
+    items = [normalize_library_item(item) for item in (data.get("library_items") or data.get("items") or [])]
     for item in items:
         item_id = str(item.get("id", ""))
         if not item_id:
@@ -289,14 +436,22 @@ async def import_library_from_path(source: Path) -> tuple[int, str]:
     async with aiofiles.open(source, encoding="utf-8") as f:
         raw = await f.read()
     data = json.loads(raw)
-    items = data.get("library_items")
-    if not isinstance(items, list):
-        raise ValueError("В JSON нет массива library_items")
+    payload = normalize_library_payload(data)
+    items = payload["library_items"]
 
     ensure_library_file()
+    # Backup текущей библиотеки перед заменой.
+    if LIBRARY_PATH.exists():
+        backups = DATA_DIR / "backups"
+        backups.mkdir(parents=True, exist_ok=True)
+        from datetime import UTC, datetime
+
+        stamp = datetime.now(UTC).strftime("%Y%m%d_%H%M%S")
+        shutil.copy(LIBRARY_PATH, backups / f"library_{stamp}.json")
+
     tmp = LIBRARY_PATH.with_suffix(LIBRARY_PATH.suffix + ".tmp")
     async with aiofiles.open(tmp, "w", encoding="utf-8") as f:
-        await f.write(json.dumps(data, ensure_ascii=False, indent=2))
+        await f.write(json.dumps(payload, ensure_ascii=False, indent=2))
     tmp.replace(LIBRARY_PATH)
     invalidate_library_cache()
     await load_library_store(force=True)

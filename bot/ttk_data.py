@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 
 TTK_HOME_TEXT = (
     "📋 ТТК бара. Выберите раздел: авторские и классические коктейли, "
-    "чаи, лимонады, сезон, настойки, заготовки, чай и кофе."
+    "чаи, лимонады, настойки и заготовки."
 )
 
 SEARCH_EMPTY_TEXT = (
@@ -85,13 +85,58 @@ def _is_active(item: dict[str, Any]) -> bool:
     return not item.get("archived")
 
 
+def _category_is_visible(cat: dict[str, Any]) -> bool:
+    if cat.get("active") is False:
+        return False
+    status = str(cat.get("status") or "").strip().lower()
+    if status in {"empty", "empty_source_sheet", "hidden"}:
+        return False
+    count = cat.get("items_count")
+    if count is None:
+        count = cat.get("item_count")
+    if count is not None and int(count) <= 0:
+        return False
+    return True
+
+
+def normalize_ttk_categories(categories: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Приводит категории schema 2.x к полям, которые ожидает бот."""
+    normalized: list[dict[str, Any]] = []
+    for idx, raw in enumerate(categories):
+        cat = dict(raw)
+        name = str(cat.get("name") or "").strip()
+        emoji = str(cat.get("emoji") or "").strip()
+        title = str(cat.get("title") or "").strip()
+        if not title and name:
+            title = f"{emoji} {name}".strip() if emoji else name
+        cat["title"] = title or str(cat.get("id") or f"category_{idx}")
+        if "items_count" not in cat and "item_count" in cat:
+            cat["items_count"] = int(cat.get("item_count") or 0)
+        if "sort_order" not in cat:
+            cat["sort_order"] = idx + 1
+        normalized.append(cat)
+    return normalized
+
+
+def normalize_ttk_seed(seed: dict[str, Any]) -> dict[str, Any]:
+    data = dict(seed)
+    data["categories"] = normalize_ttk_categories(list(seed.get("categories") or []))
+    return data
+
+
 def _build_store(data: dict[str, Any]) -> TtkStore:
     store = TtkStore()
     store.meta = dict(data.get("meta") or {})
+    if data.get("source"):
+        store.meta["source"] = data.get("source")
+    if data.get("statistics"):
+        store.meta["statistics"] = data.get("statistics")
+    categories = normalize_ttk_categories(list(data.get("categories") or []))
     store.categories = sorted(
-        list(data.get("categories") or []),
+        [cat for cat in categories if _category_is_visible(cat)],
         key=lambda c: int(c.get("sort_order") or 999),
     )
+    store.meta["all_categories"] = categories
     for item in data.get("items") or []:
         item_id = str(item.get("id") or "")
         if not item_id:
@@ -159,6 +204,7 @@ def _validate_item(item: dict[str, Any]) -> None:
 def merge_ttk_data(existing: dict[str, Any] | None, seed: dict[str, Any]) -> tuple[dict[str, Any], ImportStats]:
     stats = ImportStats()
     existing = existing or {}
+    seed = normalize_ttk_seed(seed)
     existing_items = {
         str(item.get("id")): dict(item)
         for item in (existing.get("items") or [])
@@ -207,10 +253,14 @@ def merge_ttk_data(existing: dict[str, Any] | None, seed: dict[str, Any]) -> tup
     payload = {
         "schema_version": seed.get("schema_version") or existing.get("schema_version") or "1.0",
         "source": seed.get("source") or existing.get("source") or {},
+        "statistics": seed.get("statistics") or existing.get("statistics") or {},
         "meta": {
             **dict(existing.get("meta") or {}),
             **dict(seed.get("meta") or {}),
             "updated_at": datetime.now(UTC).isoformat(),
+            "import_source": (seed.get("source") or {}).get("file")
+            or (seed.get("source") or {}).get("file_name")
+            or seed.get("generated_at"),
             "import_stats": {
                 "categories_created": stats.categories_created,
                 "categories_updated": stats.categories_updated,

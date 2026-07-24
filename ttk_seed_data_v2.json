@@ -1,0 +1,3520 @@
+{
+  "schema_version": "2.1",
+  "generated_at": "2026-07-24",
+  "source": {
+    "file": "ТТК Мычара  (2).xlsx",
+    "role": "единственный источник актуальных рецептур",
+    "actual_user_cards": 78,
+    "actual_active_categories": 6,
+    "empty_user_sheets": [
+      "Чай, кофе"
+    ],
+    "missing_from_old_tz": [
+      "Сезон"
+    ],
+    "excluded_service_sheets": [
+      "Перечень инфьюз  пф (пример)",
+      "Бланк заказа (пример)",
+      "Списание на проработку",
+      "_Cебестоимость"
+    ]
+  },
+  "statistics": {
+    "total_items": 78,
+    "by_category": {
+      "Авторские коктейли": 8,
+      "Классические коктейли": 20,
+      "Авторские чаи": 3,
+      "Лимонады": 4,
+      "Настойки": 35,
+      "Заготовки": 8,
+      "Чай, кофе": 0
+    }
+  },
+  "categories": [
+    {
+      "id": "signature_cocktails",
+      "name": "Авторские коктейли",
+      "emoji": "🍸",
+      "source_sheet": "Авторские коктейли",
+      "item_count": 8,
+      "active": true,
+      "status": "active"
+    },
+    {
+      "id": "classic_cocktails",
+      "name": "Классические коктейли",
+      "emoji": "🥃",
+      "source_sheet": "Классические коктейли",
+      "item_count": 20,
+      "active": true,
+      "status": "active"
+    },
+    {
+      "id": "signature_tea",
+      "name": "Авторские чаи",
+      "emoji": "🫖",
+      "source_sheet": "Авторские чаи",
+      "item_count": 3,
+      "active": true,
+      "status": "active"
+    },
+    {
+      "id": "lemonades",
+      "name": "Лимонады",
+      "emoji": "🍋",
+      "source_sheet": "Лимонады",
+      "item_count": 4,
+      "active": true,
+      "status": "active"
+    },
+    {
+      "id": "infusions",
+      "name": "Настойки",
+      "emoji": "🍶",
+      "source_sheet": "Настойки",
+      "item_count": 35,
+      "active": true,
+      "status": "active"
+    },
+    {
+      "id": "preparations",
+      "name": "Заготовки",
+      "emoji": "🧪",
+      "source_sheet": "Заготовки",
+      "item_count": 8,
+      "active": true,
+      "status": "active"
+    },
+    {
+      "id": "tea_coffee",
+      "name": "Чай, кофе",
+      "emoji": "☕",
+      "source_sheet": "Чай, кофе",
+      "item_count": 0,
+      "active": false,
+      "status": "empty_source_sheet"
+    }
+  ],
+  "items": [
+    {
+      "id": "ttk_f3956cd83b",
+      "category_id": "signature_cocktails",
+      "category": "Авторские коктейли",
+      "title": "Базиликовый Спритц",
+      "ingredients": [
+        {
+          "amount": "30",
+          "unit": "мл",
+          "name": "Базиликовый сироп"
+        },
+        {
+          "amount": "50",
+          "unit": "мл",
+          "name": "Настойка Поко Поко"
+        },
+        {
+          "amount": "100",
+          "unit": "мл",
+          "name": "Игристое хаус"
+        },
+        {
+          "amount": "10",
+          "unit": "гр",
+          "name": "Базилик"
+        },
+        {
+          "amount": "5",
+          "unit": "гр",
+          "name": "Лимона"
+        }
+      ],
+      "glass": "Wine",
+      "method": "Билд",
+      "ice": "Кусковой",
+      "garnish": "Листик базилика + лимонный/базиликовый чипс",
+      "prebatch": "",
+      "preparation": "",
+      "output": "",
+      "notes": [],
+      "source_sheet": "Авторские коктейли",
+      "source_row_start": 3,
+      "source_row_end": 13,
+      "searchable_text": "авторские коктейли базиликовый спритц wine билд кусковой листик базилика + лимонный/базиликовый чипс 30 мл базиликовый сироп 50 мл настойка поко поко 100 мл игристое хаус 10 гр базилик 5 гр лимона"
+    },
+    {
+      "id": "ttk_c05b32975e",
+      "category_id": "signature_cocktails",
+      "category": "Авторские коктейли",
+      "title": "Лесные ягоды",
+      "ingredients": [
+        {
+          "amount": "30",
+          "unit": "мл",
+          "name": "Настойка Ежевика"
+        },
+        {
+          "amount": "30",
+          "unit": "мл",
+          "name": "Настойка Клюква"
+        },
+        {
+          "amount": "30",
+          "unit": "мл",
+          "name": "Белок"
+        },
+        {
+          "amount": "20",
+          "unit": "мл",
+          "name": "Лимонный фреш"
+        },
+        {
+          "amount": "20",
+          "unit": "мл",
+          "name": "Сахарный сироп"
+        }
+      ],
+      "glass": "Шале",
+      "method": "Шейк + Драй Шейк",
+      "ice": "Нет",
+      "garnish": "Сублимированная малина, красивая пенка от белка",
+      "prebatch": "60 мл",
+      "preparation": "",
+      "output": "",
+      "notes": [],
+      "source_sheet": "Авторские коктейли",
+      "source_row_start": 14,
+      "source_row_end": 23,
+      "searchable_text": "авторские коктейли лесные ягоды шале шейк + драй шейк нет сублимированная малина, красивая пенка от белка 60 мл 30 мл настойка ежевика 30 мл настойка клюква 30 мл белок 20 мл лимонный фреш 20 мл сахарный сироп"
+    },
+    {
+      "id": "ttk_0294a2fd8b",
+      "category_id": "signature_cocktails",
+      "category": "Авторские коктейли",
+      "title": "Сенчевый гимлет",
+      "ingredients": [
+        {
+          "amount": "50",
+          "unit": "мл",
+          "name": "Кордиал груша/вино/сенча"
+        },
+        {
+          "amount": "25",
+          "unit": "мл",
+          "name": "Водка"
+        },
+        {
+          "amount": "5",
+          "unit": "мл",
+          "name": "Желтый сентджермен"
+        }
+      ],
+      "glass": "Nick & Nora",
+      "method": "Стир",
+      "ice": "Кусковой",
+      "garnish": "Цветок",
+      "prebatch": "65 мл",
+      "preparation": "",
+      "output": "",
+      "notes": [],
+      "source_sheet": "Авторские коктейли",
+      "source_row_start": 24,
+      "source_row_end": 33,
+      "searchable_text": "авторские коктейли сенчевый гимлет nick & nora стир кусковой цветок 65 мл 50 мл кордиал груша/вино/сенча 25 мл водка 5 мл желтый сентджермен"
+    },
+    {
+      "id": "ttk_75c35ce2a5",
+      "category_id": "signature_cocktails",
+      "category": "Авторские коктейли",
+      "title": "Вишневый АйрМэйл",
+      "ingredients": [
+        {
+          "amount": "80",
+          "unit": "мл",
+          "name": "Вишня под ромом"
+        },
+        {
+          "amount": "50",
+          "unit": "мл",
+          "name": "СуперДжус"
+        },
+        {
+          "amount": "10",
+          "unit": "мл",
+          "name": "Сахарный сироп"
+        },
+        {
+          "amount": "60",
+          "unit": "мл",
+          "name": "Хаус игристое"
+        },
+        {
+          "amount": "5",
+          "unit": "гр",
+          "name": "Лимон"
+        }
+      ],
+      "glass": "Пилснер",
+      "method": "Стир",
+      "ice": "Кусковой",
+      "garnish": "Сушеный чипс лимона + цветок",
+      "prebatch": "85 мл",
+      "preparation": "",
+      "output": "",
+      "notes": [],
+      "source_sheet": "Авторские коктейли",
+      "source_row_start": 34,
+      "source_row_end": 42,
+      "searchable_text": "авторские коктейли вишневый айрмэйл пилснер стир кусковой сушеный чипс лимона + цветок 85 мл 80 мл вишня под ромом 50 мл суперджус 10 мл сахарный сироп 60 мл хаус игристое 5 гр лимон"
+    },
+    {
+      "id": "ttk_85d04777ae",
+      "category_id": "signature_cocktails",
+      "category": "Авторские коктейли",
+      "title": "Малиновый Физз",
+      "ingredients": [
+        {
+          "amount": "45",
+          "unit": "мл",
+          "name": "Настойка Малина"
+        },
+        {
+          "amount": "45",
+          "unit": "мл",
+          "name": "Мятные подушечки"
+        },
+        {
+          "amount": "140",
+          "unit": "мл",
+          "name": "Тоник топ"
+        },
+        {
+          "amount": "2",
+          "unit": "гр",
+          "name": "Мята"
+        },
+        {
+          "amount": "5",
+          "unit": "гр",
+          "name": "Лимон"
+        }
+      ],
+      "glass": "Пилснер",
+      "method": "Билд",
+      "ice": "Кусковой",
+      "garnish": "Ветка мяты, сушеный чипс лимона",
+      "prebatch": "90 мл",
+      "preparation": "",
+      "output": "",
+      "notes": [],
+      "source_sheet": "Авторские коктейли",
+      "source_row_start": 43,
+      "source_row_end": 52,
+      "searchable_text": "авторские коктейли малиновый физз пилснер билд кусковой ветка мяты, сушеный чипс лимона 90 мл 45 мл настойка малина 45 мл мятные подушечки 140 мл тоник топ 2 гр мята 5 гр лимон"
+    },
+    {
+      "id": "ttk_9ea36b53d0",
+      "category_id": "signature_cocktails",
+      "category": "Авторские коктейли",
+      "title": "Ананасовый Френч",
+      "ingredients": [
+        {
+          "amount": "15",
+          "unit": "мл",
+          "name": "Джин Хаус"
+        },
+        {
+          "amount": "10",
+          "unit": "мл",
+          "name": "Сироп Сахарный"
+        },
+        {
+          "amount": "10",
+          "unit": "мл",
+          "name": "Фреш лимонный"
+        },
+        {
+          "amount": "25",
+          "unit": "мл",
+          "name": "Ананасовый сок"
+        },
+        {
+          "amount": "50",
+          "unit": "мл",
+          "name": "Хаус Игристое"
+        },
+        {
+          "amount": "1",
+          "unit": "шт",
+          "name": "Цветы"
+        }
+      ],
+      "glass": "Champagne",
+      "method": "Шейк, Сухой шейк",
+      "ice": "Нет",
+      "garnish": "Цветы",
+      "prebatch": "50 мл",
+      "preparation": "",
+      "output": "",
+      "notes": [],
+      "source_sheet": "Авторские коктейли",
+      "source_row_start": 53,
+      "source_row_end": 63,
+      "searchable_text": "авторские коктейли ананасовый френч champagne шейк, сухой шейк нет цветы 50 мл 15 мл джин хаус 10 мл сироп сахарный 10 мл фреш лимонный 25 мл ананасовый сок 50 мл хаус игристое 1 шт цветы"
+    },
+    {
+      "id": "ttk_f61ef4252a",
+      "category_id": "signature_cocktails",
+      "category": "Авторские коктейли",
+      "title": "Грейпфрутовый лонг",
+      "ingredients": [
+        {
+          "amount": "30",
+          "unit": "мл",
+          "name": "Ликер бузины"
+        },
+        {
+          "amount": "50",
+          "unit": "гр",
+          "name": "Вейдж грейп"
+        },
+        {
+          "amount": "75",
+          "unit": "мл",
+          "name": "Вино белое обра прима"
+        },
+        {
+          "amount": "75",
+          "unit": "мл",
+          "name": "Сок грейп"
+        },
+        {
+          "amount": "5",
+          "unit": "гр",
+          "name": "Грейпруйт"
+        }
+      ],
+      "glass": "Пилснер",
+      "method": "Билд",
+      "ice": "Кусковой",
+      "garnish": "Сушеный грейп",
+      "prebatch": "180 мл",
+      "preparation": "",
+      "output": "",
+      "notes": [],
+      "source_sheet": "Авторские коктейли",
+      "source_row_start": 64,
+      "source_row_end": 72,
+      "searchable_text": "авторские коктейли грейпфрутовый лонг пилснер билд кусковой сушеный грейп 180 мл 30 мл ликер бузины 50 гр вейдж грейп 75 мл вино белое обра прима 75 мл сок грейп 5 гр грейпруйт"
+    },
+    {
+      "id": "ttk_3e2e2746b9",
+      "category_id": "signature_cocktails",
+      "category": "Авторские коктейли",
+      "title": "Клубничная маргарита",
+      "ingredients": [
+        {
+          "amount": "60",
+          "unit": "мл",
+          "name": "Мексиканка"
+        },
+        {
+          "amount": "20",
+          "unit": "мл",
+          "name": "СуперДжус"
+        },
+        {
+          "amount": "10",
+          "unit": "мл",
+          "name": "Сахарный сироп"
+        },
+        {
+          "amount": "20",
+          "unit": "мл",
+          "name": "Трипл сек"
+        },
+        {
+          "amount": "1",
+          "unit": "гр",
+          "name": "Сахар"
+        },
+        {
+          "amount": "5",
+          "unit": "гр",
+          "name": "Лайм"
+        }
+      ],
+      "glass": "Nick & Nora",
+      "method": "Шейк",
+      "ice": "Кусковой",
+      "garnish": "Сахарная краста, сушеный чипс лайма",
+      "prebatch": "100 мл",
+      "preparation": "",
+      "output": "",
+      "notes": [],
+      "source_sheet": "Авторские коктейли",
+      "source_row_start": 73,
+      "source_row_end": 79,
+      "searchable_text": "авторские коктейли клубничная маргарита nick & nora шейк кусковой сахарная краста, сушеный чипс лайма 100 мл 60 мл мексиканка 20 мл суперджус 10 мл сахарный сироп 20 мл трипл сек 1 гр сахар 5 гр лайм"
+    },
+    {
+      "id": "ttk_9527486fea",
+      "category_id": "classic_cocktails",
+      "category": "Классические коктейли",
+      "title": "Мартини Фиеро Тоник",
+      "ingredients": [
+        {
+          "amount": "70",
+          "unit": "мл",
+          "name": "Мартини Фиеро"
+        },
+        {
+          "amount": "150",
+          "unit": "мл",
+          "name": "Тоник"
+        },
+        {
+          "amount": "20",
+          "unit": "гр",
+          "name": "Апельсин"
+        }
+      ],
+      "glass": "Wine",
+      "method": "Билд",
+      "ice": "Кусковой",
+      "garnish": "Сушенный слайс апельсина",
+      "prebatch": "",
+      "preparation": "",
+      "output": "",
+      "notes": [],
+      "source_sheet": "Классические коктейли",
+      "source_row_start": 3,
+      "source_row_end": 12,
+      "searchable_text": "классические коктейли мартини фиеро тоник wine билд кусковой сушенный слайс апельсина 70 мл мартини фиеро 150 мл тоник 20 гр апельсин"
+    },
+    {
+      "id": "ttk_5b8cbe168a",
+      "category_id": "classic_cocktails",
+      "category": "Классические коктейли",
+      "title": "Апероль Спритц",
+      "ingredients": [
+        {
+          "amount": "50",
+          "unit": "мл",
+          "name": "Ликер Апероль"
+        },
+        {
+          "amount": "150",
+          "unit": "мл",
+          "name": "Вино Игристое"
+        },
+        {
+          "amount": "30",
+          "unit": "мл",
+          "name": "Вода"
+        },
+        {
+          "amount": "30",
+          "unit": "гр",
+          "name": "Апельсины"
+        }
+      ],
+      "glass": "Wine",
+      "method": "Билд",
+      "ice": "Нет",
+      "garnish": "Сушенный слайс апельсина",
+      "prebatch": "",
+      "preparation": "",
+      "output": "",
+      "notes": [],
+      "source_sheet": "Классические коктейли",
+      "source_row_start": 13,
+      "source_row_end": 21,
+      "searchable_text": "классические коктейли апероль спритц wine билд нет сушенный слайс апельсина 50 мл ликер апероль 150 мл вино игристое 30 мл вода 30 гр апельсины"
+    },
+    {
+      "id": "ttk_6c1d0ae63f",
+      "category_id": "classic_cocktails",
+      "category": "Классические коктейли",
+      "title": "Виски Кола",
+      "ingredients": [
+        {
+          "amount": "40",
+          "unit": "мл",
+          "name": "Виски Хаус"
+        },
+        {
+          "amount": "150",
+          "unit": "мл",
+          "name": "Кола Хаус"
+        },
+        {
+          "amount": "10",
+          "unit": "гр",
+          "name": "Лимоны"
+        }
+      ],
+      "glass": "Rocks",
+      "method": "Билд",
+      "ice": "Кусковой",
+      "garnish": "Сушеный чипс лимона",
+      "prebatch": "",
+      "preparation": "",
+      "output": "",
+      "notes": [],
+      "source_sheet": "Классические коктейли",
+      "source_row_start": 22,
+      "source_row_end": 31,
+      "searchable_text": "классические коктейли виски кола rocks билд кусковой сушеный чипс лимона 40 мл виски хаус 150 мл кола хаус 10 гр лимоны"
+    },
+    {
+      "id": "ttk_b2eff2394b",
+      "category_id": "classic_cocktails",
+      "category": "Классические коктейли",
+      "title": "Виски Сауэр",
+      "ingredients": [
+        {
+          "amount": "60",
+          "unit": "мл",
+          "name": "Виски Хаус"
+        },
+        {
+          "amount": "20",
+          "unit": "мл",
+          "name": "Фреш лимона"
+        },
+        {
+          "amount": "20",
+          "unit": "мл",
+          "name": "Сахарный сироп"
+        },
+        {
+          "amount": "30",
+          "unit": "мл",
+          "name": "Белок Яичный"
+        },
+        {
+          "amount": "10",
+          "unit": "гр",
+          "name": "Лимоны"
+        }
+      ],
+      "glass": "Rocks",
+      "method": "Шейк + Сухой шейк",
+      "ice": "Кусковой",
+      "garnish": "Сушеный чипс лимона",
+      "prebatch": "",
+      "preparation": "",
+      "output": "",
+      "notes": [],
+      "source_sheet": "Классические коктейли",
+      "source_row_start": 32,
+      "source_row_end": 40,
+      "searchable_text": "классические коктейли виски сауэр rocks шейк + сухой шейк кусковой сушеный чипс лимона 60 мл виски хаус 20 мл фреш лимона 20 мл сахарный сироп 30 мл белок яичный 10 гр лимоны"
+    },
+    {
+      "id": "ttk_0d4e3acd0f",
+      "category_id": "classic_cocktails",
+      "category": "Классические коктейли",
+      "title": "Джин-Тоник",
+      "ingredients": [
+        {
+          "amount": "40",
+          "unit": "мл",
+          "name": "Джин Хаус"
+        },
+        {
+          "amount": "150",
+          "unit": "мл",
+          "name": "Тоник"
+        },
+        {
+          "amount": "10",
+          "unit": "гр",
+          "name": "Лайм"
+        }
+      ],
+      "glass": "Пилснер",
+      "method": "Билд",
+      "ice": "Кусковой",
+      "garnish": "Сушеный чипс лайма",
+      "prebatch": "",
+      "preparation": "",
+      "output": "",
+      "notes": [],
+      "source_sheet": "Классические коктейли",
+      "source_row_start": 41,
+      "source_row_end": 50,
+      "searchable_text": "классические коктейли джин-тоник пилснер билд кусковой сушеный чипс лайма 40 мл джин хаус 150 мл тоник 10 гр лайм"
+    },
+    {
+      "id": "ttk_8c4f5d685f",
+      "category_id": "classic_cocktails",
+      "category": "Классические коктейли",
+      "title": "Лонг Айленд",
+      "ingredients": [
+        {
+          "amount": "20",
+          "unit": "мл",
+          "name": "Водка Хаус"
+        },
+        {
+          "amount": "20",
+          "unit": "мл",
+          "name": "Ром Хаус"
+        },
+        {
+          "amount": "20",
+          "unit": "мл",
+          "name": "Джин Хаус"
+        },
+        {
+          "amount": "20",
+          "unit": "мл",
+          "name": "Текила Хаус"
+        },
+        {
+          "amount": "20",
+          "unit": "мл",
+          "name": "Ликер Трипл Секс"
+        },
+        {
+          "amount": "120",
+          "unit": "мл",
+          "name": "Кола"
+        },
+        {
+          "amount": "20",
+          "unit": "мл",
+          "name": "Сахарный сироп"
+        },
+        {
+          "amount": "20",
+          "unit": "мл",
+          "name": "Лимонный сок"
+        }
+      ],
+      "glass": "Пилснер",
+      "method": "Билд",
+      "ice": "Кусковой",
+      "garnish": "Сушеный чипс лимона",
+      "prebatch": "100 мл добавить топ колу сахар + лимоный сок",
+      "preparation": "",
+      "output": "",
+      "notes": [],
+      "source_sheet": "Классические коктейли",
+      "source_row_start": 51,
+      "source_row_end": 65,
+      "searchable_text": "классические коктейли лонг айленд пилснер билд кусковой сушеный чипс лимона 100 мл добавить топ колу сахар + лимоный сок 20 мл водка хаус 20 мл ром хаус 20 мл джин хаус 20 мл текила хаус 20 мл ликер трипл секс 120 мл кола 20 мл сахарный сироп 20 мл лимонный сок"
+    },
+    {
+      "id": "ttk_48f8345008",
+      "category_id": "classic_cocktails",
+      "category": "Классические коктейли",
+      "title": "Негрони",
+      "ingredients": [
+        {
+          "amount": "30",
+          "unit": "мл",
+          "name": "Мартини Россо"
+        },
+        {
+          "amount": "30",
+          "unit": "мл",
+          "name": "Кампари"
+        },
+        {
+          "amount": "30",
+          "unit": "мл",
+          "name": "Джин Хаус"
+        },
+        {
+          "amount": "10",
+          "unit": "гр",
+          "name": "Апельсины"
+        }
+      ],
+      "glass": "Rocks",
+      "method": "Билд",
+      "ice": "Кусковой",
+      "garnish": "Цедра апельсина",
+      "prebatch": "",
+      "preparation": "",
+      "output": "",
+      "notes": [],
+      "source_sheet": "Классические коктейли",
+      "source_row_start": 66,
+      "source_row_end": 74,
+      "searchable_text": "классические коктейли негрони rocks билд кусковой цедра апельсина 30 мл мартини россо 30 мл кампари 30 мл джин хаус 10 гр апельсины"
+    },
+    {
+      "id": "ttk_148eef1d60",
+      "category_id": "classic_cocktails",
+      "category": "Классические коктейли",
+      "title": "Олд Фешен",
+      "ingredients": [
+        {
+          "amount": "60",
+          "unit": "мл",
+          "name": "Виски Хаус"
+        },
+        {
+          "amount": "10",
+          "unit": "мл",
+          "name": "Сахарный сироп"
+        },
+        {
+          "amount": "15",
+          "unit": "мл",
+          "name": "Суперджус"
+        },
+        {
+          "amount": "1",
+          "unit": "гр",
+          "name": "Ангостура"
+        },
+        {
+          "amount": "20",
+          "unit": "мл",
+          "name": "Вода"
+        }
+      ],
+      "glass": "Rocks",
+      "method": "Стир",
+      "ice": "Кусковой",
+      "garnish": "Цедра Апельсина",
+      "prebatch": "",
+      "preparation": "",
+      "output": "",
+      "notes": [],
+      "source_sheet": "Классические коктейли",
+      "source_row_start": 75,
+      "source_row_end": 84,
+      "searchable_text": "классические коктейли олд фешен rocks стир кусковой цедра апельсина 60 мл виски хаус 10 мл сахарный сироп 15 мл суперджус 1 гр ангостура 20 мл вода"
+    },
+    {
+      "id": "ttk_67263b8e24",
+      "category_id": "classic_cocktails",
+      "category": "Классические коктейли",
+      "title": "ПорнСтарМартини",
+      "ingredients": [
+        {
+          "amount": "100",
+          "unit": "мл",
+          "name": "Настойка порнстар"
+        },
+        {
+          "amount": "15",
+          "unit": "мл",
+          "name": "Фреш Лимоный (супер джус)"
+        },
+        {
+          "amount": "50",
+          "unit": "мл",
+          "name": "Хаус игристое"
+        },
+        {
+          "amount": "10",
+          "unit": "мл",
+          "name": "Ванильный сироп"
+        }
+      ],
+      "glass": "Шале",
+      "method": "Шейк + сухой шейк",
+      "ice": "Нет",
+      "garnish": "Сушеный чипс лайма/лимона",
+      "prebatch": "",
+      "preparation": "",
+      "output": "",
+      "notes": [],
+      "source_sheet": "Классические коктейли",
+      "source_row_start": 85,
+      "source_row_end": 94,
+      "searchable_text": "классические коктейли порнстармартини шале шейк + сухой шейк нет сушеный чипс лайма/лимона 100 мл настойка порнстар 15 мл фреш лимоный (супер джус) 50 мл хаус игристое 10 мл ванильный сироп"
+    },
+    {
+      "id": "ttk_10ff760311",
+      "category_id": "classic_cocktails",
+      "category": "Классические коктейли",
+      "title": "Глинтвейн",
+      "ingredients": [
+        {
+          "amount": "235",
+          "unit": "мл",
+          "name": "Сангрия бейби п/ф"
+        },
+        {
+          "amount": "30",
+          "unit": "гр",
+          "name": "Апельсины"
+        },
+        {
+          "amount": "20",
+          "unit": "гр",
+          "name": "Лимоны"
+        },
+        {
+          "amount": "30",
+          "unit": "гр",
+          "name": "Яблоки"
+        },
+        {
+          "amount": "6",
+          "unit": "гр",
+          "name": "Корица палочки"
+        },
+        {
+          "amount": "3",
+          "unit": "гр",
+          "name": "Бадьян"
+        },
+        {
+          "amount": "3",
+          "unit": "гр",
+          "name": "Гвоздика"
+        }
+      ],
+      "glass": "Tea",
+      "method": "Прогреть Стимером",
+      "ice": "Нет",
+      "garnish": "Нет",
+      "prebatch": "",
+      "preparation": "",
+      "output": "",
+      "notes": [],
+      "source_sheet": "Классические коктейли",
+      "source_row_start": 95,
+      "source_row_end": 105,
+      "searchable_text": "классические коктейли глинтвейн tea прогреть стимером нет нет 235 мл сангрия бейби п/ф 30 гр апельсины 20 гр лимоны 30 гр яблоки 6 гр корица палочки 3 гр бадьян 3 гр гвоздика"
+    },
+    {
+      "id": "ttk_c45c5a9d8a",
+      "category_id": "classic_cocktails",
+      "category": "Классические коктейли",
+      "title": "Глинтвейн б/а",
+      "ingredients": [
+        {
+          "amount": "235",
+          "unit": "мл",
+          "name": "Винограный сок"
+        },
+        {
+          "amount": "30",
+          "unit": "гр",
+          "name": "Апельсины"
+        },
+        {
+          "amount": "20",
+          "unit": "гр",
+          "name": "Лимоны"
+        },
+        {
+          "amount": "30",
+          "unit": "гр",
+          "name": "Яблоки"
+        },
+        {
+          "amount": "6",
+          "unit": "гр",
+          "name": "Корица палочки"
+        },
+        {
+          "amount": "3",
+          "unit": "гр",
+          "name": "Бадьян"
+        },
+        {
+          "amount": "3",
+          "unit": "гр",
+          "name": "Гвоздика"
+        },
+        {
+          "amount": "50",
+          "unit": "мл",
+          "name": "Мед"
+        }
+      ],
+      "glass": "Tea",
+      "method": "Прогреть Стимером",
+      "ice": "Нет",
+      "garnish": "Нет",
+      "prebatch": "",
+      "preparation": "",
+      "output": "",
+      "notes": [],
+      "source_sheet": "Классические коктейли",
+      "source_row_start": 106,
+      "source_row_end": 117,
+      "searchable_text": "классические коктейли глинтвейн б/а tea прогреть стимером нет нет 235 мл винограный сок 30 гр апельсины 20 гр лимоны 30 гр яблоки 6 гр корица палочки 3 гр бадьян 3 гр гвоздика 50 мл мед"
+    },
+    {
+      "id": "ttk_8f3d819858",
+      "category_id": "classic_cocktails",
+      "category": "Классические коктейли",
+      "title": "Кузнечик",
+      "ingredients": [
+        {
+          "amount": "30 мл",
+          "unit": "мл",
+          "name": "Мятный ликер"
+        },
+        {
+          "amount": "30",
+          "unit": "мл",
+          "name": "Какао темный ликер"
+        },
+        {
+          "amount": "30",
+          "unit": "мл",
+          "name": "Сливки"
+        }
+      ],
+      "glass": "Nick & Nora",
+      "method": "Шейк",
+      "ice": "Нет",
+      "garnish": "Листик мяты",
+      "prebatch": "",
+      "preparation": "",
+      "output": "",
+      "notes": [],
+      "source_sheet": "Классические коктейли",
+      "source_row_start": 118,
+      "source_row_end": 126,
+      "searchable_text": "классические коктейли кузнечик nick & nora шейк нет листик мяты 30 мл мл мятный ликер 30 мл какао темный ликер 30 мл сливки"
+    },
+    {
+      "id": "ttk_923cb6f6d1",
+      "category_id": "classic_cocktails",
+      "category": "Классические коктейли",
+      "title": "Сайдкар",
+      "ingredients": [
+        {
+          "amount": "40 мл",
+          "unit": "мл",
+          "name": "Коньяк хаус"
+        },
+        {
+          "amount": "20",
+          "unit": "мл",
+          "name": "Фреш лимона (супер джус)"
+        },
+        {
+          "amount": "20",
+          "unit": "мл",
+          "name": "Ликер Трипл Сек"
+        }
+      ],
+      "glass": "Nick & Nora",
+      "method": "Шейк",
+      "ice": "Кусковой",
+      "garnish": "Цедра лимона",
+      "prebatch": "",
+      "preparation": "",
+      "output": "",
+      "notes": [],
+      "source_sheet": "Классические коктейли",
+      "source_row_start": 127,
+      "source_row_end": 135,
+      "searchable_text": "классические коктейли сайдкар nick & nora шейк кусковой цедра лимона 40 мл мл коньяк хаус 20 мл фреш лимона (супер джус) 20 мл ликер трипл сек"
+    },
+    {
+      "id": "ttk_3d34712dfa",
+      "category_id": "classic_cocktails",
+      "category": "Классические коктейли",
+      "title": "Бренди Александр",
+      "ingredients": [
+        {
+          "amount": "30 мл",
+          "unit": "мл",
+          "name": "Коньяк хаус"
+        },
+        {
+          "amount": "30",
+          "unit": "мл",
+          "name": "Темный ликер какао"
+        },
+        {
+          "amount": "30",
+          "unit": "мл",
+          "name": "Сливки"
+        }
+      ],
+      "glass": "Nick & Nora",
+      "method": "Шейк",
+      "ice": "Кусковой",
+      "garnish": "Какао на стенку",
+      "prebatch": "",
+      "preparation": "",
+      "output": "",
+      "notes": [],
+      "source_sheet": "Классические коктейли",
+      "source_row_start": 136,
+      "source_row_end": 144,
+      "searchable_text": "классические коктейли бренди александр nick & nora шейк кусковой какао на стенку 30 мл мл коньяк хаус 30 мл темный ликер какао 30 мл сливки"
+    },
+    {
+      "id": "ttk_9ca7607c18",
+      "category_id": "classic_cocktails",
+      "category": "Классические коктейли",
+      "title": "Френч 75",
+      "ingredients": [
+        {
+          "amount": "40 мл",
+          "unit": "мл",
+          "name": "Джин хаус"
+        },
+        {
+          "amount": "15",
+          "unit": "мл",
+          "name": "Сахарный сироп"
+        },
+        {
+          "amount": "15",
+          "unit": "мл",
+          "name": "Супер Джус"
+        },
+        {
+          "amount": "60",
+          "unit": "мл",
+          "name": "Игристое хаус"
+        }
+      ],
+      "glass": "Nick & Nora",
+      "method": "Шейк",
+      "ice": "Кусковой",
+      "garnish": "Цедра лимона",
+      "prebatch": "",
+      "preparation": "",
+      "output": "",
+      "notes": [],
+      "source_sheet": "Классические коктейли",
+      "source_row_start": 145,
+      "source_row_end": 154,
+      "searchable_text": "классические коктейли френч 75 nick & nora шейк кусковой цедра лимона 40 мл мл джин хаус 15 мл сахарный сироп 15 мл супер джус 60 мл игристое хаус"
+    },
+    {
+      "id": "ttk_a4d2e7dd5f",
+      "category_id": "classic_cocktails",
+      "category": "Классические коктейли",
+      "title": "Меж простыней",
+      "ingredients": [
+        {
+          "amount": "30 мл",
+          "unit": "мл",
+          "name": "Коньяк хаус"
+        },
+        {
+          "amount": "30",
+          "unit": "мл",
+          "name": "Трипл сек"
+        },
+        {
+          "amount": "30",
+          "unit": "мл",
+          "name": "Ром Хаус"
+        },
+        {
+          "amount": "20",
+          "unit": "мл",
+          "name": "Лимонный сок (супер джус)"
+        }
+      ],
+      "glass": "Nick & Nora",
+      "method": "Шейк",
+      "ice": "Кусковой",
+      "garnish": "Цедра апельсина",
+      "prebatch": "",
+      "preparation": "",
+      "output": "",
+      "notes": [],
+      "source_sheet": "Классические коктейли",
+      "source_row_start": 155,
+      "source_row_end": 163,
+      "searchable_text": "классические коктейли меж простыней nick & nora шейк кусковой цедра апельсина 30 мл мл коньяк хаус 30 мл трипл сек 30 мл ром хаус 20 мл лимонный сок (супер джус)"
+    },
+    {
+      "id": "ttk_e20f79932d",
+      "category_id": "classic_cocktails",
+      "category": "Классические коктейли",
+      "title": "Джин Базил Смэш",
+      "ingredients": [
+        {
+          "amount": "40 мл",
+          "unit": "мл",
+          "name": "Джин Хаус"
+        },
+        {
+          "amount": "60",
+          "unit": "мл",
+          "name": "Базиликовый кордиал"
+        },
+        {
+          "amount": "30",
+          "unit": "мл",
+          "name": "Вода газ топ"
+        },
+        {
+          "amount": "15",
+          "unit": "мл",
+          "name": "СуперДжус"
+        }
+      ],
+      "glass": "Rocks",
+      "method": "Шейк + файн стрейн",
+      "ice": "Кусковой",
+      "garnish": "Листик базилика, сушеный чипс лайма",
+      "prebatch": "",
+      "preparation": "",
+      "output": "",
+      "notes": [],
+      "source_sheet": "Классические коктейли",
+      "source_row_start": 164,
+      "source_row_end": 172,
+      "searchable_text": "классические коктейли джин базил смэш rocks шейк + файн стрейн кусковой листик базилика, сушеный чипс лайма 40 мл мл джин хаус 60 мл базиликовый кордиал 30 мл вода газ топ 15 мл суперджус"
+    },
+    {
+      "id": "ttk_5f4cc2246d",
+      "category_id": "classic_cocktails",
+      "category": "Классические коктейли",
+      "title": "Мартини Фиеро Спритц",
+      "ingredients": [
+        {
+          "amount": "70",
+          "unit": "мл",
+          "name": "Мартини Фиеро"
+        },
+        {
+          "amount": "100",
+          "unit": "мл",
+          "name": "Мартини Брют"
+        },
+        {
+          "amount": "80",
+          "unit": "гр",
+          "name": "Апельсин"
+        },
+        {
+          "amount": "30",
+          "unit": "гр",
+          "name": "Вода газ"
+        }
+      ],
+      "glass": "Wine",
+      "method": "Билд",
+      "ice": "Кусковой",
+      "garnish": "Слайс апельсина",
+      "prebatch": "",
+      "preparation": "",
+      "output": "",
+      "notes": [],
+      "source_sheet": "Классические коктейли",
+      "source_row_start": 173,
+      "source_row_end": 184,
+      "searchable_text": "классические коктейли мартини фиеро спритц wine билд кусковой слайс апельсина 70 мл мартини фиеро 100 мл мартини брют 80 гр апельсин 30 гр вода газ"
+    },
+    {
+      "id": "ttk_8b65952a5e",
+      "category_id": "classic_cocktails",
+      "category": "Классические коктейли",
+      "title": "Нью-Йорк Сауэр",
+      "ingredients": [
+        {
+          "amount": "40",
+          "unit": "мл",
+          "name": "Виски хаус"
+        },
+        {
+          "amount": "15",
+          "unit": "мл",
+          "name": "СуперДжус"
+        },
+        {
+          "amount": "15",
+          "unit": "мл",
+          "name": "Сахарный сироп"
+        },
+        {
+          "amount": "15",
+          "unit": "мл",
+          "name": "Белок"
+        },
+        {
+          "amount": "30",
+          "unit": "мл",
+          "name": "Красное вино хаус"
+        }
+      ],
+      "glass": "Rocks",
+      "method": "Шейк + дабл шейк",
+      "ice": "Кусковой",
+      "garnish": "Слоем красное вино",
+      "prebatch": "",
+      "preparation": "",
+      "output": "",
+      "notes": [],
+      "source_sheet": "Классические коктейли",
+      "source_row_start": 185,
+      "source_row_end": 194,
+      "searchable_text": "классические коктейли нью-йорк сауэр rocks шейк + дабл шейк кусковой слоем красное вино 40 мл виски хаус 15 мл суперджус 15 мл сахарный сироп 15 мл белок 30 мл красное вино хаус"
+    },
+    {
+      "id": "ttk_e054c94720",
+      "category_id": "classic_cocktails",
+      "category": "Классические коктейли",
+      "title": "Пенецилин",
+      "ingredients": [
+        {
+          "amount": "50",
+          "unit": "мл",
+          "name": "Бурбон хаус"
+        },
+        {
+          "amount": "20",
+          "unit": "мл",
+          "name": "Сироп имбирный"
+        },
+        {
+          "amount": "10",
+          "unit": "мл",
+          "name": "Сахарный сироп"
+        },
+        {
+          "amount": "15",
+          "unit": "мл",
+          "name": "Белок"
+        },
+        {
+          "amount": "10",
+          "unit": "мл",
+          "name": "СуперДжус"
+        }
+      ],
+      "glass": "Rocks",
+      "method": "Шейк + дабл шейк",
+      "ice": "Кусковой",
+      "garnish": "Цитрусовая пыль",
+      "prebatch": "",
+      "preparation": "",
+      "output": "",
+      "notes": [],
+      "source_sheet": "Классические коктейли",
+      "source_row_start": 195,
+      "source_row_end": 200,
+      "searchable_text": "классические коктейли пенецилин rocks шейк + дабл шейк кусковой цитрусовая пыль 50 мл бурбон хаус 20 мл сироп имбирный 10 мл сахарный сироп 15 мл белок 10 мл суперджус"
+    },
+    {
+      "id": "ttk_9301184abf",
+      "category_id": "signature_tea",
+      "category": "Авторские чаи",
+      "title": "Ягодный с мятой",
+      "ingredients": [
+        {
+          "amount": "20",
+          "unit": "гр",
+          "name": "Мята"
+        },
+        {
+          "amount": "6",
+          "unit": "гр",
+          "name": "Ассам"
+        },
+        {
+          "amount": "100",
+          "unit": "мл",
+          "name": "Кордиал малина/черная смородина"
+        },
+        {
+          "amount": "20",
+          "unit": "гр",
+          "name": "Жмых из под кордиала"
+        }
+      ],
+      "glass": "",
+      "method": "",
+      "ice": "",
+      "garnish": "",
+      "prebatch": "",
+      "preparation": "Добавить все ингридиенты в стеклянный чайник, и прогреть все стимером.",
+      "output": "",
+      "notes": [
+        "Выход: 500 мл"
+      ],
+      "source_sheet": "Авторские чаи",
+      "source_row_start": 3,
+      "source_row_end": 10,
+      "searchable_text": "авторские чаи ягодный с мятой добавить все ингридиенты в стеклянный чайник, и прогреть все стимером. 20 гр мята 6 гр ассам 100 мл кордиал малина/черная смородина 20 гр жмых из под кордиала выход: 500 мл"
+    },
+    {
+      "id": "ttk_e861a068e7",
+      "category_id": "signature_tea",
+      "category": "Авторские чаи",
+      "title": "Облепиховый",
+      "ingredients": [
+        {
+          "amount": "10",
+          "unit": "гр",
+          "name": "Имбирь"
+        },
+        {
+          "amount": "30",
+          "unit": "гр",
+          "name": "Лимоны"
+        },
+        {
+          "amount": "5",
+          "unit": "мл",
+          "name": "Чай сенча"
+        },
+        {
+          "amount": "30",
+          "unit": "гр",
+          "name": "Мед"
+        },
+        {
+          "amount": "5",
+          "unit": "гр",
+          "name": "Мята"
+        },
+        {
+          "amount": "100",
+          "unit": "мл",
+          "name": "Кордиал облепиха"
+        },
+        {
+          "amount": "20",
+          "unit": "гр",
+          "name": "Жмых из под кордиала"
+        }
+      ],
+      "glass": "",
+      "method": "",
+      "ice": "",
+      "garnish": "",
+      "prebatch": "",
+      "preparation": "Добавить все ингридиенты в стеклянный чайник, и прогреть все стимером.",
+      "output": "",
+      "notes": [
+        "Выход: 500 мл"
+      ],
+      "source_sheet": "Авторские чаи",
+      "source_row_start": 11,
+      "source_row_end": 21,
+      "searchable_text": "авторские чаи облепиховый добавить все ингридиенты в стеклянный чайник, и прогреть все стимером. 10 гр имбирь 30 гр лимоны 5 мл чай сенча 30 гр мед 5 гр мята 100 мл кордиал облепиха 20 гр жмых из под кордиала выход: 500 мл"
+    },
+    {
+      "id": "ttk_9a16cf8263",
+      "category_id": "signature_tea",
+      "category": "Авторские чаи",
+      "title": "Цитрусовый",
+      "ingredients": [
+        {
+          "amount": "100",
+          "unit": "мл",
+          "name": "Цитрусовый кордиал п/ф"
+        },
+        {
+          "amount": "50",
+          "unit": "мл",
+          "name": "Супер джус п/ф"
+        },
+        {
+          "amount": "20",
+          "unit": "гр",
+          "name": "Апельсины"
+        },
+        {
+          "amount": "20",
+          "unit": "гр",
+          "name": "Грейпфрут"
+        },
+        {
+          "amount": "5",
+          "unit": "гр",
+          "name": "Юдзу-инжир"
+        },
+        {
+          "amount": "20",
+          "unit": "мл",
+          "name": "Сахарный сироп"
+        },
+        {
+          "amount": "10",
+          "unit": "гр",
+          "name": "Имбирь"
+        }
+      ],
+      "glass": "",
+      "method": "",
+      "ice": "",
+      "garnish": "",
+      "prebatch": "",
+      "preparation": "Добавить все ингридиенты в стеклянный чайник, и прогреть все стимером.",
+      "output": "",
+      "notes": [
+        "Выход: 500 мл"
+      ],
+      "source_sheet": "Авторские чаи",
+      "source_row_start": 22,
+      "source_row_end": 29,
+      "searchable_text": "авторские чаи цитрусовый добавить все ингридиенты в стеклянный чайник, и прогреть все стимером. 100 мл цитрусовый кордиал п/ф 50 мл супер джус п/ф 20 гр апельсины 20 гр грейпфрут 5 гр юдзу-инжир 20 мл сахарный сироп 10 гр имбирь выход: 500 мл"
+    },
+    {
+      "id": "ttk_ef6e230231",
+      "category_id": "lemonades",
+      "category": "Лимонады",
+      "title": "Базиликовый лимонад",
+      "ingredients": [
+        {
+          "amount": "50",
+          "unit": "мл",
+          "name": "Базеликовый кордиал п/ф"
+        },
+        {
+          "amount": "30",
+          "unit": "мл",
+          "name": "Супер джус п/ф"
+        },
+        {
+          "amount": "10",
+          "unit": "гр",
+          "name": "Лайм"
+        },
+        {
+          "amount": "180",
+          "unit": "мл",
+          "name": "Вода"
+        }
+      ],
+      "glass": "Highball",
+      "method": "Стир",
+      "ice": "Кусковой",
+      "garnish": "Бошка базилика",
+      "prebatch": "Нет",
+      "preparation": "",
+      "output": "",
+      "notes": [],
+      "source_sheet": "Лимонады",
+      "source_row_start": 3,
+      "source_row_end": 11,
+      "searchable_text": "лимонады базиликовый лимонад highball стир кусковой бошка базилика нет 50 мл базеликовый кордиал п/ф 30 мл супер джус п/ф 10 гр лайм 180 мл вода"
+    },
+    {
+      "id": "ttk_80a8df7823",
+      "category_id": "lemonades",
+      "category": "Лимонады",
+      "title": "Цитрусовый лимонад",
+      "ingredients": [
+        {
+          "amount": "80",
+          "unit": "мл",
+          "name": "Цитрусовый коридал п/ф"
+        },
+        {
+          "amount": "30",
+          "unit": "мл",
+          "name": "Супер джус п/ф"
+        },
+        {
+          "amount": "5",
+          "unit": "гр",
+          "name": "Лайм"
+        },
+        {
+          "amount": "180",
+          "unit": "мл",
+          "name": "Вода"
+        },
+        {
+          "amount": "5",
+          "unit": "гр",
+          "name": "Мята"
+        },
+        {
+          "amount": "5",
+          "unit": "гр",
+          "name": "Грейп"
+        },
+        {
+          "amount": "5",
+          "unit": "гр",
+          "name": "Лимон"
+        }
+      ],
+      "glass": "Highball",
+      "method": "Стир",
+      "ice": "Кусковой",
+      "garnish": "Бошка мяты",
+      "prebatch": "Нет",
+      "preparation": "",
+      "output": "",
+      "notes": [],
+      "source_sheet": "Лимонады",
+      "source_row_start": 12,
+      "source_row_end": 22,
+      "searchable_text": "лимонады цитрусовый лимонад highball стир кусковой бошка мяты нет 80 мл цитрусовый коридал п/ф 30 мл супер джус п/ф 5 гр лайм 180 мл вода 5 гр мята 5 гр грейп 5 гр лимон"
+    },
+    {
+      "id": "ttk_33f342fc9d",
+      "category_id": "lemonades",
+      "category": "Лимонады",
+      "title": "Малина-Смородина",
+      "ingredients": [
+        {
+          "amount": "80",
+          "unit": "мл",
+          "name": "Малина-Смородина Кордиал п/ф"
+        },
+        {
+          "amount": "30",
+          "unit": "мл",
+          "name": "Супер джус п/ф"
+        },
+        {
+          "amount": "10",
+          "unit": "гр",
+          "name": "Ежевика"
+        },
+        {
+          "amount": "5",
+          "unit": "гр",
+          "name": "Мята"
+        }
+      ],
+      "glass": "Highball",
+      "method": "Стир",
+      "ice": "Кусковой",
+      "garnish": "Бошка мяты",
+      "prebatch": "Нет",
+      "preparation": "",
+      "output": "",
+      "notes": [],
+      "source_sheet": "Лимонады",
+      "source_row_start": 23,
+      "source_row_end": 33,
+      "searchable_text": "лимонады малина-смородина highball стир кусковой бошка мяты нет 80 мл малина-смородина кордиал п/ф 30 мл супер джус п/ф 10 гр ежевика 5 гр мята"
+    },
+    {
+      "id": "ttk_338d51d834",
+      "category_id": "lemonades",
+      "category": "Лимонады",
+      "title": "Облепиховый с имбирем",
+      "ingredients": [
+        {
+          "amount": "80",
+          "unit": "мл",
+          "name": "Облепиховый кордиал"
+        },
+        {
+          "amount": "20",
+          "unit": "мл",
+          "name": "Имбирный сироп"
+        },
+        {
+          "amount": "10",
+          "unit": "гр",
+          "name": "Апельсин"
+        },
+        {
+          "amount": "5",
+          "unit": "гр",
+          "name": "Мята"
+        }
+      ],
+      "glass": "Highball",
+      "method": "Стир",
+      "ice": "Кусковой",
+      "garnish": "Бошка мяты, сушеный чипс апельсина",
+      "prebatch": "Нет",
+      "preparation": "",
+      "output": "",
+      "notes": [],
+      "source_sheet": "Лимонады",
+      "source_row_start": 34,
+      "source_row_end": 39,
+      "searchable_text": "лимонады облепиховый с имбирем highball стир кусковой бошка мяты, сушеный чипс апельсина нет 80 мл облепиховый кордиал 20 мл имбирный сироп 10 гр апельсин 5 гр мята"
+    },
+    {
+      "id": "ttk_c284c544ca",
+      "category_id": "infusions",
+      "category": "Настойки",
+      "title": "Сухофрукт",
+      "ingredients": [
+        {
+          "amount": "2000",
+          "unit": "мл",
+          "name": "Джин Хаус"
+        },
+        {
+          "amount": "1000",
+          "unit": "гр",
+          "name": "Смесь сухофруктов"
+        },
+        {
+          "amount": "1000",
+          "unit": "мл",
+          "name": "Сироп настойки"
+        },
+        {
+          "amount": "400",
+          "unit": "мл",
+          "name": "Супер джус"
+        },
+        {
+          "amount": "0.03",
+          "unit": "мл",
+          "name": "Краситель пищевой в асс"
+        }
+      ],
+      "glass": "",
+      "method": "",
+      "ice": "",
+      "garnish": "",
+      "prebatch": "",
+      "preparation": "",
+      "output": "3500 мл",
+      "notes": [],
+      "source_sheet": "Настойки",
+      "source_row_start": 3,
+      "source_row_end": 14,
+      "searchable_text": "настойки сухофрукт 3500 мл 2000 мл джин хаус 1000 гр смесь сухофруктов 1000 мл сироп настойки 400 мл супер джус 0.03 мл краситель пищевой в асс"
+    },
+    {
+      "id": "ttk_eff3cda0bc",
+      "category_id": "infusions",
+      "category": "Настойки",
+      "title": "Прямо как в первый раз",
+      "ingredients": [
+        {
+          "amount": "1000",
+          "unit": "гр",
+          "name": "Клубника с/м"
+        },
+        {
+          "amount": "2000",
+          "unit": "мл",
+          "name": "Хаус водка"
+        },
+        {
+          "amount": "1000",
+          "unit": "гр",
+          "name": "Сироп наливки"
+        },
+        {
+          "amount": "1100",
+          "unit": "гр",
+          "name": "Личи в сиропе"
+        },
+        {
+          "amount": "700",
+          "unit": "мл",
+          "name": "Ликер фрукошульц личи"
+        },
+        {
+          "amount": "400",
+          "unit": "мл",
+          "name": "СуперДжус"
+        },
+        {
+          "amount": "0.03",
+          "unit": "мл",
+          "name": "Краситель пищевой в асс"
+        }
+      ],
+      "glass": "",
+      "method": "",
+      "ice": "",
+      "garnish": "",
+      "prebatch": "",
+      "preparation": "",
+      "output": "6000 мл",
+      "notes": [],
+      "source_sheet": "Настойки",
+      "source_row_start": 15,
+      "source_row_end": 26,
+      "searchable_text": "настойки прямо как в первый раз 6000 мл 1000 гр клубника с/м 2000 мл хаус водка 1000 гр сироп наливки 1100 гр личи в сиропе 700 мл ликер фрукошульц личи 400 мл суперджус 0.03 мл краситель пищевой в асс"
+    },
+    {
+      "id": "ttk_63832de238",
+      "category_id": "infusions",
+      "category": "Настойки",
+      "title": "Кедр",
+      "ingredients": [
+        {
+          "amount": "500",
+          "unit": "гр",
+          "name": "Кедр неочищенный"
+        },
+        {
+          "amount": "2000",
+          "unit": "мл",
+          "name": "Хаус водка"
+        },
+        {
+          "amount": "1000",
+          "unit": "мл",
+          "name": "Сироп наливки"
+        }
+      ],
+      "glass": "",
+      "method": "",
+      "ice": "",
+      "garnish": "",
+      "prebatch": "",
+      "preparation": "",
+      "output": "3500 мл",
+      "notes": [],
+      "source_sheet": "Настойки",
+      "source_row_start": 27,
+      "source_row_end": 39,
+      "searchable_text": "настойки кедр 3500 мл 500 гр кедр неочищенный 2000 мл хаус водка 1000 мл сироп наливки"
+    },
+    {
+      "id": "ttk_33bbc3aa8b",
+      "category_id": "infusions",
+      "category": "Настойки",
+      "title": "Острая Японка",
+      "ingredients": [
+        {
+          "amount": "30",
+          "unit": "гр",
+          "name": "Чили"
+        },
+        {
+          "amount": "60",
+          "unit": "гр",
+          "name": "Васаби порошек"
+        },
+        {
+          "amount": "1000",
+          "unit": "гр",
+          "name": "Мед"
+        },
+        {
+          "amount": "2000",
+          "unit": "мл",
+          "name": "Острая водка п/ф"
+        },
+        {
+          "amount": "20",
+          "unit": "гр",
+          "name": "Перец хлопенью"
+        }
+      ],
+      "glass": "",
+      "method": "",
+      "ice": "",
+      "garnish": "",
+      "prebatch": "",
+      "preparation": "",
+      "output": "3500 мл",
+      "notes": [],
+      "source_sheet": "Настойки",
+      "source_row_start": 40,
+      "source_row_end": 51,
+      "searchable_text": "настойки острая японка 3500 мл 30 гр чили 60 гр васаби порошек 1000 гр мед 2000 мл острая водка п/ф 20 гр перец хлопенью"
+    },
+    {
+      "id": "ttk_083a242fa9",
+      "category_id": "infusions",
+      "category": "Настойки",
+      "title": "Под борщ",
+      "ingredients": [
+        {
+          "amount": "2000",
+          "unit": "мл",
+          "name": "Острая водка п/ф"
+        },
+        {
+          "amount": "650",
+          "unit": "гр",
+          "name": "Помидор"
+        },
+        {
+          "amount": "100",
+          "unit": "гр",
+          "name": "Чеснок"
+        },
+        {
+          "amount": "80",
+          "unit": "гр",
+          "name": "Бекон"
+        },
+        {
+          "amount": "15",
+          "unit": "гр",
+          "name": "Жидкий дым"
+        },
+        {
+          "amount": "15",
+          "unit": "гр",
+          "name": "Перец горошком черный"
+        },
+        {
+          "amount": "8",
+          "unit": "гр",
+          "name": "Лавровый лист"
+        },
+        {
+          "amount": "600",
+          "unit": "гр",
+          "name": "Свекла"
+        },
+        {
+          "amount": "300",
+          "unit": "мл",
+          "name": "Сироп настойки"
+        },
+        {
+          "amount": "0.03",
+          "unit": "мл",
+          "name": "Краситель пищевой в асс"
+        }
+      ],
+      "glass": "",
+      "method": "",
+      "ice": "",
+      "garnish": "",
+      "prebatch": "",
+      "preparation": "",
+      "output": "3500 мл",
+      "notes": [],
+      "source_sheet": "Настойки",
+      "source_row_start": 52,
+      "source_row_end": 68,
+      "searchable_text": "настойки под борщ 3500 мл 2000 мл острая водка п/ф 650 гр помидор 100 гр чеснок 80 гр бекон 15 гр жидкий дым 15 гр перец горошком черный 8 гр лавровый лист 600 гр свекла 300 мл сироп настойки 0.03 мл краситель пищевой в асс"
+    },
+    {
+      "id": "ttk_06b63c5c5a",
+      "category_id": "infusions",
+      "category": "Настойки",
+      "title": "База",
+      "ingredients": [
+        {
+          "amount": "2000",
+          "unit": "мл",
+          "name": "Джин хаус"
+        },
+        {
+          "amount": "1000",
+          "unit": "мл",
+          "name": "Сироп настойки"
+        },
+        {
+          "amount": "500",
+          "unit": "гр",
+          "name": "Лайм"
+        },
+        {
+          "amount": "70",
+          "unit": "гр",
+          "name": "Базилик"
+        },
+        {
+          "amount": "500",
+          "unit": "мл",
+          "name": "СуперДжус"
+        },
+        {
+          "amount": "0.03",
+          "unit": "мл",
+          "name": "Краситель пищевой в асс"
+        }
+      ],
+      "glass": "",
+      "method": "",
+      "ice": "",
+      "garnish": "",
+      "prebatch": "",
+      "preparation": "",
+      "output": "3500 мл",
+      "notes": [],
+      "source_sheet": "Настойки",
+      "source_row_start": 69,
+      "source_row_end": 81,
+      "searchable_text": "настойки база 3500 мл 2000 мл джин хаус 1000 мл сироп настойки 500 гр лайм 70 гр базилик 500 мл суперджус 0.03 мл краситель пищевой в асс"
+    },
+    {
+      "id": "ttk_f0f6a6720f",
+      "category_id": "infusions",
+      "category": "Настойки",
+      "title": "Барбара",
+      "ingredients": [
+        {
+          "amount": "2000",
+          "unit": "гр",
+          "name": "Барбарисовые конфеты"
+        },
+        {
+          "amount": "2000",
+          "unit": "мл",
+          "name": "Водка Хаус"
+        },
+        {
+          "amount": "1000",
+          "unit": "мл",
+          "name": "Сироп настойки"
+        },
+        {
+          "amount": "500",
+          "unit": "мл",
+          "name": "СуперДжус"
+        },
+        {
+          "amount": "0.03",
+          "unit": "мл",
+          "name": "Краситель пищевой в асс"
+        }
+      ],
+      "glass": "",
+      "method": "",
+      "ice": "",
+      "garnish": "",
+      "prebatch": "",
+      "preparation": "",
+      "output": "6000 мл",
+      "notes": [],
+      "source_sheet": "Настойки",
+      "source_row_start": 82,
+      "source_row_end": 91,
+      "searchable_text": "настойки барбара 6000 мл 2000 гр барбарисовые конфеты 2000 мл водка хаус 1000 мл сироп настойки 500 мл суперджус 0.03 мл краситель пищевой в асс"
+    },
+    {
+      "id": "ttk_0c814efab0",
+      "category_id": "infusions",
+      "category": "Настойки",
+      "title": "Блади Гуд",
+      "ingredients": [
+        {
+          "amount": "2000",
+          "unit": "гр",
+          "name": "Сок в ассортименте"
+        },
+        {
+          "amount": "70",
+          "unit": "гр",
+          "name": "Перец халапеньо"
+        },
+        {
+          "amount": "20",
+          "unit": "гр",
+          "name": "Чеснок"
+        },
+        {
+          "amount": "200",
+          "unit": "гр",
+          "name": "Сахар"
+        },
+        {
+          "amount": "2000",
+          "unit": "мл",
+          "name": "Острая водка п/ф"
+        }
+      ],
+      "glass": "",
+      "method": "",
+      "ice": "",
+      "garnish": "",
+      "prebatch": "",
+      "preparation": "",
+      "output": "3000 мл",
+      "notes": [],
+      "source_sheet": "Настойки",
+      "source_row_start": 92,
+      "source_row_end": 105,
+      "searchable_text": "настойки блади гуд 3000 мл 2000 гр сок в ассортименте 70 гр перец халапеньо 20 гр чеснок 200 гр сахар 2000 мл острая водка п/ф"
+    },
+    {
+      "id": "ttk_85a90f8e75",
+      "category_id": "infusions",
+      "category": "Настойки",
+      "title": "Брусника Лорэн",
+      "ingredients": [
+        {
+          "amount": "1000",
+          "unit": "гр",
+          "name": "Брусника с/м"
+        },
+        {
+          "amount": "2000",
+          "unit": "мл",
+          "name": "Водка Хаус"
+        },
+        {
+          "amount": "1000",
+          "unit": "мл",
+          "name": "Сироп настойки"
+        },
+        {
+          "amount": "400",
+          "unit": "мл",
+          "name": "Супер джус"
+        }
+      ],
+      "glass": "",
+      "method": "",
+      "ice": "",
+      "garnish": "",
+      "prebatch": "",
+      "preparation": "",
+      "output": "4000 мл",
+      "notes": [],
+      "source_sheet": "Настойки",
+      "source_row_start": 106,
+      "source_row_end": 119,
+      "searchable_text": "настойки брусника лорэн 4000 мл 1000 гр брусника с/м 2000 мл водка хаус 1000 мл сироп настойки 400 мл супер джус"
+    },
+    {
+      "id": "ttk_f01061a0b6",
+      "category_id": "infusions",
+      "category": "Настойки",
+      "title": "Вишня под ромом",
+      "ingredients": [
+        {
+          "amount": "2100",
+          "unit": "мл",
+          "name": "Ром Хаус"
+        },
+        {
+          "amount": "1000",
+          "unit": "мл",
+          "name": "Вишня с/м"
+        },
+        {
+          "amount": "1000",
+          "unit": "мл",
+          "name": "Сироп Настойки"
+        }
+      ],
+      "glass": "",
+      "method": "",
+      "ice": "",
+      "garnish": "",
+      "prebatch": "",
+      "preparation": "",
+      "output": "3500 мл",
+      "notes": [],
+      "source_sheet": "Настойки",
+      "source_row_start": 120,
+      "source_row_end": 134,
+      "searchable_text": "настойки вишня под ромом 3500 мл 2100 мл ром хаус 1000 мл вишня с/м 1000 мл сироп настойки"
+    },
+    {
+      "id": "ttk_eac7baaef8",
+      "category_id": "infusions",
+      "category": "Настойки",
+      "title": "ВСливу",
+      "ingredients": [
+        {
+          "amount": "1000",
+          "unit": "гр",
+          "name": "Слива с/м"
+        },
+        {
+          "amount": "1500",
+          "unit": "мл",
+          "name": "Водка Хаус"
+        },
+        {
+          "amount": "1000",
+          "unit": "мл",
+          "name": "Сироп Настойки"
+        }
+      ],
+      "glass": "",
+      "method": "",
+      "ice": "",
+      "garnish": "",
+      "prebatch": "",
+      "preparation": "",
+      "output": "3000 мл",
+      "notes": [],
+      "source_sheet": "Настойки",
+      "source_row_start": 135,
+      "source_row_end": 149,
+      "searchable_text": "настойки всливу 3000 мл 1000 гр слива с/м 1500 мл водка хаус 1000 мл сироп настойки"
+    },
+    {
+      "id": "ttk_d1857caf52",
+      "category_id": "infusions",
+      "category": "Настойки",
+      "title": "ЕстьЖеВика",
+      "ingredients": [
+        {
+          "amount": "1000",
+          "unit": "гр",
+          "name": "Ежевика с/м"
+        },
+        {
+          "amount": "1500",
+          "unit": "мл",
+          "name": "Водка Хаус"
+        },
+        {
+          "amount": "1000",
+          "unit": "мл",
+          "name": "Сироп настойки"
+        }
+      ],
+      "glass": "",
+      "method": "",
+      "ice": "",
+      "garnish": "",
+      "prebatch": "",
+      "preparation": "",
+      "output": "3500 мл",
+      "notes": [],
+      "source_sheet": "Настойки",
+      "source_row_start": 150,
+      "source_row_end": 163,
+      "searchable_text": "настойки естьжевика 3500 мл 1000 гр ежевика с/м 1500 мл водка хаус 1000 мл сироп настойки"
+    },
+    {
+      "id": "ttk_079bcde953",
+      "category_id": "infusions",
+      "category": "Настойки",
+      "title": "Какава",
+      "ingredients": [
+        {
+          "amount": "1000",
+          "unit": "мл",
+          "name": "Сироп настойки"
+        },
+        {
+          "amount": "150",
+          "unit": "гр",
+          "name": "Какао"
+        },
+        {
+          "amount": "1500",
+          "unit": "мл",
+          "name": "Водка"
+        },
+        {
+          "amount": "2000",
+          "unit": "мл",
+          "name": "Сливки 10%"
+        }
+      ],
+      "glass": "",
+      "method": "",
+      "ice": "",
+      "garnish": "",
+      "prebatch": "",
+      "preparation": "",
+      "output": "5500 мл",
+      "notes": [],
+      "source_sheet": "Настойки",
+      "source_row_start": 164,
+      "source_row_end": 177,
+      "searchable_text": "настойки какава 5500 мл 1000 мл сироп настойки 150 гр какао 1500 мл водка 2000 мл сливки 10%"
+    },
+    {
+      "id": "ttk_1cff796ccf",
+      "category_id": "infusions",
+      "category": "Настойки",
+      "title": "Карловы Вары",
+      "ingredients": [
+        {
+          "amount": "2000",
+          "unit": "мл",
+          "name": "Водка Хаус"
+        },
+        {
+          "amount": "1000",
+          "unit": "мл",
+          "name": "Сироп настойки"
+        },
+        {
+          "amount": "500",
+          "unit": "гр",
+          "name": "Апельсин"
+        },
+        {
+          "amount": "7",
+          "unit": "гр",
+          "name": "Корица"
+        },
+        {
+          "amount": "6",
+          "unit": "гр",
+          "name": "Анис / бадьян"
+        },
+        {
+          "amount": "6",
+          "unit": "гр",
+          "name": "Кардамон"
+        },
+        {
+          "amount": "12",
+          "unit": "гр",
+          "name": "Гвоздика"
+        },
+        {
+          "amount": "12",
+          "unit": "гр",
+          "name": "Перец черный горошек"
+        }
+      ],
+      "glass": "",
+      "method": "",
+      "ice": "",
+      "garnish": "",
+      "prebatch": "",
+      "preparation": "",
+      "output": "3500 мл",
+      "notes": [],
+      "source_sheet": "Настойки",
+      "source_row_start": 178,
+      "source_row_end": 191,
+      "searchable_text": "настойки карловы вары 3500 мл 2000 мл водка хаус 1000 мл сироп настойки 500 гр апельсин 7 гр корица 6 гр анис / бадьян 6 гр кардамон 12 гр гвоздика 12 гр перец черный горошек"
+    },
+    {
+      "id": "ttk_a3c1d37968",
+      "category_id": "infusions",
+      "category": "Настойки",
+      "title": "Крим Пай",
+      "ingredients": [
+        {
+          "amount": "1000",
+          "unit": "мл",
+          "name": "Супер джус"
+        },
+        {
+          "amount": "2000",
+          "unit": "мл",
+          "name": "Водка Хаус"
+        },
+        {
+          "amount": "1000",
+          "unit": "мл",
+          "name": "Сироп настойки"
+        },
+        {
+          "amount": "1000",
+          "unit": "мл",
+          "name": "Молоко"
+        },
+        {
+          "amount": "1000",
+          "unit": "мл",
+          "name": "Сливки"
+        }
+      ],
+      "glass": "",
+      "method": "",
+      "ice": "",
+      "garnish": "",
+      "prebatch": "",
+      "preparation": "",
+      "output": "6000 мл",
+      "notes": [],
+      "source_sheet": "Настойки",
+      "source_row_start": 192,
+      "source_row_end": 205,
+      "searchable_text": "настойки крим пай 6000 мл 1000 мл супер джус 2000 мл водка хаус 1000 мл сироп настойки 1000 мл молоко 1000 мл сливки"
+    },
+    {
+      "id": "ttk_3f8366c78c",
+      "category_id": "infusions",
+      "category": "Настойки",
+      "title": "Лампочка",
+      "ingredients": [
+        {
+          "amount": "1000",
+          "unit": "гр",
+          "name": "Груша"
+        },
+        {
+          "amount": "2000",
+          "unit": "мл",
+          "name": "Водка Хаус"
+        },
+        {
+          "amount": "1000",
+          "unit": "мл",
+          "name": "Сироп настойки"
+        }
+      ],
+      "glass": "",
+      "method": "",
+      "ice": "",
+      "garnish": "",
+      "prebatch": "",
+      "preparation": "",
+      "output": "3500 мл",
+      "notes": [],
+      "source_sheet": "Настойки",
+      "source_row_start": 206,
+      "source_row_end": 219,
+      "searchable_text": "настойки лампочка 3500 мл 1000 гр груша 2000 мл водка хаус 1000 мл сироп настойки"
+    },
+    {
+      "id": "ttk_cd336772fa",
+      "category_id": "infusions",
+      "category": "Настойки",
+      "title": "Малинки Малинки",
+      "ingredients": [
+        {
+          "amount": "1000",
+          "unit": "гр",
+          "name": "Малина с/м"
+        },
+        {
+          "amount": "2000",
+          "unit": "мл",
+          "name": "Джин"
+        },
+        {
+          "amount": "1000",
+          "unit": "мл",
+          "name": "Сироп настойки"
+        }
+      ],
+      "glass": "",
+      "method": "",
+      "ice": "",
+      "garnish": "",
+      "prebatch": "",
+      "preparation": "",
+      "output": "3500 мл",
+      "notes": [],
+      "source_sheet": "Настойки",
+      "source_row_start": 220,
+      "source_row_end": 233,
+      "searchable_text": "настойки малинки малинки 3500 мл 1000 гр малина с/м 2000 мл джин 1000 мл сироп настойки"
+    },
+    {
+      "id": "ttk_f8d849a339",
+      "category_id": "infusions",
+      "category": "Настойки",
+      "title": "МангоПих",
+      "ingredients": [
+        {
+          "amount": "1500",
+          "unit": "мл",
+          "name": "Джин"
+        },
+        {
+          "amount": "1000",
+          "unit": "мл",
+          "name": "Сироп настойки"
+        },
+        {
+          "amount": "500",
+          "unit": "гр",
+          "name": "Манго с/м"
+        },
+        {
+          "amount": "500",
+          "unit": "гр",
+          "name": "Облепиха с/м"
+        }
+      ],
+      "glass": "",
+      "method": "",
+      "ice": "",
+      "garnish": "",
+      "prebatch": "",
+      "preparation": "",
+      "output": "4000 мл",
+      "notes": [],
+      "source_sheet": "Настойки",
+      "source_row_start": 234,
+      "source_row_end": 248,
+      "searchable_text": "настойки мангопих 4000 мл 1500 мл джин 1000 мл сироп настойки 500 гр манго с/м 500 гр облепиха с/м"
+    },
+    {
+      "id": "ttk_9f51f6a9d7",
+      "category_id": "infusions",
+      "category": "Настойки",
+      "title": "Мексиканка",
+      "ingredients": [
+        {
+          "amount": "2000",
+          "unit": "мл",
+          "name": "Текила ХАУС"
+        },
+        {
+          "amount": "300",
+          "unit": "гр",
+          "name": "Лайм"
+        },
+        {
+          "amount": "1000",
+          "unit": "гр",
+          "name": "Клубника с/м"
+        },
+        {
+          "amount": "1000",
+          "unit": "гр",
+          "name": "Сироп настойки"
+        }
+      ],
+      "glass": "",
+      "method": "",
+      "ice": "",
+      "garnish": "",
+      "prebatch": "",
+      "preparation": "",
+      "output": "4000 мл",
+      "notes": [],
+      "source_sheet": "Настойки",
+      "source_row_start": 249,
+      "source_row_end": 262,
+      "searchable_text": "настойки мексиканка 4000 мл 2000 мл текила хаус 300 гр лайм 1000 гр клубника с/м 1000 гр сироп настойки"
+    },
+    {
+      "id": "ttk_bafa6039c5",
+      "category_id": "infusions",
+      "category": "Настойки",
+      "title": "Мятные Подушечки",
+      "ingredients": [
+        {
+          "amount": "2000",
+          "unit": "мл",
+          "name": "Водка Хаус"
+        },
+        {
+          "amount": "1000",
+          "unit": "мл",
+          "name": "Супер джус"
+        },
+        {
+          "amount": "1000",
+          "unit": "мл",
+          "name": "Сироп настойки"
+        },
+        {
+          "amount": "700",
+          "unit": "мл",
+          "name": "Ликер мяты фруко шульц"
+        }
+      ],
+      "glass": "",
+      "method": "",
+      "ice": "",
+      "garnish": "",
+      "prebatch": "",
+      "preparation": "",
+      "output": "5000 мл",
+      "notes": [],
+      "source_sheet": "Настойки",
+      "source_row_start": 263,
+      "source_row_end": 276,
+      "searchable_text": "настойки мятные подушечки 5000 мл 2000 мл водка хаус 1000 мл супер джус 1000 мл сироп настойки 700 мл ликер мяты фруко шульц"
+    },
+    {
+      "id": "ttk_b68db15dd7",
+      "category_id": "infusions",
+      "category": "Настойки",
+      "title": "НаКлюковка",
+      "ingredients": [
+        {
+          "amount": "2000",
+          "unit": "гр",
+          "name": "Клюква с/м"
+        },
+        {
+          "amount": "2000",
+          "unit": "мл",
+          "name": "Водка Хаус"
+        },
+        {
+          "amount": "1000",
+          "unit": "мл",
+          "name": "Сироп настойки"
+        },
+        {
+          "amount": "500",
+          "unit": "мл",
+          "name": "Супер джус"
+        }
+      ],
+      "glass": "",
+      "method": "",
+      "ice": "",
+      "garnish": "",
+      "prebatch": "",
+      "preparation": "",
+      "output": "4500 мл",
+      "notes": [],
+      "source_sheet": "Настойки",
+      "source_row_start": 277,
+      "source_row_end": 290,
+      "searchable_text": "настойки наклюковка 4500 мл 2000 гр клюква с/м 2000 мл водка хаус 1000 мл сироп настойки 500 мл супер джус"
+    },
+    {
+      "id": "ttk_533401671c",
+      "category_id": "infusions",
+      "category": "Настойки",
+      "title": "НаШишке",
+      "ingredients": [
+        {
+          "amount": "2000",
+          "unit": "мл",
+          "name": "Джин Хаус"
+        },
+        {
+          "amount": "1300",
+          "unit": "мл",
+          "name": "Варенье из шишки"
+        },
+        {
+          "amount": "1000",
+          "unit": "мл",
+          "name": "Сироп настойки"
+        },
+        {
+          "amount": "500",
+          "unit": "мл",
+          "name": "Супер джус"
+        }
+      ],
+      "glass": "",
+      "method": "",
+      "ice": "",
+      "garnish": "",
+      "prebatch": "",
+      "preparation": "",
+      "output": "4500 мл",
+      "notes": [],
+      "source_sheet": "Настойки",
+      "source_row_start": 291,
+      "source_row_end": 301,
+      "searchable_text": "настойки нашишке 4500 мл 2000 мл джин хаус 1300 мл варенье из шишки 1000 мл сироп настойки 500 мл супер джус"
+    },
+    {
+      "id": "ttk_9fdd05d17d",
+      "category_id": "infusions",
+      "category": "Настойки",
+      "title": "НеРявиНАХ",
+      "ingredients": [
+        {
+          "amount": "1000",
+          "unit": "гр",
+          "name": "Рябина с/м"
+        },
+        {
+          "amount": "2000",
+          "unit": "мл",
+          "name": "Коньяк Хаус"
+        },
+        {
+          "amount": "1000",
+          "unit": "мл",
+          "name": "Сироп настойки"
+        }
+      ],
+      "glass": "",
+      "method": "",
+      "ice": "",
+      "garnish": "",
+      "prebatch": "",
+      "preparation": "",
+      "output": "3500 мл",
+      "notes": [],
+      "source_sheet": "Настойки",
+      "source_row_start": 302,
+      "source_row_end": 315,
+      "searchable_text": "настойки нерявинах 3500 мл 1000 гр рябина с/м 2000 мл коньяк хаус 1000 мл сироп настойки"
+    },
+    {
+      "id": "ttk_57e00a99ed",
+      "category_id": "infusions",
+      "category": "Настойки",
+      "title": "О.хренеть",
+      "ingredients": [
+        {
+          "amount": "500",
+          "unit": "гр",
+          "name": "Мед"
+        },
+        {
+          "amount": "600",
+          "unit": "гр",
+          "name": "Корень хрен"
+        },
+        {
+          "amount": "2500",
+          "unit": "мл",
+          "name": "Водка Хаус"
+        }
+      ],
+      "glass": "",
+      "method": "",
+      "ice": "",
+      "garnish": "",
+      "prebatch": "",
+      "preparation": "",
+      "output": "3000 мл",
+      "notes": [],
+      "source_sheet": "Настойки",
+      "source_row_start": 316,
+      "source_row_end": 329,
+      "searchable_text": "настойки о.хренеть 3000 мл 500 гр мед 600 гр корень хрен 2500 мл водка хаус"
+    },
+    {
+      "id": "ttk_33b15cc46f",
+      "category_id": "infusions",
+      "category": "Настойки",
+      "title": "ОранжАд",
+      "ingredients": [
+        {
+          "amount": "1000",
+          "unit": "мл",
+          "name": "Супер джус"
+        },
+        {
+          "amount": "2000",
+          "unit": "мл",
+          "name": "Водка Хаус"
+        },
+        {
+          "amount": "1000",
+          "unit": "мл",
+          "name": "Апельсиновый кордиал"
+        }
+      ],
+      "glass": "",
+      "method": "",
+      "ice": "",
+      "garnish": "",
+      "prebatch": "",
+      "preparation": "",
+      "output": "4000 мл",
+      "notes": [],
+      "source_sheet": "Настойки",
+      "source_row_start": 330,
+      "source_row_end": 343,
+      "searchable_text": "настойки оранжад 4000 мл 1000 мл супер джус 2000 мл водка хаус 1000 мл апельсиновый кордиал"
+    },
+    {
+      "id": "ttk_a594a8520d",
+      "category_id": "infusions",
+      "category": "Настойки",
+      "title": "Памэло Анедерсон",
+      "ingredients": [
+        {
+          "amount": "1000",
+          "unit": "гр",
+          "name": "Грейпфрут"
+        },
+        {
+          "amount": "2000",
+          "unit": "мл",
+          "name": "Водка Хаус"
+        },
+        {
+          "amount": "1000",
+          "unit": "мл",
+          "name": "Сироп настойки"
+        },
+        {
+          "amount": "1000",
+          "unit": "мл",
+          "name": "Сок в асс"
+        },
+        {
+          "amount": "700",
+          "unit": "мл",
+          "name": "Ликер Дыня ФрукоШульц"
+        }
+      ],
+      "glass": "",
+      "method": "",
+      "ice": "",
+      "garnish": "",
+      "prebatch": "",
+      "preparation": "",
+      "output": "5000 мл",
+      "notes": [],
+      "source_sheet": "Настойки",
+      "source_row_start": 344,
+      "source_row_end": 357,
+      "searchable_text": "настойки памэло анедерсон 5000 мл 1000 гр грейпфрут 2000 мл водка хаус 1000 мл сироп настойки 1000 мл сок в асс 700 мл ликер дыня фрукошульц"
+    },
+    {
+      "id": "ttk_d86b301755",
+      "category_id": "infusions",
+      "category": "Настойки",
+      "title": "Печёная Вишня",
+      "ingredients": [
+        {
+          "amount": "1000",
+          "unit": "гр",
+          "name": "Вишня с/м"
+        },
+        {
+          "amount": "2000",
+          "unit": "мл",
+          "name": "Водка Хаус"
+        },
+        {
+          "amount": "1000",
+          "unit": "мл",
+          "name": "Сироп наливки"
+        },
+        {
+          "amount": "7",
+          "unit": "гр",
+          "name": "Корица"
+        },
+        {
+          "amount": "7",
+          "unit": "гр",
+          "name": "Бадьян"
+        },
+        {
+          "amount": "7",
+          "unit": "гр",
+          "name": "Гвоздика"
+        }
+      ],
+      "glass": "",
+      "method": "",
+      "ice": "",
+      "garnish": "",
+      "prebatch": "",
+      "preparation": "",
+      "output": "3000 мл",
+      "notes": [],
+      "source_sheet": "Настойки",
+      "source_row_start": 358,
+      "source_row_end": 371,
+      "searchable_text": "настойки печёная вишня 3000 мл 1000 гр вишня с/м 2000 мл водка хаус 1000 мл сироп наливки 7 гр корица 7 гр бадьян 7 гр гвоздика"
+    },
+    {
+      "id": "ttk_4220354d19",
+      "category_id": "infusions",
+      "category": "Настойки",
+      "title": "Поко Поко Итальяно",
+      "ingredients": [
+        {
+          "amount": "3000",
+          "unit": "гр",
+          "name": "Лимон"
+        },
+        {
+          "amount": "5000",
+          "unit": "мл",
+          "name": "Водка Хаус"
+        },
+        {
+          "amount": "2000",
+          "unit": "мл",
+          "name": "Супер джус"
+        },
+        {
+          "amount": "3000",
+          "unit": "мл",
+          "name": "Сироп наливки"
+        },
+        {
+          "amount": "0.06",
+          "unit": "мл",
+          "name": "Краситель пищевой в асс"
+        }
+      ],
+      "glass": "",
+      "method": "",
+      "ice": "",
+      "garnish": "",
+      "prebatch": "",
+      "preparation": "",
+      "output": "11000 мл",
+      "notes": [],
+      "source_sheet": "Настойки",
+      "source_row_start": 372,
+      "source_row_end": 385,
+      "searchable_text": "настойки поко поко итальяно 11000 мл 3000 гр лимон 5000 мл водка хаус 2000 мл супер джус 3000 мл сироп наливки 0.06 мл краситель пищевой в асс"
+    },
+    {
+      "id": "ttk_e881696b0d",
+      "category_id": "infusions",
+      "category": "Настойки",
+      "title": "Полукровка",
+      "ingredients": [
+        {
+          "amount": "1000",
+          "unit": "гр",
+          "name": "Черная смородина с/м"
+        },
+        {
+          "amount": "1500",
+          "unit": "мл",
+          "name": "Водка Хаус"
+        },
+        {
+          "amount": "1000",
+          "unit": "мл",
+          "name": "Сироп настойки"
+        }
+      ],
+      "glass": "",
+      "method": "",
+      "ice": "",
+      "garnish": "",
+      "prebatch": "",
+      "preparation": "",
+      "output": "3500 мл",
+      "notes": [],
+      "source_sheet": "Настойки",
+      "source_row_start": 386,
+      "source_row_end": 399,
+      "searchable_text": "настойки полукровка 3500 мл 1000 гр черная смородина с/м 1500 мл водка хаус 1000 мл сироп настойки"
+    },
+    {
+      "id": "ttk_f275182391",
+      "category_id": "infusions",
+      "category": "Настойки",
+      "title": "Попа как орех",
+      "ingredients": [
+        {
+          "amount": "200",
+          "unit": "гр",
+          "name": "Орех грецкий"
+        },
+        {
+          "amount": "200",
+          "unit": "мл",
+          "name": "Орех пекан"
+        },
+        {
+          "amount": "2000",
+          "unit": "мл",
+          "name": "Коньяк"
+        },
+        {
+          "amount": "1000",
+          "unit": "мл",
+          "name": "Сироп настойки"
+        }
+      ],
+      "glass": "",
+      "method": "",
+      "ice": "",
+      "garnish": "",
+      "prebatch": "",
+      "preparation": "",
+      "output": "3500 мл",
+      "notes": [],
+      "source_sheet": "Настойки",
+      "source_row_start": 400,
+      "source_row_end": 413,
+      "searchable_text": "настойки попа как орех 3500 мл 200 гр орех грецкий 200 мл орех пекан 2000 мл коньяк 1000 мл сироп настойки"
+    },
+    {
+      "id": "ttk_f5d9b5928f",
+      "category_id": "infusions",
+      "category": "Настойки",
+      "title": "Порн Стар",
+      "ingredients": [
+        {
+          "amount": "2000",
+          "unit": "гр",
+          "name": "Пюре Маракуя"
+        },
+        {
+          "amount": "2000",
+          "unit": "мл",
+          "name": "Водка Хаус"
+        },
+        {
+          "amount": "1000",
+          "unit": "гр",
+          "name": "Ванильный сахар"
+        },
+        {
+          "amount": "500",
+          "unit": "мл",
+          "name": "Сироп настойки"
+        },
+        {
+          "amount": "1500",
+          "unit": "мл",
+          "name": "Ванильного сиропа"
+        }
+      ],
+      "glass": "",
+      "method": "",
+      "ice": "",
+      "garnish": "",
+      "prebatch": "",
+      "preparation": "",
+      "output": "6000 мл",
+      "notes": [],
+      "source_sheet": "Настойки",
+      "source_row_start": 414,
+      "source_row_end": 427,
+      "searchable_text": "настойки порн стар 6000 мл 2000 гр пюре маракуя 2000 мл водка хаус 1000 гр ванильный сахар 500 мл сироп настойки 1500 мл ванильного сиропа"
+    },
+    {
+      "id": "ttk_294b5e533c",
+      "category_id": "infusions",
+      "category": "Настойки",
+      "title": "Сангрия",
+      "ingredients": [
+        {
+          "amount": "750",
+          "unit": "мл",
+          "name": "Красное сухое вино"
+        },
+        {
+          "amount": "500",
+          "unit": "гр",
+          "name": "Апельсины"
+        },
+        {
+          "amount": "300",
+          "unit": "гр",
+          "name": "Лимоны"
+        },
+        {
+          "amount": "300",
+          "unit": "гр",
+          "name": "Яблоко"
+        },
+        {
+          "amount": "100",
+          "unit": "гр",
+          "name": "Сахар-песок"
+        },
+        {
+          "amount": "150",
+          "unit": "мл",
+          "name": "Апельсиновый сок"
+        },
+        {
+          "amount": "200",
+          "unit": "мл",
+          "name": "Газированная вода"
+        }
+      ],
+      "glass": "",
+      "method": "",
+      "ice": "",
+      "garnish": "",
+      "prebatch": "",
+      "preparation": "1. Тщательно вымойте апельсины, лимон и яблоко. Апельсины и лимон нарежьте кружочками или полукружочками. Яблоко удалите сердцевину и нарежьте небольшими кубиками.\n2. В большой кувшин или графин выложите нарезанные фрукты. Добавьте сахар. Немного разомните фрукты ложкой или мадлером, чтобы они выпустили сок и ароматы, а сахар начал растворяться.\n3. Влейте красное вино и апельсиновый сок. Хорошо перемешайте, чтобы сахар полностью растворился.\n4. Накройте кувшин и поставьте в холодильник минимум на 2-4 часа, а лучше на ночь. Это позволит фруктам настояться и передать свои вкусы напитку.",
+      "output": "",
+      "notes": [
+        "Выход: 1000 мл"
+      ],
+      "source_sheet": "Настойки",
+      "source_row_start": 428,
+      "source_row_end": 444,
+      "searchable_text": "настойки сангрия 1. тщательно вымойте апельсины, лимон и яблоко. апельсины и лимон нарежьте кружочками или полукружочками. яблоко удалите сердцевину и нарежьте небольшими кубиками.\n2. в большой кувшин или графин выложите нарезанные фрукты. добавьте сахар. немного разомните фрукты ложкой или мадлером, чтобы они выпустили сок и ароматы, а сахар начал растворяться.\n3. влейте красное вино и апельсиновый сок. хорошо перемешайте, чтобы сахар полностью растворился.\n4. накройте кувшин и поставьте в холодильник минимум на 2-4 часа, а лучше на ночь. это позволит фруктам настояться и передать свои вкусы напитку. 750 мл красное сухое вино 500 гр апельсины 300 гр лимоны 300 гр яблоко 100 гр сахар-песок 150 мл апельсиновый сок 200 мл газированная вода выход: 1000 мл"
+    },
+    {
+      "id": "ttk_f9ae42c9ff",
+      "category_id": "infusions",
+      "category": "Настойки",
+      "title": "Экспрессо",
+      "ingredients": [
+        {
+          "amount": "500",
+          "unit": "гр",
+          "name": "Кофе в зернах"
+        },
+        {
+          "amount": "1000",
+          "unit": "мл",
+          "name": "Сироп настойки"
+        },
+        {
+          "amount": "2000",
+          "unit": "мл",
+          "name": "Водка Хаус"
+        }
+      ],
+      "glass": "",
+      "method": "",
+      "ice": "",
+      "garnish": "",
+      "prebatch": "",
+      "preparation": "",
+      "output": "4000 мл",
+      "notes": [],
+      "source_sheet": "Настойки",
+      "source_row_start": 445,
+      "source_row_end": 457,
+      "searchable_text": "настойки экспрессо 4000 мл 500 гр кофе в зернах 1000 мл сироп настойки 2000 мл водка хаус"
+    },
+    {
+      "id": "ttk_6db46b8790",
+      "category_id": "infusions",
+      "category": "Настойки",
+      "title": "Бурбоня",
+      "ingredients": [
+        {
+          "amount": "1400",
+          "unit": "мл",
+          "name": "Бурбон"
+        },
+        {
+          "amount": "1000",
+          "unit": "мл",
+          "name": "Сироп в асс"
+        },
+        {
+          "amount": "1000",
+          "unit": "гр",
+          "name": "Черная смородина с/м"
+        }
+      ],
+      "glass": "",
+      "method": "",
+      "ice": "",
+      "garnish": "",
+      "prebatch": "",
+      "preparation": "",
+      "output": "3500 мл",
+      "notes": [],
+      "source_sheet": "Настойки",
+      "source_row_start": 458,
+      "source_row_end": 470,
+      "searchable_text": "настойки бурбоня 3500 мл 1400 мл бурбон 1000 мл сироп в асс 1000 гр черная смородина с/м"
+    },
+    {
+      "id": "ttk_6d953b63a7",
+      "category_id": "infusions",
+      "category": "Настойки",
+      "title": "Щавельвет",
+      "ingredients": [
+        {
+          "amount": "1000",
+          "unit": "гр",
+          "name": "Щавель"
+        },
+        {
+          "amount": "1000",
+          "unit": "гр",
+          "name": "Яблоко зеленое"
+        },
+        {
+          "amount": "1000",
+          "unit": "мл",
+          "name": "Сироп настойки"
+        },
+        {
+          "amount": "500",
+          "unit": "мл",
+          "name": "СуперДжус"
+        },
+        {
+          "amount": "2000",
+          "unit": "мл",
+          "name": "Текила Хаус"
+        }
+      ],
+      "glass": "",
+      "method": "",
+      "ice": "",
+      "garnish": "",
+      "prebatch": "",
+      "preparation": "",
+      "output": "3500 мл",
+      "notes": [],
+      "source_sheet": "Настойки",
+      "source_row_start": 471,
+      "source_row_end": 480,
+      "searchable_text": "настойки щавельвет 3500 мл 1000 гр щавель 1000 гр яблоко зеленое 1000 мл сироп настойки 500 мл суперджус 2000 мл текила хаус"
+    },
+    {
+      "id": "ttk_2818c5f54c",
+      "category_id": "preparations",
+      "category": "Заготовки",
+      "title": "Джем Апельсиново-Грейпфрутовый",
+      "ingredients": [
+        {
+          "amount": "1.5",
+          "unit": "кг",
+          "name": "Апельсин"
+        },
+        {
+          "amount": "300",
+          "unit": "гр",
+          "name": "Грейпфрут"
+        },
+        {
+          "amount": "400",
+          "unit": "гр",
+          "name": "Сахар"
+        },
+        {
+          "amount": "100",
+          "unit": "гр",
+          "name": "Цедра апельсина"
+        },
+        {
+          "amount": "3",
+          "unit": "гр",
+          "name": "Агар-Агар"
+        }
+      ],
+      "glass": "",
+      "method": "",
+      "ice": "",
+      "garnish": "",
+      "prebatch": "",
+      "preparation": "Пребить в блендере: апельсин — 1,5 кг, грейпфрут — 300 гр \nТщательно процедить через сито (выход — 1.45 кг)\nДобавить сахар — 400 гр\nЦедра апельсина (без альбедо) — 100 гр — порезать полосками 1 мм\nСмешать всё в сотейнике и варить на ‘3’ 1 час.\nЗамочить агар-агар — 3 гр. в холодной воде на 10 минут\nДовести агар-агар до кипения и влить в него горячий джем\nВарить 5 минут тщательно помешивая.\nСнять с огня и перелить в горячую, стерилизованую кипятком банку.",
+      "output": "",
+      "notes": [
+        "Выход: 1500 гр"
+      ],
+      "source_sheet": "Заготовки",
+      "source_row_start": 3,
+      "source_row_end": 16,
+      "searchable_text": "заготовки джем апельсиново-грейпфрутовый пребить в блендере: апельсин — 1,5 кг, грейпфрут — 300 гр \nтщательно процедить через сито (выход — 1.45 кг)\nдобавить сахар — 400 гр\nцедра апельсина (без альбедо) — 100 гр — порезать полосками 1 мм\nсмешать всё в сотейнике и варить на ‘3’ 1 час.\nзамочить агар-агар — 3 гр. в холодной воде на 10 минут\nдовести агар-агар до кипения и влить в него горячий джем\nварить 5 минут тщательно помешивая.\nснять с огня и перелить в горячую, стерилизованую кипятком банку. 1.5 кг апельсин 300 гр грейпфрут 400 гр сахар 100 гр цедра апельсина 3 гр агар-агар выход: 1500 гр"
+    },
+    {
+      "id": "ttk_8578ed00a7",
+      "category_id": "preparations",
+      "category": "Заготовки",
+      "title": "Облепиховый Кордиал",
+      "ingredients": [
+        {
+          "amount": "2000",
+          "unit": "гр",
+          "name": "С/м облепиха"
+        },
+        {
+          "amount": "1500",
+          "unit": "мл",
+          "name": "Сироп настойки"
+        },
+        {
+          "amount": "1000",
+          "unit": "мл",
+          "name": "Вода фильтрованная"
+        },
+        {
+          "amount": "4",
+          "unit": "мл",
+          "name": "Бензоат натрия 33%"
+        }
+      ],
+      "glass": "",
+      "method": "",
+      "ice": "",
+      "garnish": "",
+      "prebatch": "",
+      "preparation": "1. Подготовка сиропа: В небольшом сотейнике смешайте воду и сахар. Нагревайте на среднем огне, постоянно помешивая, пока сахар полностью не растворится. Доведите сироп до кипения и сразу снимите с огня. Дайте сиропу немного остыть.\n\n2. Смешивание: Добавьте облепиховое пюре (предварительно размороженное, если было заморожено, и протертое через мелкое сито для максимально гладкой текстуры) в теплый сахарный сироп. Тщательно перемешайте до получения полностью однородной массы.\n\n3. Добавление кислот: Введите лимонную кислоту и молочную кислоту. Снова хорошо перемешайте, чтобы кислоты равномерно распределились.\n\n4. Фильтрация (опционально): Для получения абсолютно прозрачного и гладкого кордиала, процедите смесь через мелкодисперсное сито, несколько слоев марли или кофейный фильтр.\n\n5. Контроль вкуса: Попробуйте кордиал. В зависимости от сладости и кислотности самой облепихи, при необходимости можно добавить еще немного сахара для баланса или чуть-чуть лимонной кислоты для усиления кислинки.\n\n6. Розлив и хранение: Перелейте готовый кордиал в чистые, стерилизованные бутылки. Плотно укупорьте. Храните кордиал в холодильнике. Срок хранения составит до 2-3 недель. Для увеличения срока хранения кордиал можно пастеризовать: нагреть до 75-80°C и разлить в горячие стерилизованные бутылки.",
+      "output": "",
+      "notes": [
+        "Выход: 4500 мл"
+      ],
+      "source_sheet": "Заготовки",
+      "source_row_start": 17,
+      "source_row_end": 41,
+      "searchable_text": "заготовки облепиховый кордиал 1. подготовка сиропа: в небольшом сотейнике смешайте воду и сахар. нагревайте на среднем огне, постоянно помешивая, пока сахар полностью не растворится. доведите сироп до кипения и сразу снимите с огня. дайте сиропу немного остыть.\n\n2. смешивание: добавьте облепиховое пюре (предварительно размороженное, если было заморожено, и протертое через мелкое сито для максимально гладкой текстуры) в теплый сахарный сироп. тщательно перемешайте до получения полностью однородной массы.\n\n3. добавление кислот: введите лимонную кислоту и молочную кислоту. снова хорошо перемешайте, чтобы кислоты равномерно распределились.\n\n4. фильтрация (опционально): для получения абсолютно прозрачного и гладкого кордиала, процедите смесь через мелкодисперсное сито, несколько слоев марли или кофейный фильтр.\n\n5. контроль вкуса: попробуйте кордиал. в зависимости от сладости и кислотности самой облепихи, при необходимости можно добавить еще немного сахара для баланса или чуть-чуть лимонной кислоты для усиления кислинки.\n\n6. розлив и хранение: перелейте готовый кордиал в чистые, стерилизованные бутылки. плотно укупорьте. храните кордиал в холодильнике. срок хранения составит до 2-3 недель. для увеличения срока хранения кордиал можно пастеризовать: нагреть до 75-80°c и разлить в горячие стерилизованные бутылки. 2000 гр с/м облепиха 1500 мл сироп настойки 1000 мл вода фильтрованная 4 мл бензоат натрия 33% выход: 4500 мл"
+    },
+    {
+      "id": "ttk_08237926d8",
+      "category_id": "preparations",
+      "category": "Заготовки",
+      "title": "Малина-Смородина Кордиал",
+      "ingredients": [
+        {
+          "amount": "2000",
+          "unit": "мл",
+          "name": "С/м Малина"
+        },
+        {
+          "amount": "2000",
+          "unit": "мл",
+          "name": "С/м черная смородина"
+        },
+        {
+          "amount": "1500",
+          "unit": "мл",
+          "name": "Сироп настойки"
+        },
+        {
+          "amount": "1000",
+          "unit": "гр",
+          "name": "Вода фильтрованная"
+        },
+        {
+          "amount": "6",
+          "unit": "мл",
+          "name": "Бензоат натрия 33%"
+        }
+      ],
+      "glass": "",
+      "method": "",
+      "ice": "",
+      "garnish": "",
+      "prebatch": "",
+      "preparation": "1) Смешайте пюре смородины и малины. Добавьте ~200 мл воды и подогрейте до 40–50 °C (не кипятить).\n\n2) Введите сахар, лимонную, яблочную и молочную кислоты, соль. Размешайте до полного растворения.\n\n3) Пробейте блендером 20–30 секунд для однородности.\n\n4) Процедите через мелкое сито, затем через марлю/супербэг, чтобы убрать косточки и лишнюю мякоть.\n\n5) Долейте холодной водой до точного объёма 1000 мл, ещё раз перемешайте.\n\n6) Охладите и выдержите 6–12 часов в холодильнике для стабилизации вкуса",
+      "output": "",
+      "notes": [
+        "Выход: 6000 мл"
+      ],
+      "source_sheet": "Заготовки",
+      "source_row_start": 42,
+      "source_row_end": 58,
+      "searchable_text": "заготовки малина-смородина кордиал 1) смешайте пюре смородины и малины. добавьте ~200 мл воды и подогрейте до 40–50 °c (не кипятить).\n\n2) введите сахар, лимонную, яблочную и молочную кислоты, соль. размешайте до полного растворения.\n\n3) пробейте блендером 20–30 секунд для однородности.\n\n4) процедите через мелкое сито, затем через марлю/супербэг, чтобы убрать косточки и лишнюю мякоть.\n\n5) долейте холодной водой до точного объёма 1000 мл, ещё раз перемешайте.\n\n6) охладите и выдержите 6–12 часов в холодильнике для стабилизации вкуса 2000 мл с/м малина 2000 мл с/м черная смородина 1500 мл сироп настойки 1000 гр вода фильтрованная 6 мл бензоат натрия 33% выход: 6000 мл"
+    },
+    {
+      "id": "ttk_127ec389f5",
+      "category_id": "preparations",
+      "category": "Заготовки",
+      "title": "Базиликовый Кордиал",
+      "ingredients": [
+        {
+          "amount": "100",
+          "unit": "гр",
+          "name": "Базилик свежий"
+        },
+        {
+          "amount": "800",
+          "unit": "мл",
+          "name": "Сироп настойки"
+        },
+        {
+          "amount": "200",
+          "unit": "мл",
+          "name": "Вода фильтрованная"
+        },
+        {
+          "amount": "1",
+          "unit": "мл",
+          "name": "Бензоат натрия 33%"
+        }
+      ],
+      "glass": "",
+      "method": "",
+      "ice": "",
+      "garnish": "",
+      "prebatch": "",
+      "preparation": "1. Подготовка базилика: Тщательно промойте листья базилика и обсушите их. Отделите листья от стеблей, так как стебли могут придать горечь.\n\n2. Блендирование: Поместите листья базилика, холодный сахарный сироп, воду, лимонную кислоту и соль в мощный блендер.\n\n3. Измельчение: Перебейте смесь на высокой скорости в течение 2-3 минут, до получения максимально однородной и яркой зеленой массы. Убедитесь, что все частички базилика хорошо измельчены.\n\n4. Процеживание: Процедите полученную смесь через мелкоячеистое сито, прижимая твердые частицы лопаткой, чтобы извлечь максимальное количество жидкости. Для получения более прозрачного кордиала можно дополнительно процедить через марлю, сложенную в несколько слоев, или кофейный фильтр.\n\n5. Коррекция вкуса: Попробуйте кордиал. При необходимости можно добавить еще немного лимонной кислоты для большей кислинки или сахарного сиропа для сладости.\n\n6. Розлив: Перелейте готовый базиликовый кордиал в чистые, стерилизованные бутылки.",
+      "output": "",
+      "notes": [
+        "Выход: 1000 мл"
+      ],
+      "source_sheet": "Заготовки",
+      "source_row_start": 59,
+      "source_row_end": 82,
+      "searchable_text": "заготовки базиликовый кордиал 1. подготовка базилика: тщательно промойте листья базилика и обсушите их. отделите листья от стеблей, так как стебли могут придать горечь.\n\n2. блендирование: поместите листья базилика, холодный сахарный сироп, воду, лимонную кислоту и соль в мощный блендер.\n\n3. измельчение: перебейте смесь на высокой скорости в течение 2-3 минут, до получения максимально однородной и яркой зеленой массы. убедитесь, что все частички базилика хорошо измельчены.\n\n4. процеживание: процедите полученную смесь через мелкоячеистое сито, прижимая твердые частицы лопаткой, чтобы извлечь максимальное количество жидкости. для получения более прозрачного кордиала можно дополнительно процедить через марлю, сложенную в несколько слоев, или кофейный фильтр.\n\n5. коррекция вкуса: попробуйте кордиал. при необходимости можно добавить еще немного лимонной кислоты для большей кислинки или сахарного сиропа для сладости.\n\n6. розлив: перелейте готовый базиликовый кордиал в чистые, стерилизованные бутылки. 100 гр базилик свежий 800 мл сироп настойки 200 мл вода фильтрованная 1 мл бензоат натрия 33% выход: 1000 мл"
+    },
+    {
+      "id": "ttk_b991146ae9",
+      "category_id": "preparations",
+      "category": "Заготовки",
+      "title": "Цитрусовый кордиал",
+      "ingredients": [
+        {
+          "amount": "2000",
+          "unit": "мл",
+          "name": "Сок в ассортименте"
+        },
+        {
+          "amount": "300",
+          "unit": "гр",
+          "name": "Грейфрут"
+        },
+        {
+          "amount": "300",
+          "unit": "гр",
+          "name": "Лайм"
+        },
+        {
+          "amount": "300",
+          "unit": "гр",
+          "name": "Лимон"
+        },
+        {
+          "amount": "2000",
+          "unit": "мл",
+          "name": "Сироп настойки"
+        },
+        {
+          "amount": "1000",
+          "unit": "гр",
+          "name": "Вода филтрованная"
+        },
+        {
+          "amount": "300",
+          "unit": "гр",
+          "name": "Апельсин"
+        },
+        {
+          "amount": "6",
+          "unit": "мл",
+          "name": "Бензоат натрия 33%"
+        }
+      ],
+      "glass": "",
+      "method": "",
+      "ice": "",
+      "garnish": "",
+      "prebatch": "",
+      "preparation": "1. Снять всю цедру с фруктов (по возможноти без альбедо)\n2. Смешать цедру с сахаром, убрать настаиваться минимум на 4 часа\n3. Выжать сок из фруктов \n4. После того как сахар выжмет все масла из цедры, перебить все в блендере\n5. Смешать соки вместе с перебитой массой из блендера\n6. Поставь на индукцию, добавить воды, кислоты по балансу\n7. Слегка подогреть до расстоврения кислот, не кипятить! (иначе потерет цвет)\n8. Охладить, разлить по бутылкам",
+      "output": "6000 мл",
+      "notes": [],
+      "source_sheet": "Заготовки",
+      "source_row_start": 83,
+      "source_row_end": 100,
+      "searchable_text": "заготовки цитрусовый кордиал 1. снять всю цедру с фруктов (по возможноти без альбедо)\n2. смешать цедру с сахаром, убрать настаиваться минимум на 4 часа\n3. выжать сок из фруктов \n4. после того как сахар выжмет все масла из цедры, перебить все в блендере\n5. смешать соки вместе с перебитой массой из блендера\n6. поставь на индукцию, добавить воды, кислоты по балансу\n7. слегка подогреть до расстоврения кислот, не кипятить! (иначе потерет цвет)\n8. охладить, разлить по бутылкам 6000 мл 2000 мл сок в ассортименте 300 гр грейфрут 300 гр лайм 300 гр лимон 2000 мл сироп настойки 1000 гр вода филтрованная 300 гр апельсин 6 мл бензоат натрия 33%"
+    },
+    {
+      "id": "ttk_5a3ac5d1d1",
+      "category_id": "preparations",
+      "category": "Заготовки",
+      "title": "Супер джус",
+      "ingredients": [
+        {
+          "amount": "200",
+          "unit": "гр",
+          "name": "Лимонная кислота"
+        },
+        {
+          "amount": "1",
+          "unit": "кг",
+          "name": "Лимоны"
+        },
+        {
+          "amount": "1",
+          "unit": "кг",
+          "name": "Лаймы"
+        },
+        {
+          "amount": "42",
+          "unit": "гр",
+          "name": "Яблочная кислота"
+        },
+        {
+          "amount": "500",
+          "unit": "гр",
+          "name": "Сахар"
+        },
+        {
+          "amount": "4100",
+          "unit": "мл",
+          "name": "Вода"
+        }
+      ],
+      "glass": "",
+      "method": "",
+      "ice": "",
+      "garnish": "",
+      "prebatch": "",
+      "preparation": "1. Снять цедру с фруктов, перемешать цедру с кислотами\n2. Выжать сок фруктов\n3. Перебить все в блендере\n4. Добавить воды и сахара, довести до баланса: вкус должен быть кисло-сладким, свежим и вкусно.",
+      "output": "5000 мл",
+      "notes": [],
+      "source_sheet": "Заготовки",
+      "source_row_start": 101,
+      "source_row_end": 114,
+      "searchable_text": "заготовки супер джус 1. снять цедру с фруктов, перемешать цедру с кислотами\n2. выжать сок фруктов\n3. перебить все в блендере\n4. добавить воды и сахара, довести до баланса: вкус должен быть кисло-сладким, свежим и вкусно. 5000 мл 200 гр лимонная кислота 1 кг лимоны 1 кг лаймы 42 гр яблочная кислота 500 гр сахар 4100 мл вода"
+    },
+    {
+      "id": "ttk_9f1125a93d",
+      "category_id": "preparations",
+      "category": "Заготовки",
+      "title": "Острая водка",
+      "ingredients": [
+        {
+          "amount": "3000",
+          "unit": "мл",
+          "name": "Водка хаус"
+        },
+        {
+          "amount": "100",
+          "unit": "гр",
+          "name": "Перец чили"
+        },
+        {
+          "amount": "100",
+          "unit": "гр",
+          "name": "Перец хлопенью"
+        },
+        {
+          "amount": "100",
+          "unit": "гр",
+          "name": "Перец горошком"
+        }
+      ],
+      "glass": "",
+      "method": "",
+      "ice": "",
+      "garnish": "",
+      "prebatch": "",
+      "preparation": "",
+      "output": "",
+      "notes": [
+        "Выход: 3000 мл"
+      ],
+      "source_sheet": "Заготовки",
+      "source_row_start": 115,
+      "source_row_end": 127,
+      "searchable_text": "заготовки острая водка 3000 мл водка хаус 100 гр перец чили 100 гр перец хлопенью 100 гр перец горошком выход: 3000 мл"
+    },
+    {
+      "id": "ttk_e6a72eac2b",
+      "category_id": "preparations",
+      "category": "Заготовки",
+      "title": "Сироп настойки",
+      "ingredients": [
+        {
+          "amount": "11000",
+          "unit": "гр",
+          "name": "Сахар"
+        },
+        {
+          "amount": "10000",
+          "unit": "гр",
+          "name": "Вода фильтрованная"
+        },
+        {
+          "amount": "200",
+          "unit": "гр",
+          "name": "Лимонная кислота"
+        },
+        {
+          "amount": "100",
+          "unit": "гр",
+          "name": "Яблочная кислота"
+        },
+        {
+          "amount": "40",
+          "unit": "гр",
+          "name": "Винной кислоты"
+        },
+        {
+          "amount": "15",
+          "unit": "гр",
+          "name": "Аскорбиновая кислота"
+        }
+      ],
+      "glass": "",
+      "method": "",
+      "ice": "",
+      "garnish": "",
+      "prebatch": "",
+      "preparation": "",
+      "output": "",
+      "notes": [
+        "Выход: 15000 мл"
+      ],
+      "source_sheet": "Заготовки",
+      "source_row_start": 128,
+      "source_row_end": 134,
+      "searchable_text": "заготовки сироп настойки 11000 гр сахар 10000 гр вода фильтрованная 200 гр лимонная кислота 100 гр яблочная кислота 40 гр винной кислоты 15 гр аскорбиновая кислота выход: 15000 мл"
+    }
+  ],
+  "import_policy": {
+    "upsert_key": "id; fallback category_id + normalized title",
+    "archive_missing": true,
+    "delete_missing": false,
+    "idempotent": true,
+    "hide_empty_fields": true
+  },
+  "quality_notes": [
+    "Количество 80 из старого ТЗ заменено на фактические 78 карточек.",
+    "Лист «Сезон» отсутствует в новом файле и не создаётся искусственно.",
+    "Лист «Чай, кофе» пустой: раздел скрывается или показывается как временно пустой.",
+    "Служебные листы и себестоимость не публикуются обычным пользователям.",
+    "Очевидные опечатки исправлены только в нормализованном тексте; строки источника сохранены в source_row_start/source_row_end."
+  ]
+}
